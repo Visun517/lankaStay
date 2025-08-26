@@ -1,6 +1,6 @@
 package lk.ijse.gdse71.lankastay.utill;
 
-import lk.ijse.gdse71.lankastay.entity.Role;
+import lk.ijse.gdse71.lankastay.entity.types.RoleTypes;
 import lk.ijse.gdse71.lankastay.entity.Tourist;
 import lk.ijse.gdse71.lankastay.entity.User;
 import lk.ijse.gdse71.lankastay.repository.TouristRepository;
@@ -61,7 +61,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                     .email(email)
                     .name(name)
                     .password(passwordEncoder.encode("OAUTH2_USER_PASSWORD_PLACEHOLDER"))
-                    .role(Role.TOURIST)
+                    .role(RoleTypes.TOURIST)
                     .build();
             user = userRepository.save(newUser); // user ව save කරනවා
 

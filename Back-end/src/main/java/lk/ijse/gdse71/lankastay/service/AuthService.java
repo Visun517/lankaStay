@@ -5,7 +5,7 @@ import lk.ijse.gdse71.lankastay.dto.AuthResponseDto;
 import lk.ijse.gdse71.lankastay.dto.BusinessRegisterDto;
 import lk.ijse.gdse71.lankastay.dto.TouristRegisterDto;
 import lk.ijse.gdse71.lankastay.entity.Business;
-import lk.ijse.gdse71.lankastay.entity.BusinessType;
+import lk.ijse.gdse71.lankastay.entity.types.BusinessType;
 import lk.ijse.gdse71.lankastay.entity.Tourist;
 import lk.ijse.gdse71.lankastay.entity.User;
 import lk.ijse.gdse71.lankastay.repository.BusinessRepository;

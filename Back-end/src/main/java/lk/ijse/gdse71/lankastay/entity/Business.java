@@ -1,6 +1,7 @@
 package lk.ijse.gdse71.lankastay.entity;
 
 import jakarta.persistence.*;
+import lk.ijse.gdse71.lankastay.entity.types.BusinessType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class Business {
     private BusinessType businessType; // Hotel, Guest House, Spa, etc.
     private String district;
     private String phoneNumber;
+    private String imageUrl;
 
     @CreatedDate
     @Column(updatable = false)
@@ -53,4 +55,10 @@ public class Business {
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
     private List<Review> reviews;
+
+    @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BusinessImage> galleryImages;
+
+    @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ClosedDate> closedDates;
 }

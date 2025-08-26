@@ -1,6 +1,7 @@
 package lk.ijse.gdse71.lankastay.entity;
 
 import jakarta.persistence.*;
+import lk.ijse.gdse71.lankastay.entity.types.MealTypes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,7 @@ public class Package {
     private double price;
     private LocalDate availability_start;
     private LocalDate availability_end;
-    private boolean is_meal_included;
+    private MealTypes meal_inclusion;
 
     @Column(name = "image_url")
     private String imageUrl;

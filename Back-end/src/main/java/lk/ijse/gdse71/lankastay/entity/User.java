@@ -1,6 +1,7 @@
 package lk.ijse.gdse71.lankastay.entity;
 
 import jakarta.persistence.*;
+import lk.ijse.gdse71.lankastay.entity.types.RoleTypes;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,7 +32,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private RoleTypes role;
 
     // --- UserDetails Methods ---
 

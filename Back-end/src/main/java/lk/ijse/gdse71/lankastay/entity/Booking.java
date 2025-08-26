@@ -1,6 +1,7 @@
 package lk.ijse.gdse71.lankastay.entity;
 
 import jakarta.persistence.*;
+import lk.ijse.gdse71.lankastay.entity.types.StatusTypes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ public class Booking {
     private String bookingDate;
 
     @Enumerated(EnumType.STRING)
-    private EnumStatus status; // PENDING, CONFIRMED, CANCELLED
+    private StatusTypes status; // PENDING, CONFIRMED, CANCELLED
 
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
