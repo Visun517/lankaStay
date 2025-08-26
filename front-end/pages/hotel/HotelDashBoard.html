@@ -13,6 +13,56 @@
 
 </head>
 
+<!-- Navigation Bar -->
+<div class="w-full bg-white shadow-lg border-b border-gray-200">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Left side - Project Name -->
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <h1 class="text-2xl font-bold text-blue-600"><span class="text-2xl font-bold text-gray-900">Lanka</span>Stay</h1>
+        </div>
+      </div>
+
+      <!-- Right side - Navigation Links -->
+      <div class="flex items-center space-x-1 sm:space-x-4">
+        <a href="#profile" class="nav-link px-3 py-2 rounded-lg font-medium text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition flex items-center gap-2 text-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+          <span class="hidden sm:inline">Profile</span>
+        </a>
+        <a href="#gallery" class="nav-link px-3 py-2 rounded-lg font-medium text-gray-700 hover:bg-green-100 hover:text-green-700 transition flex items-center gap-2 text-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span class="hidden sm:inline">Gallery</span>
+        </a>
+        <a href="#rooms" class="nav-link px-3 py-2 rounded-lg font-medium text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition flex items-center gap-2 text-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z" />
+          </svg>
+          <span class="hidden sm:inline">Room / Package</span>
+        </a>
+        <a href="#availability" class="nav-link px-3 py-2 rounded-lg font-medium text-gray-700 hover:bg-yellow-100 hover:text-yellow-700 transition flex items-center gap-2 text-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span class="hidden sm:inline">Calendar</span>
+        </a>
+        <a href="#stats" class="nav-link px-3 py-2 rounded-lg font-medium text-gray-700 hover:bg-purple-100 hover:text-purple-700 transition flex items-center gap-2 text-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          <span class="hidden sm:inline">Stats</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+</div>
+
+
 <body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
   <!-- Facebook-style Cover Only Section -->
   <div class="relative w-full max-w-5xl mx-auto mt-6 mb-8">
@@ -36,13 +86,14 @@
     </div>
   </div>
 
+  
   <div class="max-w-5xl mx-auto py-8 px-2 sm:px-6 flex flex-col gap-8">
     <!-- Hotel Profile Info Section -->
-    <section class="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
-      <h2 class="text-xl font-bold text-blue-700 mb-2">Hotel Profile Info</h2>
+    <section id="profile" class="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
+      <h2 class="text-xl font-bold text-blue-700 mb-2">Business Profile Info</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-semibold text-gray-600 mb-1">Hotel Name</label>
+          <label class="block text-sm font-semibold text-gray-600 mb-1">Business Name</label>
           <input type="text" class="w-full px-4 py-2 rounded border border-gray-200 focus:ring-2 focus:ring-blue-200"
             placeholder="Your Hotel Name" />
         </div>
@@ -93,109 +144,872 @@
     
 
     <!-- Hotel Image Gallery Section -->
-    <section class="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
-      <h2 class="text-xl font-bold text-blue-700 mb-2">Hotel Image Gallery</h2>
-      <div class="flex gap-4 overflow-x-auto pb-2">
-        <img src="https://source.unsplash.com/200x150/?hotel,1" class="w-40 h-28 object-cover rounded-lg shadow"
-          alt="Hotel 1" />
-        <img src="https://source.unsplash.com/200x150/?hotel,2" class="w-40 h-28 object-cover rounded-lg shadow"
-          alt="Hotel 2" />
-        <img src="https://source.unsplash.com/200x150/?hotel,3" class="w-40 h-28 object-cover rounded-lg shadow"
-          alt="Hotel 3" />
-        <img src="https://source.unsplash.com/200x150/?hotel,4" class="w-40 h-28 object-cover rounded-lg shadow"
-          alt="Hotel 4" />
-        <img src="https://source.unsplash.com/200x150/?hotel,5" class="w-40 h-28 object-cover rounded-lg shadow"
-          alt="Hotel 5" />
+    <section id="gallery" class="bg-white rounded-xl shadow p-6 flex flex-col gap-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-blue-700">Hotel Image Gallery</h2>
+        <!-- <button class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          Add New Photos
+        </button> -->
       </div>
-      <div class="flex gap-4 mt-2">
-        <button class="px-4 py-2 bg-green-200 text-green-700 rounded-lg font-semibold hover:bg-green-300 transition">Add
-          New Photos</button>
-        <button
-          class="px-4 py-2 bg-yellow-200 text-yellow-700 rounded-lg font-semibold hover:bg-yellow-300 transition">Edit
-          Your Gallery</button>
+      
+      <!-- Gallery Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <!-- Add Image Card -->
+        <div id="addPhotoBtn" class="group relative border-2 border-dashed border-gray-300 rounded-xl p-4 hover:border-blue-400 transition-all duration-300 cursor-pointer bg-gray-50 hover:bg-blue-50">
+          <div class="flex flex-col items-center justify-center h-32 text-gray-400 hover:text-blue-500 transition-colors">
+            <svg class="w-12 h-12 mb-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            <span class="text-sm font-medium">Add Photo</span>
+          </div>
+        </div>
+        
+        <!-- Existing Images with Remove Functionality -->
+        <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+          <img src="https://source.unsplash.com/400x300/?hotel,luxury" 
+               class="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-110" 
+               alt="Hotel Image 1" />
+          <!-- Remove Button Overlay -->
+          <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button class="bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition shadow-lg">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <!-- Image Info Overlay -->
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white">
+            <p class="text-sm font-medium">Luxury Suite</p>
+            <p class="text-xs opacity-80">Main Building</p>
+          </div>
+        </div>
+        
+        <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+          <img src="https://source.unsplash.com/400x300/?hotel,pool" 
+               class="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-110" 
+               alt="Hotel Image 2" />
+          <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button class="bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition shadow-lg">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white">
+            <p class="text-sm font-medium">Swimming Pool</p>
+            <p class="text-xs opacity-80">Outdoor Area</p>
+          </div>
+        </div>
+        
+        <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+          <img src="https://source.unsplash.com/400x300/?hotel,restaurant" 
+               class="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-110" 
+               alt="Hotel Image 3" />
+          <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button class="bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition shadow-lg">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white">
+            <p class="text-sm font-medium">Fine Dining</p>
+            <p class="text-xs opacity-80">Restaurant</p>
+          </div>
+        </div>
+        
+        <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+          <img src="https://source.unsplash.com/400x300/?hotel,spa" 
+               class="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-110" 
+               alt="Hotel Image 4" />
+          <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button class="bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition shadow-lg">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white">
+            <p class="text-sm font-medium">Spa & Wellness</p>
+            <p class="text-xs opacity-80">Relaxation Zone</p>
+          </div>
+        </div>
+        
+        <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+          <img src="https://source.unsplash.com/400x300/?hotel,garden" 
+               class="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-110" 
+               alt="Hotel Image 5" />
+          <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button class="bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition shadow-lg">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white">
+            <p class="text-sm font-medium">Garden View</p>
+            <p class="text-xs opacity-80">Landscaped Area</p>
+          </div>
+        </div>
+        
+        <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+          <img src="https://source.unsplash.com/400x300/?hotel,beach" 
+               class="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-110" 
+               alt="Hotel Image 6" />
+          <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button class="bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition shadow-lg">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white">
+            <p class="text-sm font-medium">Beach Access</p>
+            <p class="text-xs opacity-80">Private Beach</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Gallery Stats and Actions -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-200">
+        <div class="flex items-center gap-6 text-sm text-gray-600">
+          <span class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            6 Photos
+          </span>
+          <span class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Gallery Active
+          </span>
+        </div>
+        <div class="flex gap-3">
+          <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Refresh
+          </button>
+          <button class="px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg font-medium hover:bg-yellow-200 transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Edit Gallery
+          </button>
+        </div>
       </div>
     </section>
+
+    <!-- Add Photo Modal -->
+    <div id="addPhotoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-900">Add New Photo</h3>
+          <button id="closeModal" class="text-gray-400 hover:text-gray-600 transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Modal Body -->
+        <div class="p-6 space-y-4">
+          <!-- Image Upload Section -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Upload Image</label>
+            <div id="imageUploadArea" class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors cursor-pointer bg-gray-50 hover:bg-blue-50">
+              <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              <p class="text-sm text-gray-600 mb-2">Click to upload or drag and drop</p>
+              <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+              <input type="file" id="imageInput" class="hidden" accept="image/*" />
+            </div>
+            <!-- Preview Image -->
+            <div id="imagePreview" class="hidden mt-4">
+              <img id="previewImg" class="w-full h-32 object-cover rounded-lg shadow" alt="Preview" />
+            </div>
+          </div>
+          
+          <!-- Description Input -->
+          <div>
+            <label for="imageDescription" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+            <input type="text" id="imageDescription" placeholder="Enter image description (e.g., Luxury Suite)" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          </div>
+          
+          <!-- Subtitle Input -->
+          <div>
+            <label for="imageSubtitle" class="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
+            <input type="text" id="imageSubtitle" placeholder="Enter subtitle (e.g., Main Building)" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          </div>
+        </div>
+        
+        <!-- Modal Footer -->
+        <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200">
+          <button id="cancelBtn" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+            Cancel
+          </button>
+          <button id="saveBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+            Save Photo
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- Room/Package Management Section -->
-    <section class="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
-      <h2 class="text-xl font-bold text-blue-700 mb-2">Room / Package Management</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col gap-2">
-          <div class="font-semibold text-gray-700">Deluxe Room</div>
-          <div class="text-sm text-gray-500">Spacious room with sea view</div>
-          <div class="text-blue-700 font-bold">$120/night</div>
+    <section id="rooms" class="bg-white rounded-xl shadow p-6 flex flex-col gap-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-blue-700">Room / Package Management</h2>
+        <button id="addPackageBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          Add New Package
+        </button>
+      </div>
+      
+      <!-- Special Offers Section -->
+      <div class="border-t border-gray-200 pt-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-orange-600 flex items-center gap-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+            </svg>
+            Special Offers
+          </h3>
+          <button id="addSpecialOfferBtn" class="px-3 py-1.5 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Add Offer
+          </button>
         </div>
-        <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col gap-2">
-          <div class="font-semibold text-gray-700">Family Suite</div>
-          <div class="text-sm text-gray-500">Perfect for families, 2 bedrooms</div>
-          <div class="text-blue-700 font-bold">$200/night</div>
-        </div>
-        <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col gap-2">
-          <div class="font-semibold text-gray-700">Honeymoon Package</div>
-          <div class="text-sm text-gray-500">Romantic setup, candlelight dinner</div>
-          <div class="text-blue-700 font-bold">$350/package</div>
+        
+        <!-- Special Offers Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          <!-- Special Offer Card 1 -->
+          <div class="group relative bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 border border-orange-200 hover:border-orange-300">
+            <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <button class="bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition shadow-lg">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-bold text-gray-800 text-sm">Honeymoon Special</h4>
+                <div class="text-xs text-orange-600 font-medium">Valid until Dec 31</div>
+              </div>
+            </div>
+            <p class="text-gray-600 text-xs mb-3">Romantic getaway with 25% discount on all honeymoon packages</p>
+            <div class="flex items-center justify-between">
+              <div class="text-lg font-bold text-orange-600">25% OFF</div>
+              <span class="text-xs text-gray-500">Limited Time</span>
+            </div>
+          </div>
+
+          <!-- Special Offer Card 2 -->
+          <div class="group relative bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 border border-green-200 hover:border-green-300">
+            <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <button class="bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition shadow-lg">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-bold text-gray-800 text-sm">Family Package</h4>
+                <div class="text-xs text-green-600 font-medium">Valid until Nov 30</div>
+              </div>
+            </div>
+            <p class="text-gray-600 text-xs mb-3">Family suites with 20% discount and free breakfast</p>
+            <div class="flex items-center justify-between">
+              <div class="text-lg font-bold text-green-600">20% OFF</div>
+              <span class="text-xs text-gray-500">Family Deal</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="flex justify-end mt-2">
-        <button class="px-5 py-2 bg-blue-200 text-blue-700 rounded-lg font-semibold hover:bg-blue-300 transition">+
-          Add</button>
+      
+      <!-- Packages Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Deluxe Room -->
+        <div class="group relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-200 hover:border-blue-300">
+          <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button class="bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition shadow-lg">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800 text-lg">Deluxe Room</h3>
+              <p class="text-sm text-blue-600 font-medium">Room Type</p>
+            </div>
+          </div>
+          <p class="text-gray-600 mb-4">Spacious room with sea view, modern amenities, and luxury comfort</p>
+          
+          <!-- Package Details -->
+          <div class="space-y-2 mb-4">
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+              <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span>Available: Jan 1 - Dec 31, 2024</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+              <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <span>Meal: Breakfast Included</span>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div class="text-2xl font-bold text-blue-700">$120</div>
+            <span class="text-sm text-gray-500">per night</span>
+          </div>
+          <div class="mt-4 pt-4 border-t border-blue-200">
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+              <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Available
+            </div>
+          </div>
+        </div>
+
+        <!-- Family Suite -->
+        <div class="group relative bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-green-200 hover:border-green-300">
+          <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button class="bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition shadow-lg">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800 text-lg">Family Suite</h3>
+              <p class="text-sm text-green-600 font-medium">Suite Type</p>
+            </div>
+          </div>
+          <p class="text-gray-600 mb-4">Perfect for families, 2 bedrooms with separate living area</p>
+          
+          <!-- Package Details -->
+          <div class="space-y-2 mb-4">
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+              <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span>Available: Jan 1 - Dec 31, 2024</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+              <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <span>Meal: Half Board</span>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div class="text-2xl font-bold text-green-700">$200</div>
+            <span class="text-sm text-gray-500">per night</span>
+          </div>
+          <div class="mt-4 pt-4 border-t border-green-200">
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+              <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Available
+            </div>
+          </div>
+        </div>
+
+        <!-- Honeymoon Package -->
+        <div class="group relative bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-pink-200 hover:border-pink-300">
+          <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button class="bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition shadow-lg">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-pink-500 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-gray-800 text-lg">Honeymoon Package</h3>
+              <p class="text-sm text-pink-600 font-medium">Special Package</p>
+            </div>
+          </div>
+          <p class="text-gray-600 mb-4">Romantic setup, candlelight dinner, spa treatment included</p>
+          
+          <!-- Package Details -->
+          <div class="space-y-2 mb-4">
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+              <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span>Available: Jan 1 - Dec 31, 2024</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+              <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <span>Meal: Full Board</span>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div class="text-2xl font-bold text-pink-700">$350</div>
+            <span class="text-sm text-gray-500">per package</span>
+          </div>
+          <div class="mt-4 pt-4 border-t border-pink-200">
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+              <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Available
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Package Stats -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-gray-200">
+        <div class="flex items-center gap-6 text-sm text-gray-600">
+          <span class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+            </svg>
+            3 Packages
+          </span>
+          <span class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            All Active
+          </span>
+          <span class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+            </svg>
+            2 Special Offers
+          </span>
+        </div>
+        <div class="flex gap-3">
+          <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Refresh
+          </button>
+          <button class="px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg font-medium hover:bg-yellow-200 transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Edit Packages
+          </button>
+        </div>
       </div>
     </section>
+
+    <!-- Add Package Modal -->
+    <div id="addPackageModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-900">Add New Package</h3>
+          <button id="closePackageModal" class="text-gray-400 hover:text-gray-600 transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Modal Body -->
+        <div class="p-6 space-y-4">
+          <!-- Package Name -->
+          <div>
+            <label for="packageName" class="block text-sm font-medium text-gray-700 mb-2">Package Name</label>
+            <input type="text" id="packageName" placeholder="Enter package name (e.g., Deluxe Room)" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          </div>
+          
+          <!-- Package Type -->
+          <div>
+            <label for="packageType" class="block text-sm font-medium text-gray-700 mb-2">Package Type</label>
+            <select id="packageType" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              <option value="">Select package type</option>
+              <option value="room">Room</option>
+              <option value="suite">Suite</option>
+              <option value="package">Special Package</option>
+              <option value="villa">Villa</option>
+            </select>
+          </div>
+          
+          <!-- Availability Dates -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="availabilityStartDate" class="block text-sm font-medium text-gray-700 mb-2">Availability Start Date</label>
+              <input type="date" id="availabilityStartDate" 
+                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label for="availabilityEndDate" class="block text-sm font-medium text-gray-700 mb-2">Availability End Date</label>
+              <input type="date" id="availabilityEndDate" 
+                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            </div>
+          </div>
+          
+          <!-- Meal Inclusion -->
+          <div>
+            <label for="isMealInclude" class="block text-sm font-medium text-gray-700 mb-2">Meal Inclusion</label>
+            <select id="isMealInclude" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              <option value="">Select meal option</option>
+              <option value="no_meal">No Meal</option>
+              <option value="breakfast">Breakfast Only</option>
+              <option value="half_board">Half Board (Breakfast + Dinner)</option>
+              <option value="full_board">Full Board (All Meals)</option>
+              <option value="all_inclusive">All Inclusive</option>
+            </select>
+          </div>
+          
+          <!-- Description -->
+          <div>
+            <label for="packageDescription" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+            <textarea id="packageDescription" rows="3" placeholder="Describe your package..." 
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+          </div>
+          
+          <!-- Package Image -->
+          <div>
+            <label for="packageImage" class="block text-sm font-medium text-gray-700 mb-2">Package Image</label>
+            <input type="file" id="packageImage" accept="image/*" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          </div>
+          
+          <!-- Price -->
+          <div>
+            <label for="packagePrice" class="block text-sm font-medium text-gray-700 mb-2">Price</label>
+            <div class="relative">
+              <span class="absolute left-3 top-2 text-gray-500">$</span>
+              <input type="number" id="packagePrice" placeholder="0.00" min="0" step="0.01"
+                     class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            </div>
+          </div>
+        
+        </div>
+        
+        <!-- Modal Footer -->
+        <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200">
+          <button id="cancelPackageBtn" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+            Cancel
+          </button>
+          <button id="savePackageBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+            Save Package
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Special Offer Modal -->
+    <div id="addSpecialOfferModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-900">Add Special Offer</h3>
+          <button id="closeSpecialOfferModal" class="text-gray-400 hover:text-gray-600 transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Modal Body -->
+        <div class="p-6 space-y-4">
+          <!-- Offer Title -->
+          <div>
+            <label for="offerTitle" class="block text-sm font-medium text-gray-700 mb-2">Offer Title</label>
+            <input type="text" id="offerTitle" placeholder="Enter offer title (e.g., Honeymoon Special)" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+          </div>
+          
+          <!-- Discount Percentage -->
+          <div>
+            <label for="discountPercentage" class="block text-sm font-medium text-gray-700 mb-2">Discount Percentage</label>
+            <div class="relative">
+              <input type="number" id="discountPercentage" placeholder="25" min="0" max="100" step="1"
+                     class="w-full pr-12 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+              <span class="absolute right-3 top-2 text-gray-500">%</span>
+            </div>
+          </div>
+          
+          <!-- Valid Dates -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="validFrom" class="block text-sm font-medium text-gray-700 mb-2">Valid From</label>
+              <input type="date" id="validFrom" 
+                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label for="validUntil" class="block text-sm font-medium text-gray-700 mb-2">Valid Until</label>
+              <input type="date" id="validUntil" 
+                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+          </div>
+          
+          <!-- Description -->
+          <div>
+            <label for="offerDescription" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+            <textarea id="offerDescription" rows="3" placeholder="Describe your special offer..." 
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"></textarea>
+          </div>
+          
+          <!-- Offer Image -->
+          <div>
+            <label for="offerImageUrl" class="block text-sm font-medium text-gray-700 mb-2">Offer Image</label>
+            <input type="file" id="offerImageUrl" accept="image/*" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+          </div>
+        </div>
+        
+        <!-- Modal Footer -->
+        <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200">
+          <button id="cancelSpecialOfferBtn" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+            Cancel
+          </button>
+          <button id="saveSpecialOfferBtn" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition font-medium">
+            Save Offer
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- Availability / Calendar Section -->
-    <section class="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
-      <h2 class="text-xl font-bold text-blue-700 mb-2">Availability / Calendar</h2>
-      <div class="flex flex-col md:flex-row md:items-center gap-4">
-        <div class="grid grid-cols-7 gap-2 w-full md:w-auto">
-          <!-- Calendar Days 1-31 -->
-          <!-- Available: bg-green-100 text-green-700, Unavailable: bg-red-100 text-red-700 -->
-          <div class="col-span-7 text-center text-gray-500 mb-1">April 2024</div>
-          <!-- Days -->
-          <template>
-            <!-- This is just a comment for clarity -->
-          </template>
-          <!-- Example: -->
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">1</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">2</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">3</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">4</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">5</div>
-          <div class="bg-red-100 text-red-700 rounded-lg p-2 text-center">6</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">7</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">8</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">9</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">10</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">11</div>
-          <div class="bg-red-100 text-red-700 rounded-lg p-2 text-center">12</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">13</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">14</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">15</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">16</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">17</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">18</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">19</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">20</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">21</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">22</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">23</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">24</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">25</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">26</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">27</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">28</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">29</div>
-          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">30</div>
-          <div class="bg-red-100 text-red-700 rounded-lg p-2 text-center">31</div>
+    <section id="availability" class="bg-white rounded-xl shadow p-6 flex flex-col gap-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-blue-700">Availability / Calendar</h2>
+        <div class="flex items-center gap-3">
+          <button id="prevMonthBtn" class="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 font-semibold transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Previous
+          </button>
+          <button id="nextMonthBtn" class="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 font-semibold transition flex items-center gap-2">
+            Next
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
-        <div class="flex flex-col gap-2 md:ml-8">
-          <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 font-semibold">Previous</button>
-          <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 font-semibold">Next</button>
+      </div>
+
+      <!-- Current Month Display -->
+      <div class="text-center">
+        <h3 id="currentMonthDisplay" class="text-2xl font-bold text-gray-800">April 2024</h3>
+        <p class="text-sm text-gray-600 mt-1">Click on dates to toggle availability status</p>
+      </div>
+
+      <!-- Calendar Grid -->
+      <div class="flex justify-center">
+        <div class="grid grid-cols-7 gap-2 w-full max-w-4xl">
+          <!-- Day Headers -->
+      
+          <div class="text-center text-sm font-semibold text-gray-600 p-2">Mon</div>
+          <div class="text-center text-sm font-semibold text-gray-600 p-2">Tue</div>
+          <div class="text-center text-sm font-semibold text-gray-600 p-2">Wed</div>
+          <div class="text-center text-sm font-semibold text-gray-600 p-2">Thu</div>
+          <div class="text-center text-sm font-semibold text-gray-600 p-2">Fri</div>
+          <div class="text-center text-sm font-semibold text-gray-600 p-2">Sat</div>
+          <div class="text-center text-sm font-semibold text-gray-600 p-2">Sun</div>
+          
+          <!-- Calendar Days Container -->
+          <div id="calendarDays" class="col-span-7 grid grid-cols-7 gap-2">
+            <!-- Days will be dynamically generated here -->
+          </div>
         </div>
+      </div>
+
+      <!-- Availability Summary -->
+      <div class="border-t border-gray-200 pt-6">
+        <h4 class="text-lg font-semibold text-gray-700 mb-4">Availability Summary</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-green-50 rounded-lg p-4 border border-green-200">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-green-700" id="openDaysCount">25</div>
+                <div class="text-sm text-green-600">Open Days</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-red-50 rounded-lg p-4 border border-red-200">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-red-700" id="closedDaysCount">6</div>
+                <div class="text-sm text-red-600">Closed Days</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-blue-700" id="totalDaysCount">31</div>
+                <div class="text-sm text-blue-600">Total Days</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
+        <button id="setAllOpenBtn" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-medium flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Set All Open
+        </button>
+        <button id="setAllClosedBtn" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-medium flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Set All Closed
+        </button>
+        <button id="setWeekendsClosedBtn" class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition font-medium flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Close Weekends
+        </button>
+        <button id="saveAvailabilityBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          Save Changes
+        </button>
       </div>
     </section>
 
+    <!-- Date Confirmation Modal -->
+    <div id="dateConfirmationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl shadow-2xl max-w-md w-full">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-900">Confirm Date Status</h3>
+          <button id="closeDateModal" class="text-gray-400 hover:text-gray-600 transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Modal Body -->
+        <div class="p-6">
+          <div class="text-center">
+            <div class="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h4 id="confirmationTitle" class="text-xl font-bold text-gray-800 mb-2">Set Business Status</h4>
+            <p id="confirmationMessage" class="text-gray-600 mb-6">Are you sure you want to change the business status for this date?</p>
+            
+            <!-- Date Display -->
+            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+              <div class="text-2xl font-bold text-blue-600" id="selectedDateDisplay">April 15, 2024</div>
+              <div class="text-sm text-gray-500" id="selectedDayDisplay">Monday</div>
+            </div>
+            
+            <!-- Status Options -->
+            <div class="space-y-3 mb-6">
+              <label class="flex items-center gap-3 p-3 rounded-lg border-2 border-green-200 hover:border-green-300 cursor-pointer transition-colors">
+                <input type="radio" name="dateStatus" value="open" class="w-4 h-4 text-green-600 focus:ring-green-500" checked>
+                <div class="flex items-center gap-2">
+                  <div class="w-4 h-4 bg-green-500 rounded-full"></div>
+                  <span class="font-medium text-green-700">Open for Business</span>
+                </div>
+              </label>
+              
+              <label class="flex items-center gap-3 p-3 rounded-lg border-2 border-red-200 hover:border-red-300 cursor-pointer transition-colors">
+                <input type="radio" name="dateStatus" value="closed" class="w-4 h-4 text-red-600 focus:ring-red-500">
+                <div class="flex items-center gap-2">
+                  <div class="w-4 h-4 bg-red-500 rounded-full"></div>
+                  <span class="font-medium text-red-700">Closed for Business</span>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Modal Footer -->
+        <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200">
+          <button id="cancelDateBtn" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+            Cancel
+          </button>
+          <button id="confirmDateBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+            Confirm Change
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Stats Section (Optional) -->
-    <section class="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
+    <section id="stats" class="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
       <h2 class="text-xl font-bold text-blue-700 mb-2">Stats</h2>
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="bg-blue-100 rounded-lg p-4 flex flex-col items-center">
