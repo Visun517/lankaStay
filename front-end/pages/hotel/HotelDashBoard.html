@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hotel Owner Dashboard - LankaStay</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbK6ZSQgHb67i6tbwwojGFNBkTRBt2dVM&callback=initMap">
+    </script>
+
+</head>
+
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+  <!-- Facebook-style Cover Only Section -->
+  <div class="relative w-full max-w-5xl mx-auto mt-6 mb-8">
+    <!-- Cover Image with shadow at bottom -->
+    <div class="relative h-56 sm:h-64 rounded-xl overflow-hidden shadow">
+      <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80"
+        alt="Hotel Cover" class="w-full h-full object-cover" />
+      <!-- Gradient shadow at bottom -->
+      <div
+        class="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-black/30 to-transparent pointer-events-none">
+      </div>
+      <!-- Add Cover Photo Button -->
+      <button
+        class="absolute bottom-4 right-4 flex items-center gap-2 bg-white/90 hover:bg-white text-gray-700 px-4 py-2 rounded shadow text-sm font-semibold transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M3 7h2a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2zm0 0V5a2 2 0 012-2h14a2 2 0 012 2v2m-4 4a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        Add cover photo
+      </button>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto py-8 px-2 sm:px-6 flex flex-col gap-8">
+    <!-- Hotel Profile Info Section -->
+    <section class="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
+      <h2 class="text-xl font-bold text-blue-700 mb-2">Hotel Profile Info</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-semibold text-gray-600 mb-1">Hotel Name</label>
+          <input type="text" class="w-full px-4 py-2 rounded border border-gray-200 focus:ring-2 focus:ring-blue-200"
+            placeholder="Your Hotel Name" />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-600 mb-1">Contact</label>
+          <input type="text" class="w-full px-4 py-2 rounded border border-gray-200 focus:ring-2 focus:ring-blue-200"
+            placeholder="Contact Number" />
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-semibold text-gray-600 mb-1">Description</label>
+          <textarea class="w-full px-4 py-2 rounded border border-gray-200 focus:ring-2 focus:ring-blue-200" rows="2"
+            placeholder="Describe your hotel..."></textarea>
+        </div>
+
+
+        <div class="md:col-span-2">
+          <label class="block text-sm font-semibold text-gray-600 mb-1">Location (Geo Coordinates)</label>
+          <!-- Map container -->
+          <div id="map" class="w-full h-64 rounded border border-gray-200"></div>
+
+          <div class="inline-flex gap-8">
+            <!-- Hidden inputs for lat/lng -->
+            <input type="text" id="latitude" class="mt-2 w-full px-4 py-2 rounded border border-gray-200"
+              placeholder="Latitude" readonly />
+            <input type="text" id="longitude" class="mt-2 w-full px-4 py-2 rounded border border-gray-200"
+              placeholder="Longitude" readonly />
+          </div>
+
+
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-sm font-semibold text-gray-600 mb-1">Address</label>
+          <input type="text" class="w-full px-4 py-2 rounded border border-gray-200 focus:ring-2 focus:ring-blue-200"
+            placeholder="Hotel Address" />
+        </div>
+
+      </div>
+      <div class="flex justify-end mt-2">
+        <button
+          class="px-5 py-2 bg-purple-200 text-purple-700 rounded-lg font-semibold hover:bg-purple-300 transition">Edit
+          Hotel Profile Info</button>
+      </div>
+    </section>
+
+
+
+    
+
+    <!-- Hotel Image Gallery Section -->
+    <section class="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
+      <h2 class="text-xl font-bold text-blue-700 mb-2">Hotel Image Gallery</h2>
+      <div class="flex gap-4 overflow-x-auto pb-2">
+        <img src="https://source.unsplash.com/200x150/?hotel,1" class="w-40 h-28 object-cover rounded-lg shadow"
+          alt="Hotel 1" />
+        <img src="https://source.unsplash.com/200x150/?hotel,2" class="w-40 h-28 object-cover rounded-lg shadow"
+          alt="Hotel 2" />
+        <img src="https://source.unsplash.com/200x150/?hotel,3" class="w-40 h-28 object-cover rounded-lg shadow"
+          alt="Hotel 3" />
+        <img src="https://source.unsplash.com/200x150/?hotel,4" class="w-40 h-28 object-cover rounded-lg shadow"
+          alt="Hotel 4" />
+        <img src="https://source.unsplash.com/200x150/?hotel,5" class="w-40 h-28 object-cover rounded-lg shadow"
+          alt="Hotel 5" />
+      </div>
+      <div class="flex gap-4 mt-2">
+        <button class="px-4 py-2 bg-green-200 text-green-700 rounded-lg font-semibold hover:bg-green-300 transition">Add
+          New Photos</button>
+        <button
+          class="px-4 py-2 bg-yellow-200 text-yellow-700 rounded-lg font-semibold hover:bg-yellow-300 transition">Edit
+          Your Gallery</button>
+      </div>
+    </section>
+
+    <!-- Room/Package Management Section -->
+    <section class="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
+      <h2 class="text-xl font-bold text-blue-700 mb-2">Room / Package Management</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col gap-2">
+          <div class="font-semibold text-gray-700">Deluxe Room</div>
+          <div class="text-sm text-gray-500">Spacious room with sea view</div>
+          <div class="text-blue-700 font-bold">$120/night</div>
+        </div>
+        <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col gap-2">
+          <div class="font-semibold text-gray-700">Family Suite</div>
+          <div class="text-sm text-gray-500">Perfect for families, 2 bedrooms</div>
+          <div class="text-blue-700 font-bold">$200/night</div>
+        </div>
+        <div class="bg-blue-50 rounded-lg p-4 shadow flex flex-col gap-2">
+          <div class="font-semibold text-gray-700">Honeymoon Package</div>
+          <div class="text-sm text-gray-500">Romantic setup, candlelight dinner</div>
+          <div class="text-blue-700 font-bold">$350/package</div>
+        </div>
+      </div>
+      <div class="flex justify-end mt-2">
+        <button class="px-5 py-2 bg-blue-200 text-blue-700 rounded-lg font-semibold hover:bg-blue-300 transition">+
+          Add</button>
+      </div>
+    </section>
+
+    <!-- Availability / Calendar Section -->
+    <section class="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
+      <h2 class="text-xl font-bold text-blue-700 mb-2">Availability / Calendar</h2>
+      <div class="flex flex-col md:flex-row md:items-center gap-4">
+        <div class="grid grid-cols-7 gap-2 w-full md:w-auto">
+          <!-- Calendar Days 1-31 -->
+          <!-- Available: bg-green-100 text-green-700, Unavailable: bg-red-100 text-red-700 -->
+          <div class="col-span-7 text-center text-gray-500 mb-1">April 2024</div>
+          <!-- Days -->
+          <template>
+            <!-- This is just a comment for clarity -->
+          </template>
+          <!-- Example: -->
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">1</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">2</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">3</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">4</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">5</div>
+          <div class="bg-red-100 text-red-700 rounded-lg p-2 text-center">6</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">7</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">8</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">9</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">10</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">11</div>
+          <div class="bg-red-100 text-red-700 rounded-lg p-2 text-center">12</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">13</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">14</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">15</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">16</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">17</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">18</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">19</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">20</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">21</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">22</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">23</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">24</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">25</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">26</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">27</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">28</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">29</div>
+          <div class="bg-green-100 text-green-700 rounded-lg p-2 text-center">30</div>
+          <div class="bg-red-100 text-red-700 rounded-lg p-2 text-center">31</div>
+        </div>
+        <div class="flex flex-col gap-2 md:ml-8">
+          <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 font-semibold">Previous</button>
+          <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 font-semibold">Next</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section (Optional) -->
+    <section class="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
+      <h2 class="text-xl font-bold text-blue-700 mb-2">Stats</h2>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-blue-100 rounded-lg p-4 flex flex-col items-center">
+          <div class="text-2xl font-bold text-blue-700">128</div>
+          <div class="text-sm text-gray-600">Total Bookings</div>
+        </div>
+        <div class="bg-green-100 rounded-lg p-4 flex flex-col items-center">
+          <div class="text-2xl font-bold text-green-700">4.7</div>
+          <div class="text-sm text-gray-600">Ratings</div>
+        </div>
+        <div class="bg-yellow-100 rounded-lg p-4 flex flex-col items-center">
+          <div class="text-2xl font-bold text-yellow-700">$12,300</div>
+          <div class="text-sm text-gray-600">Revenue</div>
+        </div>
+        <div class="bg-purple-100 rounded-lg p-4 flex flex-col items-center">
+          <div class="text-2xl font-bold text-purple-700">Excellent</div>
+          <div class="text-sm text-gray-600">Review Summary</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Floating Realtime Messaging Button -->
+  <button
+    class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full shadow-lg px-6 py-3 font-bold text-lg flex items-center gap-2 hover:bg-blue-700 transition">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round"
+        d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.77 9.77 0 01-4-.8L3 21l1.8-4A7.97 7.97 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    </svg>
+    Realtime Messaging
+  </button>
+
+
+  <script src="../js/HotelDashBoard.js"></script>
+</body>
+
+</html>

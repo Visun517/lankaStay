@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nearby Hotel Offers - LankaStay</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../js/location.js"></script>
+</head>
+<body class="bg-blue-50 min-h-screen">
+  <div class="max-w-3xl mx-auto my-10 px-4">
+    <!-- Loading Animation (Location Detection) -->
+    <div class="flex flex-col items-center justify-center py-12" id="location-loading">
+      <svg class="animate-spin h-10 w-10 text-blue-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+      </svg>
+      <p class="text-gray-600 text-lg">Detecting your location...</p>
+    </div>
+
+    <!-- Hotel Offers List -->
+    <div class="hidden" id="hotel-offers">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Nearby Hotel Offers <span class="text-blue-500">(within 5km)</span></h2>
+      <div class="grid gap-6 sm:grid-cols-2">
+        <!-- Hotel Offer Card -->
+        <div class="bg-white rounded-xl shadow p-4 flex flex-col gap-3">
+          <img src="https://source.unsplash.com/400x200/?hotel,offer" alt="Hotel" class="rounded-lg h-36 w-full object-cover mb-2" />
+          <div class="font-bold text-lg text-gray-800">Ocean View Hotel</div>
+          <div class="text-blue-600 font-semibold">20% off for 2+ nights</div>
+          <div class="text-gray-500 text-sm">2.4 km away</div>
+          <div class="flex gap-2 mt-2">
+            <button class="flex-1 px-3 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold hover:bg-blue-200 transition">View on Map</button>
+            <button class="flex-1 px-3 py-2 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition">Book Now</button>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl shadow p-4 flex flex-col gap-3">
+          <img src="https://source.unsplash.com/400x200/?hotel,room" alt="Hotel" class="rounded-lg h-36 w-full object-cover mb-2" />
+          <div class="font-bold text-lg text-gray-800">City Center Inn</div>
+          <div class="text-blue-600 font-semibold">Special lunch deal</div>
+          <div class="text-gray-500 text-sm">1.1 km away</div>
+          <div class="flex gap-2 mt-2">
+            <button class="flex-1 px-3 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold hover:bg-blue-200 transition">View on Map</button>
+            <button class="flex-1 px-3 py-2 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition">Book Now</button>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl shadow p-4 flex flex-col gap-3">
+          <img src="https://source.unsplash.com/400x200/?hotel,pool" alt="Hotel" class="rounded-lg h-36 w-full object-cover mb-2" />
+          <div class="font-bold text-lg text-gray-800">Lakeside Resort</div>
+          <div class="text-blue-600 font-semibold">Free breakfast included</div>
+          <div class="text-gray-500 text-sm">4.7 km away</div>
+          <div class="flex gap-2 mt-2">
+            <button class="flex-1 px-3 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold hover:bg-blue-200 transition">View on Map</button>
+            <button class="flex-1 px-3 py-2 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition">Book Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html> 

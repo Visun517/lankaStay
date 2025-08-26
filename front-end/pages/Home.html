@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Home - LankaStay</title>
+  <!-- Tailwind CSS CDN (React project එකේ Tailwind භාවිතා කරලා නම්) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div class="min-h-screen bg-white flex flex-col">
+    <!-- Navbar (React එකේ Navbar.jsx එකේ තියෙන content එක මෙහි copy කරන්න) -->
+    <nav class="w-full bg-white py-6">
+      <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+        <!-- Brand -->
+        <a href="/" class="text-2xl font-extrabold flex items-center">
+          <span class="text-gray-900">Stay</span><span class="text-blue-600">Lanka</span>
+        </a>
+        <!-- Menu -->
+        <div class="flex items-center space-x-2 md:space-x-4">
+          <a href="#" class="text-gray-700 font-medium hover:text-blue-600 px-3 py-2 rounded transition">About</a>
+          <a href="#" class="text-gray-700 font-medium hover:text-blue-600 px-3 py-2 rounded transition">Explore</a>
+          <a href="LogIn.html" class="font-semibold px-5 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition shadow-sm">Sign In</a>
+          <a href="Register.html" class="font-semibold px-5 py-2 rounded-full border-2 border-blue-600 text-blue-600 hover:bg-blue-50 transition">Sign Up</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="flex-1 flex flex-col items-center justify-center relative px-4">
+      <div class="relative z-10 flex flex-col items-center justify-center py-24">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-800 text-center mb-4 leading-tight">
+          Smart Hotel Discoveries Near You – Offers, Experiences &amp; More, All in One Map.
+          <span class="text-blue-600">StayLanka</span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-500 text-center mb-8 max-w-xl">
+          Explore nearby hotels, discover daily offers, and book your perfect getaway — all from where you are
+        </p>
+        <a
+          href="Register.html"
+          class="px-8 py-3 rounded-full bg-blue-600 text-white font-semibold text-lg shadow-lg hover:bg-blue-700 transition"
+        >
+          Get Started
+        </a>
+      </div>
+      <!-- Collage Images - Show Off Section -->
+      <div class="relative z-20 w-full flex justify-center -mt-16">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 bg-white px-4 py-6 rounded-3xl shadow-2xl border border-gray-100 max-w-5xl">
+          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="" class="rounded-2xl shadow-lg object-cover w-40 h-56 sm:w-44 sm:h-60 transition-transform duration-300 ease-in-out hover:scale-110 hover:shadow-2xl cursor-pointer" style="object-position: center;" tabindex="-1" />
+          <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=400&q=80" alt="" class="rounded-2xl shadow-lg object-cover w-40 h-56 sm:w-44 sm:h-60 transition-transform duration-300 ease-in-out hover:scale-110 hover:shadow-2xl cursor-pointer" style="object-position: center;" tabindex="-1" />
+          <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" alt="" class="rounded-2xl shadow-lg object-cover w-40 h-56 sm:w-44 sm:h-60 transition-transform duration-300 ease-in-out hover:scale-110 hover:shadow-2xl cursor-pointer" style="object-position: center;" tabindex="-1" />
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80" alt="" class="rounded-2xl shadow-lg object-cover w-40 h-56 sm:w-44 sm:h-60 transition-transform duration-300 ease-in-out hover:scale-110 hover:shadow-2xl cursor-pointer" style="object-position: center;" tabindex="-1" />
+          <img src="https://images.unsplash.com/photo-1465156799763-2c087c332922?auto=format&fit=crop&w=400&q=80" alt="" class="rounded-2xl shadow-lg object-cover w-40 h-56 sm:w-44 sm:h-60 transition-transform duration-300 ease-in-out hover:scale-110 hover:shadow-2xl cursor-pointer" style="object-position: center;" tabindex="-1" />
+          <img src="https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=400&q=80" alt="" class="rounded-2xl shadow-lg object-cover w-40 h-56 sm:w-44 sm:h-60 transition-transform duration-300 ease-in-out hover:scale-110 hover:shadow-2xl cursor-pointer" style="object-position: center;" tabindex="-1" />
+          <img src="https://images.pexels.com/photos/16508231/pexels-photo-16508231.jpeg" alt="" class="rounded-2xl shadow-lg object-cover w-40 h-56 sm:w-44 sm:h-60 transition-transform duration-300 ease-in-out hover:scale-110 hover:shadow-2xl cursor-pointer" style="object-position: center;" tabindex="-1" />
+          <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80" alt="" class="rounded-2xl shadow-lg object-cover w-40 h-56 sm:w-44 sm:h-60 transition-transform duration-300 ease-in-out hover:scale-110 hover:shadow-2xl cursor-pointer" style="object-position: center;" tabindex="-1" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer (React එකේ Footer.jsx එකේ තියෙන content එක මෙහි copy කරන්න) -->
+    <footer class="w-full bg-gray-900 text-gray-200 pt-10 pb-6 mt-10">
+      <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-5 gap-8">
+        <!-- Brand -->
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-white">StayLanka</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:underline">About Us</a></li>
+            <li><a href="#" class="hover:underline">Contact Us</a></li>
+            <li><a href="#" class="hover:underline">Terms of Use</a></li>
+            <li><a href="#" class="hover:underline">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <!-- Social -->
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-white">Social</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:underline">Facebook</a></li>
+            <li><a href="#" class="hover:underline">Twitter</a></li>
+            <li><a href="#" class="hover:underline">Instagram</a></li>
+            <li><a href="#" class="hover:underline">YouTube</a></li>
+          </ul>
+        </div>
+        <!-- Service -->
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-white">Service</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:underline">Compare</a></li>
+            <li><a href="#" class="hover:underline">Download</a></li>
+            <li><a href="#" class="hover:underline">Feedback</a></li>
+            <li><a href="#" class="hover:underline">Support</a></li>
+          </ul>
+        </div>
+        <!-- Activity -->
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-white">Activity</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:underline">Offers</a></li>
+            <li><a href="#" class="hover:underline">Affiliate</a></li>
+            <li><a href="#" class="hover:underline">Giveaway</a></li>
+            <li><a href="#" class="hover:underline">Events</a></li>
+          </ul>
+        </div>
+        <!-- Newsletter -->
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-white">Newsletter Subscription</h3>
+          <form class="flex flex-col sm:flex-row items-center gap-2">
+            <input type="email" placeholder="Subscribe to our newsletter" class="w-full px-3 py-2 rounded bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white font-semibold transition">Subscribe</button>
+          </form>
+        </div>
+      </div>
+      <div class="max-w-7xl mx-auto px-4 mt-8 border-t border-gray-700 pt-4 text-center text-gray-400 text-sm">
+        © 2024 StayLanka. All rights reserved.
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
