@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.math.BigInteger;
 
 public interface BusinessRepository extends JpaRepository<Business , Long> {
-    Business findByUserId(Long user_id);
+    Business findByBusinessId(Long businessId);
 }

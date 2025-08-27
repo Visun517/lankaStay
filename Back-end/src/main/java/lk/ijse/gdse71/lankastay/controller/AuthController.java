@@ -4,7 +4,7 @@ import lk.ijse.gdse71.lankastay.dto.ApiResponseDto;
 import lk.ijse.gdse71.lankastay.dto.AuthDto;
 import lk.ijse.gdse71.lankastay.dto.BusinessRegisterDto;
 import lk.ijse.gdse71.lankastay.dto.TouristRegisterDto;
-import lk.ijse.gdse71.lankastay.service.AuthService;
+import lk.ijse.gdse71.lankastay.service.impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @CrossOrigin("*")
 public class AuthController {
-    private final AuthService authService;
+    private final AuthServiceImpl authService;
 
     @PostMapping("/register/tourist")
     public ResponseEntity<ApiResponseDto> registerTourist(@RequestBody TouristRegisterDto registerDto) {

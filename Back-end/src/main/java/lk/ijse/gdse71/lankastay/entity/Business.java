@@ -25,6 +25,7 @@ public class Business {
     @Enumerated(EnumType.STRING)
     private BusinessType businessType; // Hotel, Guest House, Spa, etc.
     private String district;
+
     private String phoneNumber;
     private String imageUrl;
 
@@ -37,6 +38,7 @@ public class Business {
 
     private Double latitude;
     private Double longitude;
+
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId

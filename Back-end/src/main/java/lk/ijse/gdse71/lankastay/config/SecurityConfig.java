@@ -37,15 +37,15 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/auth/**", "/oauth2/**").permitAll()
+                        auth -> auth.requestMatchers("/auth/**", "/oauth2/**", "/uploads/**" ).permitAll()
                                 .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(customAuthenticationSuccessHandler)
                 ).logout(logout -> logout
-                        .logoutUrl("/auth/logout") // Logout වීමට call කළ යුතු URL එක
-                        .logoutSuccessUrl("http://127.0.0.1:5500/pages/LogIn.html?logout=success") // සාර්ථකව logout වූ පසු යන තැන
-                        .invalidateHttpSession(true) // Session එක අහෝසි කරනවා
-                        .deleteCookies("JSESSIONID") // JSESSIONID cookie එක මකා දමනවා
+                        .logoutUrl("/auth/logout")
+                        .logoutSuccessUrl("http://127.0.0.1:5500/pages/LogIn.html?logout=success")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                 )
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
