@@ -1,5 +1,6 @@
 package lk.ijse.gdse71.lankastay.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lk.ijse.gdse71.lankastay.entity.types.BusinessType;
 import lombok.AllArgsConstructor;
@@ -49,20 +50,26 @@ public class Business {
 
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Package> packages;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<SpecialOffer> specialOffers;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Booking> bookings;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<BusinessImage> galleryImages;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<ClosedDate> closedDates;
 }

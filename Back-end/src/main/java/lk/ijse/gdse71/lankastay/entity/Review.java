@@ -1,5 +1,6 @@
 package lk.ijse.gdse71.lankastay.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,5 +38,6 @@ public class Review {
     // Many Reviews -> One Business
     @ManyToOne
     @JoinColumn(name = "business_id")
+    @JsonManagedReference
     private Business business;
 }

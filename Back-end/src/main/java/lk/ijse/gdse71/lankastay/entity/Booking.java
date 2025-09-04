@@ -1,5 +1,6 @@
 package lk.ijse.gdse71.lankastay.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lk.ijse.gdse71.lankastay.entity.types.StatusTypes;
 import lombok.AllArgsConstructor;
@@ -43,6 +44,7 @@ public class Booking {
     // Many Bookings -> One Business
     @ManyToOne
     @JoinColumn(name = "business_id")
+    @JsonManagedReference
     private Business business;
 
     // Many Bookings -> One Package

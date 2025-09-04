@@ -1,0 +1,10 @@
+package lk.ijse.gdse71.lankastay.repository;
+
+import lk.ijse.gdse71.lankastay.entity.BusinessImage;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface BusinessImageRepository extends JpaRepository<BusinessImage, Long> {
+    List<BusinessImage> findAllByBusinessId(Long id);
+}

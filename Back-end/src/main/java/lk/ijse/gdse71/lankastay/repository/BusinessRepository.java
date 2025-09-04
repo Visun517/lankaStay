@@ -9,4 +9,5 @@ import java.math.BigInteger;
 @Repository
 public interface BusinessRepository extends JpaRepository<Business , Long> {
     Business findByUserId(Long userId);
+
 }

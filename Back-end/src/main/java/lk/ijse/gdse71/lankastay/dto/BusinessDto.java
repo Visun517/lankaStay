@@ -9,4 +9,6 @@ public class BusinessDto {
     private Double longitude;
     private String description;
     private String address;
+    private String phoneNumber;
+    private String businessName;
 }
