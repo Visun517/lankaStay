@@ -9,6 +9,6 @@ import java.io.IOException;
 
 public interface BusinessService {
      Object updateProfilePicture(MultipartFile file , String email) throws IOException;
-     Object updateBusiness(Long id , BusinessDto businessDetails);
+     Object updateBusiness(BusinessDto businessDetails);
      Business getBusinessDetails(Long id);
 }

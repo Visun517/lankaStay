@@ -1,12 +1,14 @@
 package lk.ijse.gdse71.lankastay.service.impl;
 
 import jakarta.annotation.PostConstruct;
+import lk.ijse.gdse71.lankastay.dto.BusinessDto;
 import lk.ijse.gdse71.lankastay.entity.Business;
 import lk.ijse.gdse71.lankastay.entity.User;
 import lk.ijse.gdse71.lankastay.repository.BusinessRepository;
 import lk.ijse.gdse71.lankastay.repository.UserRepository;
 import lk.ijse.gdse71.lankastay.service.BusinessService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -65,4 +67,29 @@ public class BusinessServiceImpl implements BusinessService {
 
         return "http://localhost:8080" + fileUrlPath;
     }
+
+    public Business getBusinessDetails(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
+
+        return businessRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+    }
+
+
+    @Override
+    public Object updateBusiness(Long id,BusinessDto businessDetails) {
+        Business business = businessRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+
+        business.setLatitude(businessDetails.getLatitude());
+        business.setLongitude(businessDetails.getLongitude());
+        business.setDistrict(businessDetails.getDistrict());
+        business.setDescription(businessDetails.getDescription());
+        business.setAddress(businessDetails.getAddress());
+        businessRepository.save(business);
+
+        return "Business details updated successfully";
+    }
+
 }

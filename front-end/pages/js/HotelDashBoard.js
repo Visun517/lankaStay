@@ -1,11 +1,13 @@
 let map, marker, geocoder;
 
 function initMap() {
-  const defaultLocation = { lat: 6.9271, lng: 79.8612 }; // Colombo
+  console.log("initMap called by Google Maps API.");
+
+  const defaultLocation = { lat: 6.9271, lng: 79.8612 };
 
   map = new google.maps.Map(document.getElementById("map"), {
     center: defaultLocation,
-    zoom: 10,
+    zoom: 8,
   });
 
   marker = new google.maps.Marker({
@@ -16,37 +18,239 @@ function initMap() {
 
   geocoder = new google.maps.Geocoder();
 
-  // Function to update lat/lng + address
-  function updateLocation(latLng) {
-    marker.setPosition(latLng);
-
-    document.getElementById("latitude").value = latLng.lat();
-    document.getElementById("longitude").value = latLng.lng();
-
-    // Reverse geocode: lat/lng -> address
-    geocoder.geocode({ location: latLng }, function (results, status) {
-      if (status === "OK") {
-        if (results[0]) {
-          document.getElementById("address").value = results[0].formatted_address;
-        } else {
-          document.getElementById("address").value = "Address not found";
-        }
-      } else {
-        document.getElementById("address").value = "Geocoder failed: " + status;
-      }
-    });
-  }
-
-  // Marker drag
-  google.maps.event.addListener(marker, 'dragend', function () {
-    updateLocation(marker.getPosition());
+  google.maps.event.addListener(marker, 'dragend', () => {
+    updateLocationUI(marker.getPosition());
   });
 
-  // Map click
-  google.maps.event.addListener(map, 'click', function (event) {
-    updateLocation(event.latLng);
+  google.maps.event.addListener(map, 'click', (event) => {
+    updateLocationUI(event.latLng);
   });
 }
+
+function updateLocationOnMap(lat, lng) {
+  const latitude = parseFloat(lat);
+  const longitude = parseFloat(lng);
+
+  if (isNaN(latitude) || isNaN(longitude)) {
+    console.error("Invalid latitude or longitude received:", lat, lng);
+    return;
+  }
+
+  const newLocation = { lat: latitude, lng: longitude };
+
+  if (map && marker) {
+    console.log("Updating map and marker to new location:", newLocation);
+    map.setCenter(newLocation);
+    marker.setPosition(newLocation);
+    map.setZoom(15);
+  }
+}
+
+function updateLocationUI(latLng) {
+  if (!latLng) return;
+
+  $('#latitude').val(latLng.lat().toFixed(6));
+  $('#longitude').val(latLng.lng().toFixed(6));
+
+  geocoder.geocode({ location: latLng }, (results, status) => {
+    if (status === "OK" && results[0]) {
+      $('#address').val(results[0].formatted_address);
+    } else {
+      console.warn("Reverse geocode failed with status:", status);
+    }
+  });
+}
+
+
+
+$(document).ready(function () {
+  console.log("Document is ready. Initializing dashboard...");
+
+  getUserinfo();
+
+
+  $('#changeProfilePicBtn').on('click', function () {
+    $('#profileImageInput').click();
+  });
+  $('#profileImageInput').on('change', handleProfilePictureUpload); // Helper function එකක් භාවිතා කිරීම
+
+  const profileFields = $('#businessName, #contactNumber, #description, #latitude, #longitude, #district, #address');
+  const editProfileBtn = $('#editProfileBtn');
+  const submitProfileBtn = $('#submitProfileBtn');
+  let isEditMode = false;
+
+  editProfileBtn.on('click', function () {
+    isEditMode = !isEditMode;
+    profileFields.prop('readonly', !isEditMode);
+    submitProfileBtn.toggle(isEditMode);
+  });
+
+  submitProfileBtn.on('click', function () {
+    console.log("Submit profile button clicked!"); // Debugging සඳහා
+    updateProfile();
+  });
+
+  profileFields.prop('readonly', true);
+  submitProfileBtn.hide();
+
+})
+
+
+
+
+function getUserinfo() {
+
+  $.ajax({
+    url: 'http://localhost:8080/business/GetDetails',
+    method: 'POST',
+    processData: false,
+    contentType: false,
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+    success: function (response) {
+      console.log("User info received:", response.data);
+
+      const businessData = response.data;
+
+      $('#businessName').val(businessData.user ? businessData.user.name : '');
+      $('#contactNumber').val(businessData.phoneNumber || '');
+      $('#description').val(businessData.description || '');
+      $('#latitude').val(businessData.latitude || '');
+      $('#longitude').val(businessData.longitude || '');
+      $('#address').val(businessData.address || '');
+      $('#district').val(businessData.district || '');
+
+
+      if (businessData.latitude && businessData.longitude) {
+        updateLocationOnMap(businessData.latitude, businessData.longitude);
+      }
+
+
+      let incompleteFields = [];
+
+
+      if (!businessData.user || !businessData.user.name) {
+        incompleteFields.push("Business Name");
+      }
+      if (!businessData.phoneNumber) {
+        incompleteFields.push("Contact Number");
+      }
+      if (!businessData.description) {
+        incompleteFields.push("Description");
+      }
+      if (!businessData.latitude) {
+        incompleteFields.push("Location");
+      }
+      if (!businessData.address) {
+        incompleteFields.push("Address");
+      }
+      if (!businessData.district) {
+        incompleteFields.push("District");
+      }
+
+      if (incompleteFields.length > 0) {
+        const alertMessage = "Welcome! Please complete your business profile. The following fields\n\n- " +
+          incompleteFields.join("\n- ");
+
+        alert(alertMessage);
+      }
+
+      console.log("Form populated and checked for completeness.");
+
+    },
+    error: function (jqXHR) {
+      console.log("User info not received:", jqXHR.error);
+    }
+  });
+}
+
+function updateProfile() {
+
+  const updatedData = {
+    description: $('#description').val().trim(),
+    latitude: $('#latitude').val().trim(),
+    longitude: $('#longitude').val().trim(),
+    address: $('#address').val().trim(),
+    district: $('#district').val().trim()
+  };
+
+  console.log("Updated profile data to send:", updatedData);
+
+  $.ajax({
+    url: 'http://localhost:8080/business/updateBusiness',
+    method: 'PATCH',
+    contentType: 'application/json',
+    data: JSON.stringify(updatedData),
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+    success: function (response) {
+      console.log("Profile updated successfully:", response);
+      Swal.fire({
+        title: "success!",
+        text: "Profile details updated successfully.",
+        icon: "success",
+        confirmButtonText: "OK"
+      });
+    },
+    error: function (jqXHR) {
+      console.log("Profile update failed:", jqXHR.error);
+      Swal.fire({
+        title: "Error!",
+        text: "Profile details not updated successfully.",
+        icon: "error",
+        confirmButtonText: "OK"
+      });
+    }
+  });
+}
+
+function handleProfilePictureUpload() {
+  const file = this.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+
+    $.ajax({
+      url: 'http://localhost:8080/business/profilePicture',
+      method: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+      success: function (response) {
+        const newImageUrl = response.data;
+        console.log("New Image URL received:", newImageUrl);
+
+        $('#profileImagePreview').attr('src', newImageUrl);
+
+        Swal.fire({
+          title: "success!",
+          text: "Profile image updated successfully.",
+          icon: "success",
+          confirmButtonText: "OK"
+        });
+      },
+      error: function (jqXHR) {
+        Swal.fire({
+          title: "error!",
+          text: "Profile image updated successfully.",
+          icon: "success",
+          confirmButtonText: "OK"
+        });
+      }
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
   const addPhotoBtn = document.getElementById('addPhotoBtn');
@@ -662,41 +866,3 @@ document.addEventListener('DOMContentLoaded', function () {
   initCalendar();
 });
 
-
-$(document).ready(function () {
-    // Change Profile Pic button එක click කළ විට, hidden input එක click කරවන්න
-    $('#changeProfilePicBtn').on('click', function () {
-        $('#profileImageInput').click();
-    });
-
-    // Profile Pic input එකේ file එකක් තේරූ විට...
-    $('#profileImageInput').on('change', function () {
-        const file = this.files[0]; 
-        if (!file) return; 
-
-        const formData = new FormData();
-        formData.append('image', file);  
-
-        $.ajax({
-            url: 'http://localhost:8080/business/profilePicture', // ඔබගේ controller endpoint
-            method: 'POST',
-            data: formData,
-            processData: false, 
-            contentType: false,
-            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
-            success: function (response) {
-                const newImageUrl = response.data;
-                console.log("New Image URL received:", newImageUrl);
-
-                // --- මෙන්න නිවැරදි කිරීම ---
-                // නිවැරදි img tag එකේ src එක update කරන්න
-                $('#profileImagePreview').attr('src', newImageUrl); 
-                
-                // ... (Swal.fire success)
-            },
-            error: function (jqXHR) {
-                // ... (Swal.fire error)
-            }
-        });
-    });
-});
