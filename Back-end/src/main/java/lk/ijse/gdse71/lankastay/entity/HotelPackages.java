@@ -2,32 +2,37 @@ package lk.ijse.gdse71.lankastay.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lk.ijse.gdse71.lankastay.entity.types.StatusTypes;
+import lk.ijse.gdse71.lankastay.entity.types.MealTypes;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "bookings")
-public class Booking {
-
+@Builder
+@Table(name = "packages")
+public class HotelPackages {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long booking_id;
+    private Long package_id;
 
-    private String bookingDate;
-
+    private String packageName;
+    private String description;
+    private double price;
+    private LocalDate availability_start;
+    private LocalDate availability_end;
     @Enumerated(EnumType.STRING)
-    private StatusTypes status; // PENDING, CONFIRMED, CANCELLED
+    private MealTypes meal_inclusion;
 
-    private LocalDate checkInDate;
-    private LocalDate checkOutDate;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @CreatedDate
     @Column(updatable = false)
@@ -36,19 +41,13 @@ public class Booking {
     @CreatedDate
     private LocalDate updatedAt;
 
-    // Many Bookings -> One Tourist
-    @ManyToOne
-    @JoinColumn(name = "tourist_id")
-    private Tourist tourist;
-
-    // Many Bookings -> One Business
+    // Many HotelPackages -> One Business
     @ManyToOne
     @JoinColumn(name = "business_id")
     @JsonManagedReference
     private Business business;
 
-    // Many Bookings -> One HotelPackages
-    @ManyToOne
-    @JoinColumn(name = "package_id")
-    private HotelPackages packageEntity;
+    // One HotelPackages -> Many Bookings
+    @OneToMany(mappedBy = "packageEntity", cascade = CascadeType.ALL)
+    private List<Booking> bookings;
 }

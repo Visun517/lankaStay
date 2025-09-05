@@ -1,10 +1,11 @@
 package lk.ijse.gdse71.lankastay.controller;
 
-import lk.ijse.gdse71.lankastay.dto.ApiResponseDto;
-import lk.ijse.gdse71.lankastay.dto.BusinessDto;
-import lk.ijse.gdse71.lankastay.dto.ImageGalleryDto;
+import lk.ijse.gdse71.lankastay.dto.*;
 import lk.ijse.gdse71.lankastay.entity.User;
+import lk.ijse.gdse71.lankastay.service.BusinessImageService;
+import lk.ijse.gdse71.lankastay.service.HotelPackageService;
 import lk.ijse.gdse71.lankastay.service.impl.BusinessServiceImpl;
+import lk.ijse.gdse71.lankastay.service.impl.SpecialOffersServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,10 @@ import java.io.IOException;
 public class BusinessController {
 
     private final BusinessServiceImpl businessService;
+    private final BusinessImageService businessImageService;
+    private final HotelPackageService hotelPackageService;
+    private final SpecialOffersServiceImpl specialOffersService;
+
 
     @PostMapping("/profilePicture")
     public ResponseEntity<ApiResponseDto> updateProfile(@RequestParam MultipartFile image, Authentication authentication) {
@@ -57,7 +62,7 @@ public class BusinessController {
     }
 
     @PatchMapping("/updateBusiness")
-    public ResponseEntity<ApiResponseDto> updateBusiness(@RequestBody BusinessDto businessDetails,Authentication authentication) {
+    public ResponseEntity<ApiResponseDto> updateBusiness(@RequestBody BusinessDto businessDetails, Authentication authentication) {
         System.out.println(businessDetails);
         User user = (User) authentication.getPrincipal();
         return ResponseEntity.ok(
@@ -80,7 +85,7 @@ public class BusinessController {
                     new ApiResponseDto(
                             200,
                             "Image uploaded successfully",
-                            businessService.uploadImageToGallery(imageGalleryDto,email)
+                            businessImageService.uploadImageToGallery(imageGalleryDto,email)
                     )
             );
         } catch (IOException e) {
@@ -98,7 +103,7 @@ public class BusinessController {
                 new ApiResponseDto(
                         200,
                         "Images fetched successfully",
-                        businessService.getImages(user)
+                        businessImageService.getImages(user)
                 )
         );
     }
@@ -114,11 +119,108 @@ public class BusinessController {
                     new ApiResponseDto(
                             200,
                             "Image deleted successfully",
-                            businessService.deleteImage(imageId,user.getId())
+                            businessImageService.deleteImage(imageId,user.getId())
                     )
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @PostMapping("/addNewPackage")
+    public ResponseEntity<ApiResponseDto> addNewPackage(@ModelAttribute PackageDto packageDto, Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        try {
+            return ResponseEntity.ok(
+                    new ApiResponseDto(
+                            200,
+                            "HotelPackages added successfully",
+                            hotelPackageService.addPackage(packageDto,user.getId())
+                    )
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("/getAllPackages")
+    public ResponseEntity<ApiResponseDto> getAllPackages(Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Packages fetched successfully",
+                        hotelPackageService.getAllPackages(user.getId())
+                )
+        );
+    }
+
+    @DeleteMapping("/deletePackage/{packageId}")
+    public ResponseEntity<ApiResponseDto> deleteBusiness(@PathVariable Long packageId, Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Business deleted successfully",
+                        hotelPackageService.deleteBusiness(packageId,user.getId())
+                )
+        );
+    }
+
+    @PostMapping("/addSpecialOffer")
+    public ResponseEntity<ApiResponseDto> updatePackage(@ModelAttribute SpecialOffersDto specialOffersDto, Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        try {
+            return ResponseEntity.ok(
+                    new ApiResponseDto(
+                            200,
+                            "Package updated successfully",
+                            specialOffersService.addPackage(specialOffersDto,user.getId())
+                    )
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("/getAllOffers")
+    public ResponseEntity<ApiResponseDto> getAllOffers(Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Packages fetched successfully",
+                        specialOffersService.getAllOffers(user.getId())
+                )
+        );
+    }
+    @DeleteMapping("/deleteOffer/{offerId}")
+    public ResponseEntity<ApiResponseDto> deleteOffer(@PathVariable Long offerId, Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Image deleted successfully",
+                        specialOffersService.deleteOffer(offerId,user.getId())
+                )
+        );
     }
 }

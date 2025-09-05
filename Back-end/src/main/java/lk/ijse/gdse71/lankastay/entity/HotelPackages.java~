@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lk.ijse.gdse71.lankastay.entity.types.MealTypes;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,8 +16,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "packages")
-public class Package {
+public class HotelPackages {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long package_id;
@@ -38,13 +40,13 @@ public class Package {
     @CreatedDate
     private LocalDate updatedAt;
 
-    // Many Packages -> One Business
+    // Many HotelPackages -> One Business
     @ManyToOne
     @JoinColumn(name = "business_id")
     @JsonManagedReference
     private Business business;
 
-    // One Package -> Many Bookings
+    // One HotelPackages -> Many Bookings
     @OneToMany(mappedBy = "packageEntity", cascade = CascadeType.ALL)
     private List<Booking> bookings;
 }

@@ -51,7 +51,7 @@ public class Business {
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Package> packages;
+    private List<HotelPackages> packages;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
     @JsonManagedReference
