@@ -1,24 +1,24 @@
 
 // Dynamic height adjustment
 function adjustHeights() {
-  const mainContainer = document.getElementById('mainContainer');
-  const bannerSection = document.getElementById('bannerSection');
-  const formSection = document.getElementById('formSection');
-  const formWrapper = document.getElementById('formWrapper');
+    const mainContainer = document.getElementById('mainContainer');
+    const bannerSection = document.getElementById('bannerSection');
+    const formSection = document.getElementById('formSection');
+    const formWrapper = document.getElementById('formWrapper');
 
-  // Reset heights
-  bannerSection.style.height = 'auto';
-  formSection.style.height = 'auto';
-  mainContainer.style.height = 'auto';
+    // Reset heights
+    bannerSection.style.height = 'auto';
+    formSection.style.height = 'auto';
+    mainContainer.style.height = 'auto';
 
-  // Get form height and apply to both sections
-  const formHeight = formWrapper.scrollHeight;
-  const minHeight = window.innerHeight; // Viewport height
-  const targetHeight = Math.max(formHeight + 100, minHeight); // Add padding, ensure min viewport height
+    // Get form height and apply to both sections
+    const formHeight = formWrapper.scrollHeight;
+    const minHeight = window.innerHeight; // Viewport height
+    const targetHeight = Math.max(formHeight + 100, minHeight); // Add padding, ensure min viewport height
 
-  bannerSection.style.minHeight = `${targetHeight}px`;
-  formSection.style.minHeight = `${targetHeight}px`;
-  mainContainer.style.minHeight = `${targetHeight}px`;
+    bannerSection.style.minHeight = `${targetHeight}px`;
+    formSection.style.minHeight = `${targetHeight}px`;
+    mainContainer.style.minHeight = `${targetHeight}px`;
 }
 
 // Show/hide business fields and Google button
@@ -28,15 +28,15 @@ const googleButton = document.getElementById('googleButton');
 const socialSignupSection = document.getElementById('socialSignupSection');
 
 function updateAccountTypeDependentUI(selectedType) {
-  const isBusiness = selectedType === 'business';
-  businessFields.classList.toggle('hidden', !isBusiness);
-  if (googleButton) googleButton.classList.toggle('hidden', isBusiness);
-  if (socialSignupSection) socialSignupSection.classList.toggle('hidden', isBusiness);
-  setTimeout(adjustHeights, 100);
+    const isBusiness = selectedType === 'business';
+    businessFields.classList.toggle('hidden', !isBusiness);
+    if (googleButton) googleButton.classList.toggle('hidden', isBusiness);
+    if (socialSignupSection) socialSignupSection.classList.toggle('hidden', isBusiness);
+    setTimeout(adjustHeights, 100);
 }
 
 accountType.addEventListener('change', function () {
-  updateAccountTypeDependentUI(this.value);
+    updateAccountTypeDependentUI(this.value);
 });
 
 // Initialize UI on load
@@ -46,61 +46,61 @@ updateAccountTypeDependentUI(accountType.value);
 const signupForm = document.getElementById('signupForm');
 const errorMessage = document.getElementById('errorMessage');
 signupForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  errorMessage.classList.add('hidden');
+    e.preventDefault();
+    errorMessage.classList.add('hidden');
 
-  const formData = new FormData(signupForm);
-  const data = Object.fromEntries(formData);
+    const formData = new FormData(signupForm);
+    const data = Object.fromEntries(formData);
 
-  // Client-side validation
-  if (!data.accountType) {
-    errorMessage.textContent = 'Please select an account type';
-    errorMessage.classList.remove('hidden');
-    return;
-  }
-  if (data.accountType === 'business' && (!data.businessType || !data.businessName || !data.latitude || !data.longitude || !data.address || !data.contact)) {
-    errorMessage.textContent = 'Please fill all business fields';
-    errorMessage.classList.remove('hidden');
-    return;
-  }
-  if (data.password !== data.confirmPassword) {
-    errorMessage.textContent = 'Passwords do not match';
-    errorMessage.classList.remove('hidden');
-    return;
-  }
-  if (!data.terms) {
-    errorMessage.textContent = 'You must agree to the terms';
-    errorMessage.classList.remove('hidden');
-    return;
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-    errorMessage.textContent = 'Invalid email format';
-    errorMessage.classList.remove('hidden');
-    return;
-  }
-
-  // Backend call
-  try {
-    const response = await fetch('http://your-backend-url/api/auth/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    const result = await response.json();
-    if (response.ok) {
-      window.location.href = 'login.html';
-    } else {
-      errorMessage.textContent = result.message || 'Registration failed';
-      errorMessage.classList.remove('hidden');
+    // Client-side validation
+    if (!data.accountType) {
+        errorMessage.textContent = 'Please select an account type';
+        errorMessage.classList.remove('hidden');
+        return;
     }
-  } catch (err) {
-    errorMessage.textContent = 'An error occurred. Please try again.';
-    errorMessage.classList.remove('hidden');
-    console.error(err);
-  }
+    if (data.accountType === 'business' && (!data.businessType || !data.businessName || !data.latitude || !data.longitude || !data.address || !data.contact)) {
+        errorMessage.textContent = 'Please fill all business fields';
+        errorMessage.classList.remove('hidden');
+        return;
+    }
+    if (data.password !== data.confirmPassword) {
+        errorMessage.textContent = 'Passwords do not match';
+        errorMessage.classList.remove('hidden');
+        return;
+    }
+    if (!data.terms) {
+        errorMessage.textContent = 'You must agree to the terms';
+        errorMessage.classList.remove('hidden');
+        return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+        errorMessage.textContent = 'Invalid email format';
+        errorMessage.classList.remove('hidden');
+        return;
+    }
+
+    // Backend call
+    try {
+        const response = await fetch('http://your-backend-url/api/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (response.ok) {
+            window.location.href = 'login.html';
+        } else {
+            errorMessage.textContent = result.message || 'Registration failed';
+            errorMessage.classList.remove('hidden');
+        }
+    } catch (err) {
+        errorMessage.textContent = 'An error occurred. Please try again.';
+        errorMessage.classList.remove('hidden');
+        console.error(err);
+    }
 });
 
-// // Google/Twitter Sign-Up (Placeholder)
+// Google/Twitter Sign-Up (Placeholder)
 // document.getElementById('googleSignUp').addEventListener('click', () => {
 //   alert('Google Sign-Up not implemented yet. Add OAuth logic.');
 // });
@@ -113,17 +113,17 @@ window.addEventListener('resize', adjustHeights);
 adjustHeights(); // Run on page load
 
 // Password toggle functionality
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Password field toggle
     const togglePassword = document.getElementById('togglePassword');
     const password = document.getElementById('password');
     const passwordEye = document.getElementById('passwordEye');
     const passwordEyeSlash = document.getElementById('passwordEyeSlash');
 
-    togglePassword.addEventListener('click', function() {
+    togglePassword.addEventListener('click', function () {
         const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
         password.setAttribute('type', type);
-        
+
         // Toggle eye icons
         if (type === 'text') {
             passwordEye.classList.add('hidden');
@@ -140,10 +140,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmPasswordEye = document.getElementById('confirmPasswordEye');
     const confirmPasswordEyeSlash = document.getElementById('confirmPasswordEyeSlash');
 
-    toggleConfirmPassword.addEventListener('click', function() {
+    toggleConfirmPassword.addEventListener('click', function () {
         const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
         confirmPassword.setAttribute('type', type);
-        
+
         // Toggle eye icons
         if (type === 'text') {
             confirmPasswordEye.classList.add('hidden');
@@ -160,10 +160,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 $('#createAccountBtn').on('click', function () {
 
- 
+
 
     let accountType = $('#accountType').val();
-    let userName = $('#userName').val().trim(); 
+    let userName = $('#userName').val().trim();
     let email = $('#email').val().trim();
     let password = $('#password').val();
     let confirmPassword = $('#confirmPassword').val();
@@ -178,7 +178,7 @@ $('#createAccountBtn').on('click', function () {
             icon: "error",
             confirmButtonText: "OK"
         });
-        return; 
+        return;
     }
 
     if (userName === '') {
@@ -261,23 +261,24 @@ $('#createAccountBtn').on('click', function () {
         };
         console.log('Registering Tourist:', touristData);
         $.ajax({
-            url: 'http://localhost:8080/auth/register/tourist',   
+            url: 'http://localhost:8080/auth/register/tourist',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(touristData),
             success: function (response) {
                 console.log('Registration successful:', response);
+                formClear();
                 Swal.fire({
                     title: "Success!",
                     text: "Registration successful! Redirecting to login...",
                     icon: "success",
                     confirmButtonText: "OK"
                 }).then(() => {
-                    window.location.href = 'login.html'; 
+                    window.location.href = 'login.html';
                 });
             },
             error: function (xhr, status, error) {
-               console.log('Registration failed:', error);
+                console.log('Registration failed:', error);
                 Swal.fire({
                     title: "Error!",
                     text: "Registration failed. Please try again.",
@@ -286,10 +287,10 @@ $('#createAccountBtn').on('click', function () {
                 });
             }
         })
-      
 
-    } 
-    
+
+    }
+
     if (accountType === 'business') {
         let businessType = $('#businessType').val().toUpperCase();
         let contactNumber = $('#contact').val().trim();
@@ -316,8 +317,8 @@ $('#createAccountBtn').on('click', function () {
 
         console.log('Registering Business:', businessData);
 
-         $.ajax({
-            url: 'http://localhost:8080/auth/register/business',   
+        $.ajax({
+            url: 'http://localhost:8080/auth/register/business',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(businessData),
@@ -328,7 +329,7 @@ $('#createAccountBtn').on('click', function () {
                     icon: "success",
                     confirmButtonText: "OK"
                 }).then(() => {
-                    window.location.href = 'login.html'; 
+                    window.location.href = 'login.html';
                 });
             },
             error: function (xhr, status, error) {
@@ -340,7 +341,16 @@ $('#createAccountBtn').on('click', function () {
                 });
             }
         })
-  
+
     }
 });
+
+function formClear() {
+    $('#accountType').val('');
+    $('#userName').val('');
+    $('#email').val('');
+    $('#password').val('');
+    $('#confirmPassword').val('');
+    $('#businessType').val('');
+}
 

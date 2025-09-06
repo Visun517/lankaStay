@@ -39,6 +39,7 @@ $('#loginBtn').click(function() {
 
                 
                 localStorage.setItem('token', response.data.accessToken);
+                formClear();
               
                 Swal.fire({
                     title: "Success!",
@@ -76,3 +77,8 @@ $('#loginBtn').click(function() {
             }
         })
 });
+
+function formClear() {
+    $('#email').val(''); 
+    $('#password').val(''); 
+}

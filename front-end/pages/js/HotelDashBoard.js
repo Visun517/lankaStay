@@ -88,62 +88,280 @@ function updateLocationUI(latLng) {
 $(document).ready(function () {
   console.log("Document is ready. Initializing all dashboard components...");
 
-  // Setup event listeners for all interactive components
   setupProfileEventListeners();
   setupGalleryModalListeners();
   setupPackageModalListeners();
   setupSpecialOfferModalListeners();
   setupCalendarListeners();
   getImages();
-
-  // Initialize the availability calendar
+  getProfilePicture();
   initCalendar();
-
-  // Fetch initial data to populate the dashboard
   getUserinfo();
+  getAllPackages();
+  getAllSpecialOffers();
 
-  
+
+
+
   $('#galleryGridContainer').on('click', '.remove-image-btn', function (event) {
-  event.stopPropagation();
+    event.stopPropagation();
 
-  const imageId = $(this).data('image-id');
-  console.log("Attempting to delete image with ID:", imageId);
+    const imageId = $(this).data('image-id');
+    console.log("Attempting to delete image with ID:", imageId);
 
-  if (!imageId) {
-    console.error("Image ID not found on the button.");
-    return;
-  }
+    if (!imageId) {
+      console.error("Image ID not found on the button.");
+      return;
+    }
 
-  Swal.fire({
-    title: 'Are you sure?',
-    text: "You won't be able to revert this!",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Yes, delete it!'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      $.ajax({
-        url: `http://localhost:8080/business/deleteImage/${imageId}`,
-        method: 'DELETE',
-        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
-        success: function (response) {
-          Swal.fire('Deleted!', 'The photo has been successfully removed.', 'success');
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: `http://localhost:8080/business/deleteImage/${imageId}`,
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+          success: function (response) {
+            Swal.fire('Deleted!', 'The photo has been successfully removed.', 'success');
 
-          // Gallery එක refresh කරනවා
-          getImages(); // <--- 4. නිවැරදි function නම call කරනවා
-        },
-        error: function (jqXHR) {
-          console.error("Failed to delete image:", jqXHR.responseText);
-          Swal.fire('Error!', 'Could not remove the photo.', 'error');
-        }
-      });
+            // Gallery එක refresh කරනවා
+            getImages(); // <--- 4. නිවැරදි function නම call කරනවා
+          },
+          error: function (jqXHR) {
+            console.error("Failed to delete image:", jqXHR.responseText);
+            Swal.fire('Error!', 'Could not remove the photo.', 'error');
+          }
+        });
+      }
+    });
+  });
+
+  $('#packagesListContainer').on('click', '.remove-package-btn', function (event) {
+    event.stopPropagation();
+
+    const packageId = $(this).data('package-id');
+    console.log("Attempting to delete package with ID:", packageId);
+
+    if (!packageId) {
+      console.error("package ID not found on the button.");
+      return;
+    }
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: `http://localhost:8080/business/deletePackage/${packageId}`,
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+          success: function (response) {
+            getAllPackages();
+            Swal.fire('Deleted!', 'The photo has been successfully removed.', 'success');
+
+            getAllPackages();
+          },
+          error: function (jqXHR) {
+            console.error("Failed to delete image:", jqXHR.responseText);
+            Swal.fire('Error!', 'Could not remove the photo.', 'error');
+          }
+        });
+      }
+    });
+  });
+
+  $('#specialOffersContainer').on('click', '.remove-offer-btn', function (event) {
+    event.stopPropagation();
+
+    const offerId = $(this).data('offer-id');
+    console.log("Attempting to delete offer with ID:", offerId);
+
+    if (!offerId) {
+      console.error("offer ID not found on the button.");
+      return;
+    }
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: `http://localhost:8080/business/deleteOffer/${offerId}`,
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+          success: function (response) {
+            console.log(response);
+            getAllSpecialOffers();
+            Swal.fire('Deleted!', 'The photo has been successfully removed.', 'success');
+
+          },
+          error: function (jqXHR) {
+            console.error("Failed to delete image:", jqXHR.responseText);
+            Swal.fire('Error!', 'Could not remove the photo.', 'error');
+          }
+        });
+      }
+    });
+  });
+
+
+
+});
+
+
+/**
+ * Fetches packages from the backend and dynamically renders them in the packages grid.
+ */
+function getAllPackages() {
+
+  console.log("Fetching all packages...");
+
+  $.ajax({
+    url: 'http://localhost:8080/business/getAllPackages',
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+    success: function (response) {
+      console.log("Packages received successfully:", response);
+
+      if (response.status === 200 && Array.isArray(response.data)) {
+        const packages = response.data;
+        const packageGrid = $('#packagesListContainer');
+
+        packageGrid.empty();
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const activePackages = packages.filter(packages => {
+          const validUntilDate = new Date(packages.availability_end);
+          return validUntilDate >= today;
+        });
+
+        console.log("Active packages:", activePackages);
+
+        const packageColorPalette = [
+          { bg: 'bg-gradient-to-br from-blue-50 to-blue-100', border: 'border-blue-200 hover:border-blue-300', text: 'text-blue-600 font-semibold', iconBg: 'bg-blue-500' },
+          { bg: 'bg-gradient-to-br from-emerald-50 to-emerald-100', border: 'border-emerald-200 hover:border-emerald-300', text: 'text-emerald-600 font-semibold', iconBg: 'bg-emerald-500' },
+          { bg: 'bg-gradient-to-br from-violet-50 to-violet-100', border: 'border-violet-200 hover:border-violet-300', text: 'text-violet-600 font-semibold', iconBg: 'bg-violet-500' },
+          { bg: 'bg-gradient-to-br from-orange-50 to-orange-100', border: 'border-orange-200 hover:border-orange-300', text: 'text-orange-600 font-semibold', iconBg: 'bg-orange-500' },
+          { bg: 'bg-gradient-to-br from-teal-50 to-teal-100', border: 'border-teal-200 hover:border-teal-300', text: 'text-teal-600 font-semibold', iconBg: 'bg-teal-500' },
+          { bg: 'bg-gradient-to-br from-rose-50 to-rose-100', border: 'border-rose-200 hover:border-rose-300', text: 'text-rose-600 font-semibold', iconBg: 'bg-rose-500' }
+        ];
+
+
+
+        activePackages.forEach((pkg, index) => {
+
+          const color = packageColorPalette[index % packageColorPalette.length];
+
+
+          const mealInclusionText = pkg.meal_inclusion
+            ? pkg.meal_inclusion.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())
+            : 'Not Specified'; const imageUrl = pkg.imageUrl ? pkg.imageUrl : 'https://source.unsplash.com/400x300/?hotel,room';
+
+          const packageCardHtml = `
+        <div class="package-card group relative ${color.bg} rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border ${color.border}">
+            
+            <!-- 1. Image Container (මෙම කොටසේ වෙනසක් නැත) -->
+            <div class="relative h-40">
+                <img src="${imageUrl}"
+                     alt="${pkg.packageName || 'Package Image'}"
+                     class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+            </div>
+
+            <!-- Card Content (මෙම කොටසේ වෙනසක් නැත) -->
+            <div class="p-5">
+                <!-- Delete Button -->
+                <div class=" remove-package-btn absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <button class="remove-package-btn bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition shadow-lg" data-package-id="${pkg.id}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+
+                <!-- Package Name and Type -->
+                <div class="flex items-center gap-4 mb-3">
+                    <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-lg leading-tight">${pkg.packageName || 'Unnamed Package'}</h3>
+                        <p class="text-sm text-blue-600 font-medium">${pkg.packageType || 'Room'}</p>
+                    </div>
+                </div>
+                
+                <p class="text-gray-600 text-sm mb-4 h-12 overflow-hidden">${pkg.description || 'No description available.'}</p>
+
+                <!-- Package Details with Icons -->
+                <div class="space-y-2 mb-4 text-sm">
+                    <div class="flex items-center gap-3 text-gray-700">
+                        <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                        <span>${pkg.availability_start} to ${pkg.availability_end}</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-gray-700">
+                        <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                        <span>${mealInclusionText}</span>
+                    </div>
+                </div>
+
+                <!-- Price and Status -->
+                <div class="mt-5 pt-4 border-t border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-2xl font-bold text-gray-800">$${pkg.price}</div>
+                            <span class="text-sm text-gray-500">per night</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm font-medium text-green-600 bg-green-100 px-3 py-1 rounded-full">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                            Available
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+          $('#packagesListContainer').append(packageCardHtml);
+        });
+
+        $('#totalPackagesCount').text(packages.length);
+
+      } else {
+        console.error("Received data is not in the expected format.");
+      }
+    },
+    error: function (jqXHR) {
+      console.error("Failed to fetch packages:", jqXHR.responseText);
+      Swal.fire("Error!", "Could not load your packages.", "error");
     }
   });
-});
+}
 
-});
+
+
+
+
+
+
 
 
 // =================================================================
@@ -264,7 +482,7 @@ function setupPackageModalListeners() {
 /**
  * Fetches images from the backend and dynamically renders them in the gallery grid.
  */
-function getImages() { // <--- 1. Spelling නිවැරදි කළා: getImages
+function getImages() {
   console.log("Fetching gallery images...");
   $.ajax({
     url: 'http://localhost:8080/business/getImages',
@@ -279,7 +497,7 @@ function getImages() { // <--- 1. Spelling නිවැරදි කළා: getI
 
         galleryGrid.find('.existing-image').remove();
 
-        images.forEach(image  => {
+        images.forEach(image => {
           let id = 0;
           const fullImageUrl = image.imageUrl ? image.imageUrl : 'https://source.unsplash.com/400x300/?hotel';
 
@@ -417,12 +635,28 @@ function handleProfilePictureUpload() {
     processData: false, contentType: false,
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     success: (response) => {
+      console.log("Profile picture received successfully:", response.data);
+
       $('#profileImagePreview').attr('src', response.data);
       Swal.fire("Success!", "Profile image updated.", "success");
     },
     error: () => Swal.fire("Error!", "Profile image update failed.", "error")
   });
 }
+
+function getProfilePicture() {
+  $.ajax({
+    url: 'http://localhost:8080/business/getProfile',
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+    success: (response) => {
+      console.log("Profile picture received successfully:", response.data);
+      $('#profileImagePreview').attr('src', response.data);
+    },
+    error: () => console.error("Failed to get profile picture.")
+  });
+}
+
 
 /**
  * Sends updated profile details to the backend.
@@ -479,8 +713,6 @@ function handleGalleryImageSave() {
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     success: function (response) {
       $('#closeModal').click(); // Close the modal
-      // TODO: Add a function to refresh the gallery view
-      // loadGalleryImages(); 
       Swal.fire("Success!", "Image added to gallery.", "success");
     },
     error: function (jqXHR) {
@@ -498,20 +730,238 @@ function handlePackageSave() {
   // Collect all data from the package form and validate
   // ...
   console.log("Saving package...");
-  alert('Package save functionality not connected to backend yet.');
+
+  let packageName = $('#packageName').val().trim();
+  let availabilityStartDate = $('#availabilityStartDate').val().trim();
+  let availabilityEndDate = $('#availabilityEndDate').val().trim();
+  let isMealInclude = $('#isMealInclude').val();
+  let packageAmenities = $('#packageDescription').val().trim();
+  let packageImage = $('#packageImage')[0].files[0];
+  let price = $('#packagePrice').val().trim();
+
+  console.log("Saving package...");
+
+  if (!packageName || !availabilityStartDate || !availabilityEndDate || !isMealInclude || !packageAmenities || !packageImage) {
+    alert('Please fill in all required fields.');
+    return;
+  }
+
+
+  const formData = new FormData();
+
+  formData.append('packageName', packageName);
+  formData.append('availability_start', availabilityStartDate);
+  formData.append('availability_end', availabilityEndDate);
+  formData.append('meal_inclusion', isMealInclude);
+  formData.append('description', packageAmenities);
+  formData.append('image', packageImage);
+  formData.append('price', price);
+
+  console.log("Package Name:", packageName);
+  console.log("Availability Start Date:", availabilityStartDate);
+  console.log("Availability End Date:", availabilityEndDate);
+  console.log("Is Meal Included:", isMealInclude);
+  console.log("Package Amenities:", packageAmenities);
+  console.log("Package Image:", packageImage);
+  console.log("Price:", price);
+
+
+  $.ajax({
+    url: 'http://localhost:8080/business/addNewPackage',
+    method: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+    success: function (response) {
+      console.log("Package saved successfully!" + response);
+      getAllPackages();
+      Swal.fire("Success!", "Successfully to add package.", "success");
+
+    },
+    error: function (jqXHR) {
+      Swal.fire("Error!", "Failed to add package.", "error");
+    }
+
+  });
+
   $('#closePackageModal').click();
+
 }
 
 /**
  * Handles saving a new special offer.
  */
 function handleSpecialOfferSave() {
-  // Collect all data from the special offer form and validate
   // ...
   console.log("Saving special offer...");
-  alert('Special offer save functionality not connected to backend yet.');
+
+  let offerTitle = $('#offerTitle').val().trim();
+  let precentage = $('#discountPercentage').val().trim();
+  let validFrom = $('#validFrom').val().trim();
+  let validUntil = $('#validUntil').val().trim();
+  let offerDescription = $('#offerDescription').val().trim();
+  let offerImage = $('#offerImageUrl')[0].files[0];
+
+  console.log("Offer Title:", offerTitle);
+  console.log("Precentage:", precentage);
+  console.log("Valid From:", validFrom);
+  console.log("Valid Until:", validUntil);
+  console.log("Offer Description:", offerDescription);
+  console.log("Offer Image:", offerImage);
+
+  const formData = new FormData();
+
+  formData.append('title', offerTitle);
+  formData.append('discountPercentage', precentage);
+  formData.append('valid_from', validFrom);
+  formData.append('valid_until', validUntil);
+  formData.append('description', offerDescription);
+  formData.append('image', offerImage);
+
+  $.ajax({
+    url: 'http://localhost:8080/business/addSpecialOffer',
+    method: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+    success: function (response) {
+      console.log("Special offer saved successfully!" + response);
+      getAllSpecialOffers();
+      Swal.fire("Success!", "Successfully to add special offer.", "success");
+    },
+    error: function (jqXHR) {
+      Swal.fire("Error!", "Failed to add special offer.", "error");
+    }
+  });
+
+
   $('#closeSpecialOfferModal').click();
 }
+
+/**
+ * Fetches active special offers and renders them in the UI.
+ */
+function getAllSpecialOffers() {
+  console.log("Fetching special offers...");
+
+  $.ajax({
+    url: 'http://localhost:8080/business/getAllOffers',
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+    success: function (response) {
+      console.log("Special offers received:", response);
+
+      if (response.status === 200 && Array.isArray(response.data)) {
+        const offers = response.data;
+        const offersContainer = $('#specialOffersContainer');
+
+        offersContainer.find('.offer-card').remove();
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const activeOffers = offers.filter(offer => {
+          const validUntilDate = new Date(offer.valid_until);
+          return validUntilDate >= today;
+        });
+
+        if (activeOffers.length === 0) {
+          console.log("No active special offers found.");
+        }
+
+        // Color palette for Special Offer cards, inspired by the "Honeymoon Special" card
+        const offerColorPalette = [
+          // Warm Orange (Screenshot එකට සමානම වර්ණය)
+          {
+            bg: 'bg-gradient-to-br from-orange-50 to-red-50',
+            border: 'border-orange-200 hover:border-orange-300',
+            text: 'text-orange-600',
+            iconBg: 'bg-orange-500'
+          },
+          // Sunny Amber/Yellow
+          {
+            bg: 'bg-gradient-to-br from-amber-50 to-yellow-100',
+            border: 'border-yellow-200 hover:border-yellow-300',
+            text: 'text-yellow-600',
+            iconBg: 'bg-yellow-500'
+          },
+          // Soft Rose/Pink
+          {
+            bg: 'bg-gradient-to-br from-rose-50 to-pink-100',
+            border: 'border-pink-200 hover:border-pink-300',
+            text: 'text-pink-600',
+            iconBg: 'bg-pink-500'
+          },
+          // Light Red
+          {
+            bg: 'bg-gradient-to-br from-red-50 to-red-100',
+            border: 'border-red-200 hover:border-red-300',
+            text: 'text-red-600',
+            iconBg: 'bg-red-500'
+          }
+        ];
+
+        activeOffers.forEach((offer, index) => {
+
+          const color = offerColorPalette[index % offerColorPalette.length];
+          const imageUrl = offer.imageUrl ? offer.imageUrl : 'https://source.unsplash.com/400x300/?offer,discount';
+
+          const validUntilFormatted = new Date(offer.valid_until).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+
+          const offerCardHtml = `
+    <div class="offer-card group relative ${color.bg} rounded-xl overflow-hidden p-4 shadow-lg hover:shadow-xl transition-all duration-300 border ${color.border}">
+        
+        <!-- Image Container (මෙම කොටසේ වෙනසක් නැත) -->
+        <div class="relative h-24 mb-3 rounded-lg overflow-hidden">
+            <img src="${imageUrl}" alt="${offer.title}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"/>
+        </div>
+
+        <!-- Remove Button Overlay -->
+        <div class="remove-offer-btn absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button class="remove-offer-btn bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600" data-offer-id="${offer.offer_id}">
+                <!-- Remove Icon -->
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+
+        <!-- Offer Title Section with Icon -->
+        <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 ${color.iconBg} rounded-lg flex items-center justify-center flex-shrink-0">
+                <!-- Dollar Sign Icon (Special Offer Icon) -->
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" /></svg>
+            </div>
+            <div>
+                <h4 class="font-bold text-gray-800 text-sm leading-tight">${offer.title || 'Special Offer'}</h4>
+                <div class="text-xs ${color.text} font-medium">Valid until ${validUntilFormatted}</div>
+            </div>
+        </div>
+
+        <!-- Offer Description -->
+        <p class="text-gray-600 text-xs mb-3 h-10 overflow-hidden">${offer.description || 'No description available.'}</p>
+        
+        <!-- Discount Info -->
+        <div class="flex items-center justify-between">
+            <div class="text-lg font-bold ${color.text}">${offer.discountPercentage}% OFF</div>
+            <span class="text-xs text-gray-500">Limited Time</span>
+        </div>
+    </div>
+`;
+          $('#specialOffersContainer').append(offerCardHtml);
+        });
+
+      } else {
+        console.error("Received data is not in the expected format.");
+      }
+    },
+    error: function (jqXHR) {
+      console.error("Error fetching special offers:", jqXHR.responseText);
+    }
+  });
+}
+
 
 
 // =================================================================
