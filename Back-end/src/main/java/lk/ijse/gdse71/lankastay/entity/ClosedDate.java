@@ -25,6 +25,5 @@ public class ClosedDate {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "business_id", nullable = false)
-    @JsonManagedReference
     private Business business;
 }

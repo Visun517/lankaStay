@@ -41,6 +41,5 @@ public class SpecialOffer {
     // Many Offers -> One Business
     @ManyToOne
     @JoinColumn(name = "business_id")
-    @JsonManagedReference
     private Business business;
 }

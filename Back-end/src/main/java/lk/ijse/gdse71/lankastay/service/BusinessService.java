@@ -15,4 +15,5 @@ public interface BusinessService {
      Object updateProfilePicture(MultipartFile file , String email) throws IOException;
      Object updateBusiness(Long id , BusinessDto businessDetails);
      BusinessDto getBusinessDetails(Long id);
+     Object getProfile(Long id);
 }

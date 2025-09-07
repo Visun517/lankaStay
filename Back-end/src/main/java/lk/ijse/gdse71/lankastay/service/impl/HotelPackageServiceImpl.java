@@ -25,7 +25,7 @@ public class HotelPackageServiceImpl implements HotelPackageService {
     private final HotelPackageRepository packageRepository;
 
     @Override
-    public Object addPackage(PackageDto packageDto, Long userId) throws IOException {
+    public String addPackage(PackageDto packageDto, Long userId) throws IOException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
@@ -76,7 +76,7 @@ public class HotelPackageServiceImpl implements HotelPackageService {
     }
 
     @Override
-    public Object deleteBusiness(Long packageId, Long id) {
+    public Object deletePackage(Long packageId, Long id) {
         Business business = businessRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
 

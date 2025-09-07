@@ -1,0 +1,120 @@
+package lk.ijse.gdse71.lankastay.controller;
+
+import lk.ijse.gdse71.lankastay.dto.ApiResponseDto;
+import lk.ijse.gdse71.lankastay.dto.PackageDto;
+import lk.ijse.gdse71.lankastay.dto.SpecialOffersDto;
+import lk.ijse.gdse71.lankastay.entity.User;
+import lk.ijse.gdse71.lankastay.service.HotelPackageService;
+import lk.ijse.gdse71.lankastay.service.impl.SpecialOffersServiceImpl;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+
+@RestController
+@RequestMapping("/packages")
+@RequiredArgsConstructor
+public class HotelPackagesController {
+    private final HotelPackageService hotelPackageService;
+    private final SpecialOffersServiceImpl specialOffersService;
+
+    @PostMapping("/addNewPackage")
+    public ResponseEntity<ApiResponseDto> addNewPackage(@ModelAttribute PackageDto packageDto, Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        try {
+            return ResponseEntity.ok(
+                    new ApiResponseDto(
+                            200,
+                            "HotelPackages added successfully",
+                            hotelPackageService.addPackage(packageDto,user.getId())
+                    )
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("/getAllPackages")
+    public ResponseEntity<ApiResponseDto> getAllPackages(Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Packages fetched successfully",
+                        hotelPackageService.getAllPackages(user.getId())
+                )
+        );
+    }
+
+    @DeleteMapping("/deletePackage/{packageId}")
+    public ResponseEntity<ApiResponseDto> deleteBusiness(@PathVariable Long packageId, Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Business deleted successfully",
+                        hotelPackageService.deletePackage(packageId,user.getId())
+                )
+        );
+    }
+
+    @PostMapping("/addSpecialOffer")
+    public ResponseEntity<ApiResponseDto> updatePackage(@ModelAttribute SpecialOffersDto specialOffersDto, Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        try {
+            return ResponseEntity.ok(
+                    new ApiResponseDto(
+                            200,
+                            "Package updated successfully",
+                            specialOffersService.addPackage(specialOffersDto,user.getId())
+                    )
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("/getAllOffers")
+    public ResponseEntity<ApiResponseDto> getAllOffers(Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Packages fetched successfully",
+                        specialOffersService.getAllOffers(user.getId())
+                )
+        );
+    }
+    @DeleteMapping("/deleteOffer/{offerId}")
+    public ResponseEntity<ApiResponseDto> deleteOffer(@PathVariable Long offerId, Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Image deleted successfully",
+                        specialOffersService.deleteOffer(offerId,user.getId())
+                )
+        );
+    }
+}

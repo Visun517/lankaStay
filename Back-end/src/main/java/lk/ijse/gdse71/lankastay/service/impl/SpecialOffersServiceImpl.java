@@ -71,7 +71,7 @@ public class SpecialOffersServiceImpl implements SpecialOfferService {
                         .valid_from(specialOffersDto.getValid_from())
                         .valid_until(specialOffersDto.getValid_until())
                         .description(specialOffersDto.getDescription())
-                        .imageUrl("http://localhost:8080/uploads/package-images/" + specialOffersDto.getImageUrl())
+                        .imageUrl("http://localhost:8080/uploads/special-offers-images/" + specialOffersDto.getImageUrl())
                         .build()
                 )
                 .collect(Collectors.toList());

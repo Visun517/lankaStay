@@ -50,26 +50,20 @@ public class Business {
 
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<HotelPackages> packages;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<SpecialOffer> specialOffers;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<Booking> bookings;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private List<BusinessImage> galleryImages;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private List<ClosedDate> closedDates;
 }

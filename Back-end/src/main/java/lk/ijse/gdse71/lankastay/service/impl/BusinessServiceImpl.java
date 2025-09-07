@@ -1,11 +1,7 @@
 package lk.ijse.gdse71.lankastay.service.impl;
 
 import lk.ijse.gdse71.lankastay.dto.BusinessDto;
-import lk.ijse.gdse71.lankastay.dto.ImageGalleryDto;
-import lk.ijse.gdse71.lankastay.dto.PackageDto;
 import lk.ijse.gdse71.lankastay.entity.Business;
-import lk.ijse.gdse71.lankastay.entity.BusinessImage;
-import lk.ijse.gdse71.lankastay.entity.HotelPackages;
 import lk.ijse.gdse71.lankastay.entity.User;
 import lk.ijse.gdse71.lankastay.repository.BusinessImageRepository;
 import lk.ijse.gdse71.lankastay.repository.BusinessRepository;
@@ -19,8 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -65,6 +59,17 @@ public class BusinessServiceImpl implements BusinessService {
        return businessDto;
     }
 
+    @Override
+    public Object getProfile(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
+
+        Business business = businessRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+
+
+        return "http://localhost:8080" + business.getImageUrl();
+    }
 
 
     @Override

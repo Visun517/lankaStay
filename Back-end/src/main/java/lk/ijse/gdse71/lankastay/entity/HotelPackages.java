@@ -44,7 +44,6 @@ public class HotelPackages {
     // Many HotelPackages -> One Business
     @ManyToOne
     @JoinColumn(name = "business_id")
-    @JsonManagedReference
     private Business business;
 
     // One HotelPackages -> Many Bookings

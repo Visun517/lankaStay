@@ -38,6 +38,5 @@ public class Review {
     // Many Reviews -> One Business
     @ManyToOne
     @JoinColumn(name = "business_id")
-    @JsonManagedReference
     private Business business;
 }
