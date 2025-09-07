@@ -4,6 +4,7 @@
 
 // Global variables for map components, accessible by all functions
 let map, marker, geocoder;
+let closedDateId;
 
 /**
  * Initializes the Google Map. This function is called by the Google Maps API
@@ -125,7 +126,7 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: `http://localhost:8080/business/deleteImage/${imageId}`,
+          url: `http://localhost:8080/images/deleteImage/${imageId}`,
           method: 'DELETE',
           headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
           success: function (response) {
@@ -165,7 +166,7 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: `http://localhost:8080/business/deletePackage/${packageId}`,
+          url: `http://localhost:8080/packages/deletePackage/${packageId}`,
           method: 'DELETE',
           headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
           success: function (response) {
@@ -205,7 +206,7 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: `http://localhost:8080/business/deleteOffer/${offerId}`,
+          url: `http://localhost:8080/packages/deleteOffer/${offerId}`,
           method: 'DELETE',
           headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
           success: function (response) {
@@ -223,6 +224,19 @@ $(document).ready(function () {
     });
   });
 
+  
+     $('#calendarDays').on('click', '.calendar-day', function () {
+        
+        const clickedDayElement = $(this);
+        
+        const dateKey = clickedDayElement.data('date');
+
+         closedDateId = clickedDayElement.data('id');
+
+        console.log("Date clicked:", dateKey);
+        console.log("Associated Closed Date ID:", closedDateId);
+      
+    });
 
 
 });
@@ -236,7 +250,7 @@ function getAllPackages() {
   console.log("Fetching all packages...");
 
   $.ajax({
-    url: 'http://localhost:8080/business/getAllPackages',
+    url: 'http://localhost:8080/packages/getAllPackages',
     method: 'GET',
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     success: function (response) {
@@ -343,7 +357,7 @@ function getAllPackages() {
           $('#packagesListContainer').append(packageCardHtml);
         });
 
-        $('#totalPackagesCount').text(packages.length);
+        $('#totalPackagesCount').text(activePackages.length);
 
       } else {
         console.error("Received data is not in the expected format.");
@@ -485,7 +499,7 @@ function setupPackageModalListeners() {
 function getImages() {
   console.log("Fetching gallery images...");
   $.ajax({
-    url: 'http://localhost:8080/business/getImages',
+    url: 'http://localhost:8080/images/getImages',
     method: 'GET',
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     success: (response) => {
@@ -705,7 +719,7 @@ function handleGalleryImageSave() {
   console.log("Saving gallery photo...");
   // TODO: Replace with your actual AJAX call
   $.ajax({
-    url: 'http://localhost:8080/business/imageGallery',
+    url: 'http://localhost:8080/images/imageGallery',
     method: 'POST',
     data: formData,
     processData: false,
@@ -767,7 +781,7 @@ function handlePackageSave() {
 
 
   $.ajax({
-    url: 'http://localhost:8080/business/addNewPackage',
+    url: 'http://localhost:8080/packages/addNewPackage',
     method: 'POST',
     data: formData,
     processData: false,
@@ -820,7 +834,7 @@ function handleSpecialOfferSave() {
   formData.append('image', offerImage);
 
   $.ajax({
-    url: 'http://localhost:8080/business/addSpecialOffer',
+    url: 'http://localhost:8080/packages/addSpecialOffer',
     method: 'POST',
     data: formData,
     processData: false,
@@ -847,7 +861,7 @@ function getAllSpecialOffers() {
   console.log("Fetching special offers...");
 
   $.ajax({
-    url: 'http://localhost:8080/business/getAllOffers',
+    url: 'http://localhost:8080/packages/getAllOffers',
     method: 'GET',
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     success: function (response) {
@@ -952,6 +966,8 @@ function getAllSpecialOffers() {
           $('#specialOffersContainer').append(offerCardHtml);
         });
 
+        $('#totalSpecialPackages').text(activeOffers.length);
+
       } else {
         console.error("Received data is not in the expected format.");
       }
@@ -976,8 +992,9 @@ let calendar_availabilityData = {};
 function initCalendar() {
   updateMonthDisplay();
   generateCalendar();
-  // updateSummary();
-}
+  updateSummary();
+
+  }
 
 function setupCalendarListeners() {
   $('#prevMonthBtn').on('click', () => {
@@ -1017,35 +1034,88 @@ function updateMonthDisplay() {
 }
 
 function generateCalendar() {
-  const calendarDays = $('#calendarDays');
-  calendarDays.empty();
+    const calendarDays = $('#calendarDays');
+    calendarDays.empty().append('<div class="col-span-7 text-center p-4">Loading Availability...</div>');
 
-  const firstDay = new Date(calendar_currentYear, calendar_currentMonth, 1);
-  const lastDay = new Date(calendar_currentYear, calendar_currentMonth + 1, 0).getDate();
-  const firstDayOfWeek = firstDay.getDay();
+    $.ajax({
+        url: `http://localhost:8080/calender/getAllDates?year=${calendar_currentYear}&month=${calendar_currentMonth + 1}`,
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+        success: function (response) {
+    if (!response.data || !Array.isArray(response.data)) {
+        console.error("Invalid data received for closed dates.");
+        calendarDays.html('<p class="col-span-7 text-red-500 text-center">Error: Invalid data format.</p>');
+        return;
+    }
 
-  for (let i = 0; i < firstDayOfWeek; i++) {
-    calendarDays.append('<div class="p-2"></div>');
-  }
+    const closedDatesMap = new Map();
+    response.data.forEach(item => {
+        if (item.date && item.id) {
+            closedDatesMap.set(item.date, item.id);
+        }
+    });
 
-  for (let day = 1; day <= lastDay; day++) {
-    const dateKey = `${calendar_currentYear}-${String(calendar_currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    const isOpen = calendar_availabilityData[dateKey] !== false;
-    const dayClass = isOpen ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
+    console.log("Closed dates map for this month:", closedDatesMap);
 
-    const dayElement = $(`<div class="p-3 text-center rounded-lg cursor-pointer transition hover:scale-105 ${dayClass}" data-date="${dateKey}">${day}</div>`);
-    calendarDays.append(dayElement);
-  }
+    calendarDays.empty(); // Clear "Loading..." message
+    
+    const firstDayOfMonth = new Date(calendar_currentYear, calendar_currentMonth, 1).getDay();
+    const daysInMonth = new Date(calendar_currentYear, calendar_currentMonth + 1, 0).getDate();
+
+
+    // Adjust for Monday start (assuming your calendar headers start with Monday)
+    const startOffset = (firstDayOfMonth === 0) ? 6 : firstDayOfMonth - 1;
+    
+
+    for (let i = 0; i < startOffset; i++) {
+        calendarDays.append('<div class="p-2"></div>');
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dateKey = `${calendar_currentYear}-${String(calendar_currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        
+        const isClosed = closedDatesMap.has(dateKey);
+        
+        const closedDateId = isClosed ? closedDatesMap.get(dateKey) : '';
+
+        const dayClass = isClosed ? 'bg-red-200 text-red-800' : 'bg-green-200 text-green-800';
+
+        const dayElement = $(`
+            <div class="calendar-day p-3 text-center rounded-lg cursor-pointer transition hover:scale-105 ${dayClass}" 
+                 data-date="${dateKey}"
+                 data-id="${closedDateId}">
+                ${day}
+            </div>
+        `);
+        calendarDays.append(dayElement);
+        $('#closedDaysCount').text(calendarDays.length);
+        
+    }
+
+    updateSummary();
+},
+        error: function (jqXHR) {
+            calendarDays.html('<p class="col-span-7 text-red-500 text-center">Could not load availability.</p>');
+        }
+    });
 }
 
-// ... (Your other calendar helper functions: showDateConfirmationModal, updateSummary, etc.)
 let selectedDateKey = null;
 let selectedDayElement = null;
+
 
 function showDateConfirmationModal(dateKey, dayElement) {
   selectedDateKey = dateKey;
   selectedDayElement = dayElement;
-  // ... logic to update and show the modal
+
+  const date = new Date(dateKey);
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  $('#selectedDateDisplay').text(date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+  $('#selectedDayDisplay').text(date.toLocaleDateString('en-US', { weekday: 'long' }));
+
+
+
+  console.log("Show date confirmation modal for date:", dateKey);
   $('#dateConfirmationModal').removeClass('hidden');
 }
 
@@ -1056,7 +1126,78 @@ function closeDateConfirmationModal() {
 function confirmDateStatusChange() {
   if (!selectedDateKey) return;
   const selectedStatus = $('input[name="dateStatus"]:checked').val();
-  calendar_availabilityData[selectedDateKey] = (selectedStatus === 'open');
-  initCalendar(); // Regenerate calendar to reflect changes
+  console.log(selectedStatus);
+
+
+  if (selectedStatus === 'closed') {
+
+    
+  const formData = new FormData();
+  formData.append('date', selectedDateKey);
+
+    $.ajax({
+      url: 'http://localhost:8080/calender/addClosedDate',
+      method: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+      success: function (response) {
+        console.log("Special offer saved successfully!" + response);
+        // getClosedDates();
+        Swal.fire("Success!", "Successfully to add close date offer.", "success");
+      },
+      error: function (jqXHR) {
+        Swal.fire("Error!", "Failed to add close date offer.", "error");
+      }
+    });
+
+  } 
+  
+  if (selectedStatus === 'open') {
+
+    console.log("Show date confirmation modal for date:", closedDateId);
+
+      const formData = new FormData();
+      formData.append('date', selectedDateKey);
+
+
+        $.ajax({
+          url: `http://localhost:8080/calender/removeClosedDate/${closedDateId}`,
+          method: 'DELETE',
+          data: formData,
+          processData: false,
+          contentType: false,
+          headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+          success: function (response) {
+            
+            console.log("Special offer saved successfully!" + response);
+            initCalendar();
+            Swal.fire("Success!", "Successfully to delete close date .", "success");
+          },
+          error: function (jqXHR) {
+            Swal.fire("Error!", "Failed to delete close date .", "error");
+          }
+        });
+  }
+
+
+  initCalendar();
   closeDateConfirmationModal();
 }
+
+
+function updateSummary() {
+    const totalDays = new Date(calendar_currentYear, calendar_currentMonth + 1, 0).getDate();
+
+    const closedCount = $('#calendarDays .bg-red-200').length;
+
+    const openCount = totalDays - closedCount;
+
+    $('#openDaysCount').text(openCount);
+    $('#closedDaysCount').text(closedCount);
+    $('#totalDaysCount').text(totalDays);
+    
+    console.log(`Summary Updated: Total=${totalDays}, Open=${openCount}, Closed=${closedCount}`);
+}
+

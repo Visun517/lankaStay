@@ -85,8 +85,7 @@
   <div class="relative w-full max-w-5xl mx-auto mt-6 mb-8">
     <!-- Cover Image with shadow at bottom -->
     <div class="relative h-56 sm:h-64 rounded-xl overflow-hidden shadow">
-      <img 
-        id="profileImagePreview" alt="Hotel profile" class="w-full h-full object-cover" />
+      <img id="profileImagePreview" alt="Hotel profile" class="w-full h-full object-cover" />
       <!-- Gradient shadow at bottom -->
       <div
         class="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-black/30 to-transparent pointer-events-none">
@@ -202,22 +201,24 @@
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-200">
         <div class="flex items-center gap-6 text-sm text-gray-600">
           <span id="imageCount" class="flex items-center gap-2">
-           <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
 
             <div>
-                <span id="photoCount" class="font-semibold">0</span> 
-                <span>Photos</span>
+              <span id="photoCount" class="font-semibold">0</span>
+              <span>Photos</span>
             </div>
 
-          <span class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Gallery Active
-          </span>
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" stroke-width="2"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Gallery Active
+            </span>
         </div>
         <div class="flex gap-3">
           <button id="refreshBtn"
@@ -336,29 +337,29 @@
 
         <!-- Special Offers Grid -->
         <div id="specialOffersContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-         
+
         </div>
       </div>
 
       <!-- Packages Grid -->
       <div id="packagesListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-  
-           
+
+
       </div>
 
       <!-- Package Stats -->
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-gray-200">
         <div class="flex items-center gap-6 text-sm text-gray-600">
-          <span  class="flex items-center gap-2">
+          <span class="flex items-center gap-2">
             <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
             </svg>
-            
 
-              <div>
-                <span id="totalPackagesCount" class="font-semibold">0</span> 
-                <span>Packages</span>
+
+            <div>
+              <span id="totalPackagesCount" class="font-semibold">0</span>
+              <span>Packages</span>
             </div>
 
           </span>
@@ -373,7 +374,13 @@
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
             </svg>
-            2 Special Offers
+
+
+            <div>
+              <span id="totalSpecialPackages" class="font-semibold">0</span>
+              <span>Special Offers</span>
+            </div>
+
           </span>
         </div>
       </div>
@@ -402,7 +409,7 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
           </div>
 
-        
+
 
           <!-- Availability Dates -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -649,37 +656,6 @@
         </div>
       </div>
 
-      <!-- Quick Actions -->
-      <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
-        <button id="setAllOpenBtn"
-          class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-medium flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Set All Open
-        </button>
-        <button id="setAllClosedBtn"
-          class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-medium flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-          Set All Closed
-        </button>
-        <button id="setWeekendsClosedBtn"
-          class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition font-medium flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Close Weekends
-        </button>
-        <button id="saveAvailabilityBtn"
-          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
-          Save Changes
-        </button>
-      </div>
     </section>
 
     <!-- Date Confirmation Modal -->
@@ -738,7 +714,7 @@
             </div>
           </div>
         </div>
-
+        
         <!-- Modal Footer -->
         <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200">
           <button id="cancelDateBtn"
