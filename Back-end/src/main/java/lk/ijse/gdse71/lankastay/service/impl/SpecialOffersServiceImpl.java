@@ -71,7 +71,7 @@ public class SpecialOffersServiceImpl implements SpecialOfferService {
                         .valid_from(specialOffersDto.getValid_from())
                         .valid_until(specialOffersDto.getValid_until())
                         .description(specialOffersDto.getDescription())
-                        .imageUrl("http://localhost:8080/uploads/special-offers-images/" + specialOffersDto.getImageUrl())
+                        .imageUrl(specialOffersDto.getImageUrl())
                         .build()
                 )
                 .collect(Collectors.toList());
@@ -80,7 +80,7 @@ public class SpecialOffersServiceImpl implements SpecialOfferService {
     }
 
     @Override
-    public Object deleteOffer(Long offerId, Long id) {
+    public Object deleteOffer(Long offerId, Long id) throws IOException {
         Business business = businessRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
 
@@ -90,7 +90,7 @@ public class SpecialOffersServiceImpl implements SpecialOfferService {
         if (!specialOffer.getBusiness().getId().equals(business.getId())) {
             throw new RuntimeException("Unauthorized to delete this special offer");
         }
-
+        fileStorageService.deleteFile(specialOffer.getImageUrl(), "business-gallery");
         specialOfferRepository.delete(specialOffer);
 
         return "Special offer deleted successfully";

@@ -8,5 +8,5 @@ import java.util.List;
 public interface SpecialOfferService {
     Object addPackage(SpecialOffersDto specialOffersDto, Long id) throws IOException;
     List<SpecialOffersDto> getAllOffers(Long id);
-    Object deleteOffer(Long offerId, Long id);
+    Object deleteOffer(Long offerId, Long id) throws IOException;
 }

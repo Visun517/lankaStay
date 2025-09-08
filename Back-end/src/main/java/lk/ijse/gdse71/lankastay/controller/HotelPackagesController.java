@@ -61,13 +61,17 @@ public class HotelPackagesController {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(
-                new ApiResponseDto(
-                        200,
-                        "Business deleted successfully",
-                        hotelPackageService.deletePackage(packageId,user.getId())
-                )
-        );
+        try {
+            return ResponseEntity.ok(
+                    new ApiResponseDto(
+                            200,
+                            "Business deleted successfully",
+                            hotelPackageService.deletePackage(packageId,user.getId())
+                    )
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PostMapping("/addSpecialOffer")
@@ -109,12 +113,16 @@ public class HotelPackagesController {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(
-                new ApiResponseDto(
-                        200,
-                        "Image deleted successfully",
-                        specialOffersService.deleteOffer(offerId,user.getId())
-                )
-        );
+        try {
+            return ResponseEntity.ok(
+                    new ApiResponseDto(
+                            200,
+                            "Image deleted successfully",
+                            specialOffersService.deleteOffer(offerId,user.getId())
+                    )
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

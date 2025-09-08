@@ -34,6 +34,7 @@ public class HotelPackageServiceImpl implements HotelPackageService {
 
         String imageUrl = fileStorageService.saveFile(packageDto.getImage(), "package-images");
 
+
         HotelPackages hotelPackages = HotelPackages.builder()
                 .packageName(packageDto.getPackageName())
                 .description(packageDto.getDescription())
@@ -68,7 +69,7 @@ public class HotelPackageServiceImpl implements HotelPackageService {
                         .availability_start(packageDto.getAvailability_start())
                         .availability_end(packageDto.getAvailability_end())
                         .meal_inclusion(packageDto.getMeal_inclusion())
-                        .imageUrl("http://localhost:8080/uploads/package-images/" + packageDto.getImageUrl())
+                        .imageUrl(packageDto.getImageUrl())
                         .build()
                 )
                 .collect(Collectors.toList());
@@ -76,13 +77,14 @@ public class HotelPackageServiceImpl implements HotelPackageService {
     }
 
     @Override
-    public Object deletePackage(Long packageId, Long id) {
+    public Object deletePackage(Long packageId, Long id) throws IOException {
         Business business = businessRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
 
         HotelPackages hotelPackages = packageRepository.findById(packageId)
                 .orElseThrow(() -> new RuntimeException("Package not found with id: " + packageId + " for business id: " + business.getId()));
 
+        fileStorageService.deleteFile(hotelPackages.getImageUrl(), "package-images");
         packageRepository.delete(hotelPackages);
 
         return "Business deleted successfully";

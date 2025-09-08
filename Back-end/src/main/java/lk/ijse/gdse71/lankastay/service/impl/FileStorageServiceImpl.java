@@ -2,77 +2,57 @@ package lk.ijse.gdse71.lankastay.service.impl;
 
 import lk.ijse.gdse71.lankastay.service.FileStorageService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.UUID;
+import java.util.Map;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
 
-    private final Path rootStorageLocation;
+    @Value("${imgbb.api.key}")
+    private String imgbbApiKey;
 
-    public FileStorageServiceImpl(@Value("${file.storage.location}") String storagePath) {
-        this.rootStorageLocation = Paths.get(storagePath);
-        try {
-            Files.createDirectories(this.rootStorageLocation);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not initialize root storage location", e);
-        }
-    }
-
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
     public String saveFile(MultipartFile file, String subDirectory) throws IOException {
-        if (file.isEmpty()) {
-            throw new RuntimeException("Failed to store empty file.");
+        String url = "https://api.imgbb.com/1/upload?key=" + imgbbApiKey;
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("image", file.getResource()); // MultipartFile → Resource
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Map.class);
+
+        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+            Map data = (Map) response.getBody().get("data");
+            return (String) data.get("url"); // ✅ hosted image URL
+        } else {
+            throw new RuntimeException("Failed to upload image to imgbb");
         }
-
-        Path targetDirectory = this.rootStorageLocation.resolve(subDirectory);
-        Files.createDirectories(targetDirectory);
-
-        String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
-        String fileExtension = "";
-        try {
-            fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        } catch (Exception e) {
-            // No extension
-        }
-        String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
-
-        Path destinationFile = targetDirectory.resolve(uniqueFilename);
-        Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
-
-        return uniqueFilename;
     }
 
     @Override
-    public Resource loadFile(String filename, String subDirectory) {
-        try {
-            Path file = this.rootStorageLocation.resolve(subDirectory).resolve(filename);
-            Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            } else {
-                throw new RuntimeException("Could not read the file: " + filename);
-            }
-        } catch (MalformedURLException e) {
-            throw new RuntimeException("Error: " + e.getMessage());
-        }
+    public org.springframework.core.io.Resource loadFile(String filename, String subDirectory) {
+        // ❌ Not needed for imgbb
+        // ✅ You can just return the URL string saved in DB
+        throw new UnsupportedOperationException("Use URL from DB for imgbb");
     }
 
     @Override
     public void deleteFile(String filename, String subDirectory) throws IOException {
-        Path file = this.rootStorageLocation.resolve(subDirectory).resolve(filename);
-        Files.deleteIfExists(file);
+        // imgbb response එකේ "delete_url" DB එකේ save කරගන්න
+        // Then call that delete_url directly:
+        restTemplate.getForEntity(filename, String.class);
     }
 }

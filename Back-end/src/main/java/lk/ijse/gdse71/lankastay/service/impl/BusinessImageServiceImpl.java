@@ -32,12 +32,10 @@ public class BusinessImageServiceImpl implements BusinessImageService {
         Business business = businessRepository.findById(user.getId())
                 .orElseThrow(() -> new RuntimeException("Business not found with id: " + user.getId()));
 
-        String uniqueFilename = fileStorageService.saveFile(imageGalleryDto.getImage(), "business-gallery");
-
-        String fileUrlPath = "/uploads/business-gallery/" + uniqueFilename;
+        String imageUrl = fileStorageService.saveFile(imageGalleryDto.getImage(), "business-gallery");
 
         BusinessImage galleryImage = BusinessImage.builder()
-                .imageUrl(fileUrlPath)
+                .imageUrl(imageUrl)
                 .business(business)
                 .description(imageGalleryDto.getTitle())
                 .subtitle(imageGalleryDto.getSubtitle())
@@ -45,7 +43,7 @@ public class BusinessImageServiceImpl implements BusinessImageService {
 
         businessImageRepository.save(galleryImage);
 
-        return "http://localhost:8080" + fileUrlPath;
+        return imageUrl;
     }
 
     @Override
@@ -62,7 +60,7 @@ public class BusinessImageServiceImpl implements BusinessImageService {
         return images.stream()
                 .map(image -> ImageGalleryDto.builder()
                         .id(image.getId())
-                        .imageUrl("http://localhost:8080" + image.getImageUrl())
+                        .imageUrl(image.getImageUrl())
                         .title(image.getDescription())
                         .subtitle(image.getSubtitle())
                         .build()
@@ -79,9 +77,8 @@ public class BusinessImageServiceImpl implements BusinessImageService {
         if (!image.getBusiness().getId().equals(id)) {
             throw new RuntimeException("You are not authorized to delete this image");
         }
-
+        fileStorageService.deleteFile(image.getImageUrl(), "business-gallery");
         businessImageRepository.delete(image);
-        fileStorageService.deleteFile(image.getImageUrl() , "business-gallery");
 
         return "Image deleted successfully";
     }

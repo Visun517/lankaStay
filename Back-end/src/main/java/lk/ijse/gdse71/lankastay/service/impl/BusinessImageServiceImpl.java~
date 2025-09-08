@@ -32,12 +32,10 @@ public class BusinessImageServiceImpl implements BusinessImageService {
         Business business = businessRepository.findById(user.getId())
                 .orElseThrow(() -> new RuntimeException("Business not found with id: " + user.getId()));
 
-        String uniqueFilename = fileStorageService.saveFile(imageGalleryDto.getImage(), "business-gallery");
-
-        String fileUrlPath = "/uploads/business-gallery/" + uniqueFilename;
+        String imageUrl = fileStorageService.saveFile(imageGalleryDto.getImage(), "business-gallery");
 
         BusinessImage galleryImage = BusinessImage.builder()
-                .imageUrl(fileUrlPath)
+                .imageUrl(imageUrl)
                 .business(business)
                 .description(imageGalleryDto.getTitle())
                 .subtitle(imageGalleryDto.getSubtitle())
@@ -45,7 +43,7 @@ public class BusinessImageServiceImpl implements BusinessImageService {
 
         businessImageRepository.save(galleryImage);
 
-        return "http://localhost:8080" + fileUrlPath;
+        return imageUrl;
     }
 
     @Override
@@ -59,14 +57,16 @@ public class BusinessImageServiceImpl implements BusinessImageService {
 
         List<BusinessImage> images = businessImageRepository.findAllByBusinessId(business.getId());
 
-        return images.stream().map(image -> {
-            ImageGalleryDto dto = new ImageGalleryDto();
-            dto.setImageUrl("http://localhost:8080" + image.getImageUrl());
-            dto.setTitle(image.getDescription());
-            dto.setSubtitle(image.getSubtitle());
-            dto.setId(image.getId());
-            return dto;
-        }).toList();
+        return images.stream()
+                .map(image -> ImageGalleryDto.builder()
+                        .id(image.getId())
+                        .imageUrl(image.getImageUrl())
+                        .title(image.getDescription())
+                        .subtitle(image.getSubtitle())
+                        .build()
+                )
+                .toList();
+
     }
 
     @Override

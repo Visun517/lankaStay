@@ -38,13 +38,11 @@ public class BusinessServiceImpl implements BusinessService {
         Business business = businessRepository.findById(user.getId())
                 .orElseThrow(() -> new RuntimeException("Business not found with id: " + user.getId()));
 
-
-        String uniqueFilename = fileStorageService.saveFile(file, "business-profiles");
-        String fileUrlPath = "/uploads/business-profiles/" + uniqueFilename;
-        business.setImageUrl(fileUrlPath);
+        String imageUrl = fileStorageService.saveFile(file, "business-profiles");
+        business.setImageUrl(imageUrl);
         businessRepository.save(business);
 
-        return "http://localhost:8080" + fileUrlPath;
+        return imageUrl;
     }
 
     public BusinessDto getBusinessDetails(Long id) {
@@ -68,7 +66,7 @@ public class BusinessServiceImpl implements BusinessService {
                 .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
 
 
-        return "http://localhost:8080" + business.getImageUrl();
+        return business.getImageUrl();
     }
 
 

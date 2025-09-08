@@ -8,5 +8,5 @@ import java.util.List;
 public interface HotelPackageService {
     String addPackage(PackageDto packageDto, Long userId) throws IOException;
     List<PackageDto> getAllPackages(Long id);
-    Object deletePackage(Long packageId, Long id);
+    Object deletePackage(Long packageId, Long id) throws IOException;
 }
