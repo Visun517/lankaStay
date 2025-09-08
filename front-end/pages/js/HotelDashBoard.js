@@ -2,7 +2,6 @@
 // --- 1. GLOBAL SCOPE: MAP INITIALIZATION & HELPER FUNCTIONS ---
 // =================================================================
 
-// Global variables for map components, accessible by all functions
 let map, marker, geocoder;
 let closedDateId;
 
@@ -19,7 +18,7 @@ function initMap() {
     return;
   }
 
-  const defaultLocation = { lat: 6.9271, lng: 79.8612 }; // Colombo
+  const defaultLocation = { lat: 6.9271, lng: 79.8612 }; 
 
   map = new google.maps.Map(mapElement, {
     center: defaultLocation,
@@ -100,6 +99,15 @@ $(document).ready(function () {
   getUserinfo();
   getAllPackages();
   getAllSpecialOffers();
+  validateAndLoadDashboard();
+
+  setInterval(validateAndLoadDashboard, 10000);
+
+
+  $('#logoutButton').click(function () {
+    localStorage.removeItem('token');
+    window.location.href = '../Login.html';
+  });
 
 
 
@@ -132,8 +140,7 @@ $(document).ready(function () {
           success: function (response) {
             Swal.fire('Deleted!', 'The photo has been successfully removed.', 'success');
 
-            // Gallery එක refresh කරනවා
-            getImages(); // <--- 4. නිවැරදි function නම call කරනවා
+            getImages(); 
           },
           error: function (jqXHR) {
             console.error("Failed to delete image:", jqXHR.responseText);
@@ -241,7 +248,41 @@ $(document).ready(function () {
 
 });
 
+function validateAndLoadDashboard() {
+    let token = localStorage.getItem('token');
 
+    if (!token) {
+         window.location.href = '../Login.html';
+        return;
+    }
+
+    const tokenParts = token.split('.');
+
+    if (tokenParts.length !== 3) {
+         window.location.href = '../Login.html';
+        return;
+    }
+
+    try {
+        const tokenPayload = JSON.parse(atob(tokenParts[1]));
+
+        const currentTimestamp = Math.floor(Date.now() / 1000);
+        console.log("Current timestamp:", currentTimestamp);
+        console.log("Token expiration timestamp:", tokenPayload.exp);
+
+        if (tokenPayload.exp && currentTimestamp >= tokenPayload.exp) {
+            alert('Session expired. Please login again.');
+             localStorage.removeItem('token');
+            window.location.href = '../Login.html';
+            return;
+        }
+
+
+    } catch (error) { 
+        console.error('Invalid token:', error);
+        window.location.href = '../Login.html';
+    }
+}
 /**
  * Fetches packages from the backend and dynamically renders them in the packages grid.
  */
@@ -418,7 +459,6 @@ function setupGalleryModalListeners() {
   const imagePreviewContainer = $('#imagePreview');
   const imageUploadArea = $('#imageUploadArea');
 
-  // --- Helper functions with UNIQUE names for the Gallery ---
 
   const openGalleryModal = () => {
     addPhotoModal.removeClass('hidden');
@@ -448,7 +488,6 @@ function setupGalleryModalListeners() {
     }
   };
 
-  // --- Event listeners now call the UNIQUE functions ---
   $('#addPhotoBtn').on('click', openGalleryModal);
   $('#closeModal, #cancelBtn').on('click', closeGalleryModal);
   addPhotoModal.on('click', (e) => { if ($(e.target).is(addPhotoModal)) closeGalleryModal(); });
@@ -468,7 +507,6 @@ function setupGalleryModalListeners() {
 function setupPackageModalListeners() {
   const packageModal = $('#addPackageModal');
 
-  // --- Helper functions with UNIQUE names for Packages ---
   const openPackageModal = () => {
     packageModal.removeClass('hidden');
     $('body').css('overflow', 'hidden');
@@ -477,10 +515,8 @@ function setupPackageModalListeners() {
   const closePackageModal = () => {
     packageModal.addClass('hidden');
     $('body').css('overflow', 'auto');
-    // TODO: Reset package form fields here
   };
 
-  // --- Event listeners now call the UNIQUE functions ---
   $('#addPackageBtn').on('click', openPackageModal);
   $('#closePackageModal, #cancelPackageBtn').on('click', closePackageModal);
   packageModal.on('click', (e) => { if ($(e.target).is(packageModal)) closePackageModal(); });
@@ -560,7 +596,6 @@ function getImages() {
 function setupSpecialOfferModalListeners() {
   const offerModal = $('#addSpecialOfferModal');
 
-  // --- Helper functions with UNIQUE names for Offers ---
   const openOfferModal = () => {
     offerModal.removeClass('hidden');
     $('body').css('overflow', 'hidden');
@@ -569,7 +604,6 @@ function setupSpecialOfferModalListeners() {
   const closeOfferModal = () => {
     offerModal.addClass('hidden');
     $('body').css('overflow', 'auto');
-    // TODO: Reset special offer form fields here
   };
 
   // --- Event listeners now call the UNIQUE functions ---
@@ -598,7 +632,6 @@ function getUserinfo() {
       console.log("User info received successfully:", response.data);
       const businessData = response.data;
 
-      // Populate form fields
       $('#businessName').val(businessData.businessName || '');
       $('#contactNumber').val(businessData.phoneNumber || '');
       $('#description').val(businessData.description || '');
@@ -607,12 +640,10 @@ function getUserinfo() {
       $('#address').val(businessData.address || '');
       $('#district').val(businessData.district || '');
 
-      // Update the map with the fetched location
       if (businessData.latitude && businessData.longitude) {
         updateMapLocation(businessData.latitude, businessData.longitude);
       }
 
-      // Check for incomplete profile
       let incompleteFields = [];
       if (!businessData.businessName) incompleteFields.push("Business Name");
       if (!businessData.phoneNumber) incompleteFields.push("Contact Number");
@@ -717,7 +748,6 @@ function handleGalleryImageSave() {
   formData.append('subtitle', subtitle);
 
   console.log("Saving gallery photo...");
-  // TODO: Replace with your actual AJAX call
   $.ajax({
     url: 'http://localhost:8080/images/imageGallery',
     method: 'POST',
@@ -726,7 +756,7 @@ function handleGalleryImageSave() {
     contentType: false,
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     success: function (response) {
-      $('#closeModal').click(); // Close the modal
+      $('#closeModal').click(); 
       Swal.fire("Success!", "Image added to gallery.", "success");
     },
     error: function (jqXHR) {
@@ -741,8 +771,6 @@ function handleGalleryImageSave() {
  * Handles saving a new package.
  */
 function handlePackageSave() {
-  // Collect all data from the package form and validate
-  // ...
   console.log("Saving package...");
 
   let packageName = $('#packageName').val().trim();
@@ -885,30 +913,25 @@ function getAllSpecialOffers() {
           console.log("No active special offers found.");
         }
 
-        // Color palette for Special Offer cards, inspired by the "Honeymoon Special" card
         const offerColorPalette = [
-          // Warm Orange (Screenshot එකට සමානම වර්ණය)
           {
             bg: 'bg-gradient-to-br from-orange-50 to-red-50',
             border: 'border-orange-200 hover:border-orange-300',
             text: 'text-orange-600',
             iconBg: 'bg-orange-500'
           },
-          // Sunny Amber/Yellow
           {
             bg: 'bg-gradient-to-br from-amber-50 to-yellow-100',
             border: 'border-yellow-200 hover:border-yellow-300',
             text: 'text-yellow-600',
             iconBg: 'bg-yellow-500'
           },
-          // Soft Rose/Pink
           {
             bg: 'bg-gradient-to-br from-rose-50 to-pink-100',
             border: 'border-pink-200 hover:border-pink-300',
             text: 'text-pink-600',
             iconBg: 'bg-pink-500'
           },
-          // Light Red
           {
             bg: 'bg-gradient-to-br from-red-50 to-red-100',
             border: 'border-red-200 hover:border-red-300',
@@ -1057,13 +1080,12 @@ function generateCalendar() {
 
     console.log("Closed dates map for this month:", closedDatesMap);
 
-    calendarDays.empty(); // Clear "Loading..." message
+    calendarDays.empty(); 
     
     const firstDayOfMonth = new Date(calendar_currentYear, calendar_currentMonth, 1).getDay();
     const daysInMonth = new Date(calendar_currentYear, calendar_currentMonth + 1, 0).getDate();
 
 
-    // Adjust for Monday start (assuming your calendar headers start with Monday)
     const startOffset = (firstDayOfMonth === 0) ? 6 : firstDayOfMonth - 1;
     
 
