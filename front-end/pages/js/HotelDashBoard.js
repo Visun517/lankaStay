@@ -4,6 +4,9 @@
 
 let map, marker, geocoder;
 let closedDateId;
+// Global variables for map listeners
+let mapClickListener = null;
+let markerDragListener = null;
 
 /**
  * Initializes the Google Map. This function is called by the Google Maps API
@@ -18,11 +21,15 @@ function initMap() {
     return;
   }
 
-  const defaultLocation = { lat: 6.9271, lng: 79.8612 }; 
+  const defaultLocation = { lat: 6.9271, lng: 79.8612 }; // Colombo
 
   map = new google.maps.Map(mapElement, {
     center: defaultLocation,
     zoom: 8,
+    draggable: true,
+    clickableIcons: true,
+    scrollwheel: true,
+    disableDoubleClickZoom: false
   });
 
   marker = new google.maps.Marker({
@@ -33,8 +40,8 @@ function initMap() {
 
   geocoder = new google.maps.Geocoder();
 
-  google.maps.event.addListener(marker, 'dragend', () => updateLocationUI(marker.getPosition()));
-  google.maps.event.addListener(map, 'click', (event) => updateLocationUI(event.latLng));
+  markerDragListener = google.maps.event.addListener(marker, 'dragend', () => updateLocationUI(marker.getPosition()));
+  mapClickListener = google.maps.event.addListener(map, 'click', (event) => updateLocationUI(event.latLng));
 }
 
 /**
@@ -69,15 +76,6 @@ function updateLocationUI(latLng) {
 
   $('#latitude').val(latLng.lat().toFixed(6));
   $('#longitude').val(latLng.lng().toFixed(6));
-
-  geocoder.geocode({ location: latLng }, (results, status) => {
-    if (status === "OK" && results[0]) {
-      $('#address').val(results[0].formatted_address);
-    } else {
-      console.warn("Reverse geocode failed with status:", status);
-      $('#address').val("Could not determine address.");
-    }
-  });
 }
 
 
@@ -382,7 +380,7 @@ function getAllPackages() {
                 <div class="mt-5 pt-4 border-t border-gray-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <div class="text-2xl font-bold text-gray-800">$${pkg.price}</div>
+                            <div class="text-2xl font-bold text-gray-800">Rs ${pkg.price}</div>
                             <span class="text-sm text-gray-500">per night</span>
                         </div>
                         <div class="flex items-center gap-2 text-sm font-medium text-green-600 bg-green-100 px-3 py-1 rounded-full">
@@ -442,6 +440,31 @@ function setupProfileEventListeners() {
     isEditMode = !isEditMode;
     profileFields.prop('readonly', !isEditMode);
     submitProfileBtn.toggle(isEditMode);
+
+    if (map && marker) {
+      if (!isEditMode) { // Changed from isEditMode to !isEditMode
+        map.setOptions({ draggable: false, clickableIcons: false, scrollwheel: false, disableDoubleClickZoom: true });
+        marker.setDraggable(false);
+        if (mapClickListener) {
+          google.maps.event.removeListener(mapClickListener);
+          mapClickListener = null;
+        }
+        if (markerDragListener) {
+          google.maps.event.removeListener(markerDragListener);
+          markerDragListener = null;
+        }
+      } else {
+        map.setOptions({ draggable: true, clickableIcons: true, scrollwheel: true, disableDoubleClickZoom: false });
+        marker.setDraggable(true);
+        if (!mapClickListener) {
+          mapClickListener = google.maps.event.addListener(map, 'click', (event) => updateLocationUI(event.latLng));
+        }
+        if (!markerDragListener) {
+          markerDragListener = google.maps.event.addListener(marker, 'dragend', () => updateLocationUI(marker.getPosition()));
+        }
+      }
+    }
+
     if (isEditMode) {
       editProfileBtn.text('Cancel Edit').removeClass('bg-purple-200').addClass('bg-red-200 text-red-700');
     } else {

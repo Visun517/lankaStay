@@ -82,3 +82,19 @@ function formClear() {
     $('#email').val(''); 
     $('#password').val(''); 
 }
+
+// Toggle password visibility
+$('#togglePassword').on('click', function() {
+    const passwordField = $('#password');
+    const passwordFieldType = passwordField.attr('type');
+    const toggleIcon = $(this).find('svg');
+
+    if (passwordFieldType === 'password') {
+        passwordField.attr('type', 'text');
+        toggleIcon.html('<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12c0 1.657-1.414 3-3 3s-3-1.343-3-3 1.414-3 3-3 3 1.343 3 3zm6 0c0 4.418-4.03 8-9 8s-9-3.582-9-8 4.03-8 9-8 9 3.582 9 8z" />');
+    } else {
+        passwordField.attr('type', 'password');
+        // Replacing the complex eye-slash with a simpler, clearer one
+        toggleIcon.html('<path fill-rule="evenodd" d="M3.987 2.147a.75.75 0 00-1.06 1.06l16.5 16.5a.75.75 0 101.06-1.06l-16.5-16.5zM12 9a3 3 0 100 6 3 3 0 000-6z" clip-rule="evenodd" />');
+    }
+});

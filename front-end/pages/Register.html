@@ -9,6 +9,10 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
+    .bg-pattern {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zm0 30V30h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 46v-4H4v4H0v2h4v4h2v-4h4v-2H6zm0-30V0H4v4H0v2h4v4h2V6h4V4H6zm0 30V30H4v4H0v2h4v4h2v-4h4v-2H6zm0-30V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
     ::-webkit-scrollbar {
       width: 8px;
     }
@@ -28,35 +32,39 @@
   </style>
 </head>
 
-<body>
-  <div class="min-h-screen flex flex-col lg:flex-row" id="mainContainer">
+<body class="bg-gray-100 font-sans antialiased">
+  <div class="min-h-screen flex items-center justify-center p-4 lg:p-0">
     <!-- Left Section - Banner -->
-    <div class="lg:w-1/2 w-full h-auto lg:min-h-screen mt-6 lg:mt-10 ml-4 lg:ml-20 mb-6 relative" id="bannerSection">
-      <img src="https://images.pexels.com/photos/1047051/pexels-photo-1047051.jpeg" alt="LankaStay Banner"
-        class="object-cover w-full h-full" />
+    <div
+      class="hidden lg:flex flex-col items-center justify-center lg:w-[400px] h-[700px] bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-l-xl shadow-lg p-8 relative overflow-hidden">
+      <img src="https://images.pexels.com/photos/31154120/pexels-photo-31154120.jpeg" alt="LankaStay Banner"
+        class="w-full h-full object-cover absolute inset-0" />
       <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-        <div class="text-center text-white">
-          <h1 class="text-4xl lg:text-5xl font-bold mb-4">Join LankaStay</h1>
-          <p class="text-lg lg:text-xl">Create your account and start exploring Sri Lanka</p>
+        <div class="text-center text-white p-6">
+          <h1 class="text-5xl font-extrabold mb-4 drop-shadow-md">Join LankaStay</h1>
+          <p class="text-xl font-light leading-relaxed">Create your account and start exploring Sri Lanka</p>
         </div>
       </div>
+      <!-- Background pattern for visual interest -->
+      <div class="absolute inset-0 bg-pattern opacity-10 z-0"></div>
     </div>
 
     <!-- Right Section - Register Form -->
-    <div class="lg:w-1/2 w-full flex items-start justify-center bg-gray-50 p-6" id="formSection">
-      <div class="w-full max-w-md py-8 h-auto" id="formWrapper">
-        <div class="text-center mb-8">
-          <h2 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
-          <p class="text-gray-600">Join LankaStay and start your journey</p>
+    <div
+      class="w-full lg:w-1/2 bg-white p-8 sm:p-12 lg:p-16 rounded-xl lg:rounded-l-none shadow-lg max-w-lg lg:max-w-none h-[700px] flex flex-col overflow-y-auto">
+      <div class="w-full max-w-md mx-auto flex-grow">
+        <div class="text-center mb-10">
+          <h2 class="text-4xl font-extrabold text-gray-900 mb-3">Create Account</h2>
+          <p class="text-gray-600 text-lg">Join LankaStay and start your journey</p>
         </div>
 
-        <form id="signupForm" class="space-y-6">
+        <form id="signupForm" class="space-y-7">
           <div>
             <label for="accountType" class="block text-sm font-medium text-gray-700 mb-2">
               Account Type
             </label>
             <select id="accountType" name="accountType" required
-              class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors border-gray-300"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-800"
               aria-label="Select account type">
               <option value="">Select account type</option>
               <option value="tourist">Tourist</option>
@@ -71,7 +79,7 @@
                   Business Type
                 </label>
                 <select id="businessType" name="businessType"
-                  class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors border-gray-300"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-800"
                   aria-label="Select business type">
                   <option value="">Select business type</option>
                   <option value="hotel">HOTEL</option>
@@ -91,7 +99,7 @@
                 Contact Number
               </label>
               <input type="tel" id="contact" name="contact"
-                class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors border-gray-300"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-800"
                 placeholder="Enter business contact number" aria-label="Enter business contact number" />
             </div>
           </div>
@@ -101,7 +109,7 @@
               User Name / Full Name
             </label>
             <input type="text" id="userName" name="userName" required
-              class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors border-gray-300"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-800"
               placeholder="Enter your name" aria-label="Enter your name" />
           </div>
           <div>
@@ -109,7 +117,7 @@
               Email
             </label>
             <input type="email" id="email" name="businessEmail"
-              class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors border-gray-300"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-800"
               placeholder="Enter business email (optional)" aria-label="Enter business email" />
           </div>
           <div>
@@ -118,7 +126,7 @@
             </label>
             <div class="relative">
               <input type="password" id="password" name="password" required
-                class="w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors border-gray-300"
+                class="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-800"
                 placeholder="Create a password" aria-label="Create a password" />
               <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center"
                 aria-label="Toggle password visibility">
@@ -144,7 +152,7 @@
             </label>
             <div class="relative">
               <input type="password" id="confirmPassword" name="confirmPassword" required
-                class="w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors border-gray-300"
+                class="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-800"
                 placeholder="Confirm your password" aria-label="Confirm your password" />
               <button type="button" id="toggleConfirmPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center"
                 aria-label="Toggle confirm password visibility">
@@ -164,20 +172,20 @@
             </div>
           </div>
 
-          <div class="flex items-center">
+          <div class="flex items-center mt-6 text-sm">
             <input type="checkbox" id="terms" name="terms" required
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               aria-label="Agree to terms and conditions" />
-            <label for="terms" class="ml-2 text-sm text-gray-600">
+            <label for="terms" class="ml-2 text-gray-600">
               I agree to the
-              <a href="/terms" class="text-blue-600 hover:text-blue-500">Terms of Service</a>
+              <a href="/terms" class="text-blue-600 hover:text-blue-700 font-medium">Terms of Service</a>
               and
-              <a href="/privacy" class="text-blue-600 hover:text-blue-500">Privacy Policy</a>
+              <a href="/privacy" class="text-blue-600 hover:text-blue-700 font-medium">Privacy Policy</a>
             </label>
           </div>
 
           <button type="button" id="createAccountBtn"
-            class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+            class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 mt-8">
             Create Account
           </button>
 
@@ -187,26 +195,26 @@
         <div class="mt-8 text-center">
           <p class="text-gray-600">
             Already have an account?
-            <a href="../pages/LogIn.html" class="text-blue-600 hover:text-blue-500 font-semibold">
+            <a href="../pages/LogIn.html" class="text-blue-600 hover:text-blue-700 font-semibold">
               Sign In
             </a>
           </p>
         </div>
 
         <div id="socialSignupSection" class="mt-8">
-          <div class="relative">
+          <div class="relative flex justify-center py-5">
             <div class="absolute inset-0 flex items-center">
               <div class="w-full border-t border-gray-300"></div>
             </div>
             <div class="relative flex justify-center text-sm">
-              <span class="px-2 bg-gray-50 text-gray-500">Or sign up with</span>
+              <span class="px-2 bg-white text-gray-500">Or sign up with</span>
             </div>
           </div>
 
-          <div class="mt-6 grid grid-cols-0 gap-3">
+          <div class="mt-6">
             <a id="googleButton" href="http://localhost:8080/oauth2/authorization/google"
-              class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-              <svg class="w-5 h-5" viewBox="0 0 24 24">
+              class="w-full inline-flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-base font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-200 items-center">
+              <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
                 <!-- Google Icon SVG Code මෙතනට එයි -->
                 <path fill="currentColor"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -217,7 +225,7 @@
                 <path fill="currentColor"
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
               </svg>
-              <span class="ml-2">Continue with Google</span>
+              <span>Continue with Google</span>
             </a>
           </div>
         </div>
@@ -226,7 +234,6 @@
   </div>
   <script src="../pages/lib/jquery-3.7.1.min.js"></script>
   <script src="../pages/js/Register.js"></script>
-
 </body>
 
 </html>

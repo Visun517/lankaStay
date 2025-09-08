@@ -120,19 +120,19 @@
         <div>
           <label class="block text-sm font-semibold text-gray-600 mb-1">Business Name</label>
           <input type="text" id="businessName"
-            class="w-full px-4 py-2 rounded border border-gray-200 focus:ring-2 focus:ring-blue-200"
+            class="w-full p-3 rounded-lg border border-gray-300 bg-blue-50 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Your Hotel Name" readonly />
         </div>
         <div>
           <label class="block text-sm font-semibold text-gray-600 mb-1">Contact</label>
           <input type="text" id="contactNumber"
-            class="w-full px-4 py-2 rounded border border-gray-200 focus:ring-2 focus:ring-blue-200"
+            class="w-full p-3 rounded-lg border border-gray-300 bg-blue-50 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Contact Number" readonly />
         </div>
         <div class="md:col-span-2">
           <label class="block text-sm font-semibold text-gray-600 mb-1">Description</label>
           <textarea id="description"
-            class="w-full px-4 py-2 rounded border border-gray-200 focus:ring-2 focus:ring-blue-200" rows="2"
+            class="w-full p-3 rounded-lg border border-gray-300 bg-blue-50 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="2"
             placeholder="Describe your hotel..." readonly></textarea>
         </div>
 
@@ -144,9 +144,9 @@
 
           <div class="inline-flex gap-8">
             <!-- Hidden inputs for lat/lng -->
-            <input type="text" id="latitude" class="mt-2 w-full px-4 py-2 rounded border border-gray-200"
+            <input type="text" id="latitude" class="mt-2 w-full p-3 rounded-lg border border-gray-300 bg-blue-50 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Latitude" readonly />
-            <input type="text" id="longitude" class="mt-2 w-full px-4 py-2 rounded border border-gray-200"
+            <input type="text" id="longitude" class="mt-2 w-full p-3 rounded-lg border border-gray-300 bg-blue-50 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Longitude" readonly />
           </div>
 
@@ -156,14 +156,14 @@
         <div>
           <label class="block text-sm font-semibold text-gray-600 mb-1">District</label>
           <input type="text" id="district"
-            class="w-full px-4 py-2 rounded border border-gray-200 focus:ring-2 focus:ring-blue-200"
+            class="w-full p-3 rounded-lg border border-gray-300 bg-blue-50 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="District" readonly />
         </div>
 
         <div class="md:col-span-2">
           <label class="block text-sm font-semibold text-gray-600 mb-1">Address</label>
           <input type="text" id="address"
-            class="w-full px-4 py-2 rounded border border-gray-200 focus:ring-2 focus:ring-blue-200"
+            class="w-full p-3 rounded-lg border border-gray-300 bg-blue-50 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Hotel Address" readonly />
         </div>
 
@@ -770,6 +770,63 @@
     </svg>
     Realtime Messaging
   </button>
+
+  <!-- Footer -->
+  <footer class="w-full bg-gray-900 text-gray-200 pt-10 pb-6 mt-10">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-5 gap-8">
+      <!-- Brand -->
+      <div>
+        <h3 class="text-xl font-bold mb-4 text-white">StayLanka</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:underline">About Us</a></li>
+          <li><a href="#" class="hover:underline">Contact Us</a></li>
+          <li><a href="#" class="hover:underline">Terms of Use</a></li>
+          <li><a href="#" class="hover:underline">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <!-- Social -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-white">Social</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:underline">Facebook</a></li>
+          <li><a href="#" class="hover:underline">Twitter</a></li>
+          <li><a href="#" class="hover:underline">Instagram</a></li>
+          <li><a href="#" class="hover:underline">YouTube</a></li>
+        </ul>
+      </div>
+      <!-- Service -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-white">Service</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:underline">Compare</a></li>
+          <li><a href="#" class="hover:underline">Download</a></li>
+          <li><a href="#" class="hover:underline">Feedback</a></li>
+          <li><a href="#" class="hover:underline">Support</a></li>
+        </ul>
+      </div>
+      <!-- Activity -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-white">Activity</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:underline">Offers</a></li>
+          <li><a href="#" class="hover:underline">Affiliate</a></li>
+          <li><a href="#" class="hover:underline">Giveaway</a></li>
+          <li><a href="#" class="hover:underline">Events</a></li>
+        </ul>
+      </div>
+      <!-- Newsletter -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-white">Newsletter Subscription</h3>
+        <form class="flex flex-col sm:flex-row items-center gap-2">
+          <input type="email" placeholder="Subscribe to our newsletter" class="w-full px-3 py-2 rounded bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+          <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white font-semibold transition">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 mt-8 border-t border-gray-700 pt-4 text-center text-gray-400 text-sm">
+      © 2024 StayLanka. All rights reserved.
+    </div>
+  </footer>
 
 </body>
 
