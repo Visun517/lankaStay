@@ -66,4 +66,5 @@ public class Business {
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ClosedDate> closedDates;
+
 }

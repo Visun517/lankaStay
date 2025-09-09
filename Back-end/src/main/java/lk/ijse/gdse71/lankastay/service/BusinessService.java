@@ -1,11 +1,6 @@
 package lk.ijse.gdse71.lankastay.service;
 
 import lk.ijse.gdse71.lankastay.dto.BusinessDto;
-import lk.ijse.gdse71.lankastay.dto.ImageGalleryDto;
-import lk.ijse.gdse71.lankastay.dto.PackageDto;
-import lk.ijse.gdse71.lankastay.entity.Business;
-import lk.ijse.gdse71.lankastay.entity.BusinessImage;
-import lk.ijse.gdse71.lankastay.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -16,4 +11,6 @@ public interface BusinessService {
      Object updateBusiness(Long id , BusinessDto businessDetails);
      BusinessDto getBusinessDetails(Long id);
      Object getProfile(Long id);
+     List<BusinessDto> getBusinessByDistrict(String district, Long id);
+     List<BusinessDto> getBusinessByDistrictAndCategory(String district, String category, Long id);
 }

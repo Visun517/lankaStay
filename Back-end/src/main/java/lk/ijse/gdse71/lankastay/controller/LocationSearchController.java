@@ -1,0 +1,52 @@
+package lk.ijse.gdse71.lankastay.controller;
+
+import lk.ijse.gdse71.lankastay.dto.ApiResponseDto;
+import lk.ijse.gdse71.lankastay.entity.User;
+import lk.ijse.gdse71.lankastay.service.BusinessService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/search")
+@RequiredArgsConstructor
+public class LocationSearchController {
+
+    private final BusinessService businessService;
+
+    @GetMapping("/getAllLocations/{district}")
+    public ResponseEntity<ApiResponseDto> getAllPackages(@PathVariable String district, Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "get business successfully",
+                        businessService.getBusinessByDistrict(district ,user.getId())
+                )
+        );
+    }
+
+    @GetMapping("filterSearch/{district}/{category}")
+    public ResponseEntity<ApiResponseDto> filterSearch(@PathVariable String district, @PathVariable String category, Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "get business successfully",
+                        businessService.getBusinessByDistrictAndCategory(district ,category ,user.getId())
+                )
+        );
+    }
+
+}

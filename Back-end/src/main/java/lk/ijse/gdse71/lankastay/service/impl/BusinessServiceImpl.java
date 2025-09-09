@@ -1,8 +1,10 @@
 package lk.ijse.gdse71.lankastay.service.impl;
 
 import lk.ijse.gdse71.lankastay.dto.BusinessDto;
+import lk.ijse.gdse71.lankastay.dto.ImageGalleryDto;
 import lk.ijse.gdse71.lankastay.entity.Business;
 import lk.ijse.gdse71.lankastay.entity.User;
+import lk.ijse.gdse71.lankastay.entity.types.BusinessType;
 import lk.ijse.gdse71.lankastay.repository.BusinessImageRepository;
 import lk.ijse.gdse71.lankastay.repository.BusinessRepository;
 import lk.ijse.gdse71.lankastay.repository.HotelPackageRepository;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +62,7 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public Object getProfile(Long id) {
+    public String getProfile(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
 
@@ -68,7 +72,6 @@ public class BusinessServiceImpl implements BusinessService {
 
         return business.getImageUrl();
     }
-
 
     @Override
     public Object updateBusiness(Long id,BusinessDto businessDetails) {
@@ -84,4 +87,56 @@ public class BusinessServiceImpl implements BusinessService {
 
         return "Business details updated successfully";
     }
+
+    @Override
+    public List<BusinessDto> getBusinessByDistrict(String district, Long id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
+
+        List<Business> businessList = businessRepository.findAllByDistrict(district);
+
+        return businessList.stream()
+                .map(business -> BusinessDto.builder()
+                        .address(business.getAddress())
+                        .description(business.getDescription())
+                        .district(business.getDistrict())
+                        .latitude(business.getLatitude())
+                        .longitude(business.getLongitude())
+                        .phoneNumber(business.getPhoneNumber())
+                        .type(String.valueOf(business.getBusinessType()))
+                        .businessName(Optional.ofNullable(business.getUser())
+                                .map(User::getName)
+                                .orElse("Unknown"))
+                        .build()
+                )
+                .toList();
+
+    }
+
+    @Override
+    public List<BusinessDto> getBusinessByDistrictAndCategory(String district, String category, Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+
+        List<Business> businessList = businessRepository
+                .findAllByDistrictAndBusinessType(district, BusinessType.valueOf(category));
+
+        return businessList.stream()
+                .map(business -> BusinessDto.builder()
+                        .address(business.getAddress())
+                        .description(business.getDescription())
+                        .district(business.getDistrict())
+                        .latitude(business.getLatitude())
+                        .longitude(business.getLongitude())
+                        .phoneNumber(business.getPhoneNumber())
+                        .type(String.valueOf(business.getBusinessType()))
+                        .businessName(Optional.ofNullable(business.getUser())
+                                .map(User::getName)
+                                .orElse("Unknown"))
+                        .build()
+                )
+                .toList();
+    }
+
 }
