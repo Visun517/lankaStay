@@ -72,6 +72,14 @@
             </select>
           </div>
 
+          <!-- Contact Number Input (initially hidden) -->
+          <div id="contactNumberField" class="mt-4 hidden">
+            <label for="contactNumber" class="block text-sm font-medium text-gray-700 mb-2">Contact Number</label>
+            <input type="tel" id="contactNumber" name="contactNumber"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-800"
+              placeholder="Enter contact number" pattern="[0-9]{10}" title="Ten digit phone number" />
+          </div>
+
           <div id="businessFields" class="hidden space-y-4">
             <div class="grid grid-cols-1 md:grid-cols0 gap-4">
               <div>
@@ -94,8 +102,8 @@
 
             </div>
 
-            <div>
-              <label for="contact" class="block text-sm font-medium text-gray-700 mb-2">
+            <div class="hidden">
+              <label for="contactNumberField1" class="block text-sm font-medium text-gray-700 mb-2 hidden">
                 Contact Number
               </label>
               <input type="tel" id="contact" name="contact"
@@ -234,6 +242,32 @@
   </div>
   <script src="../pages/lib/jquery-3.7.1.min.js"></script>
   <script src="../pages/js/Register.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const accountTypeSelector = document.getElementById('accountType');
+      const contactNumberField = document.getElementById('contactNumberField');
+      const businessFields = document.getElementById('businessFields'); // Get the business fields container
+
+      // Initial check on page load
+      if (accountTypeSelector.value === 'business') {
+        contactNumberField.classList.remove('hidden');
+        businessFields.classList.remove('hidden'); // Show business fields initially if business is selected
+      } else {
+        contactNumberField.classList.add('hidden');
+        businessFields.classList.add('hidden'); // Hide business fields initially
+      }
+
+      accountTypeSelector.addEventListener('change', function () {
+        if (this.value === 'business') {
+          contactNumberField.classList.remove('hidden');
+          businessFields.classList.remove('hidden'); // Show business fields
+        } else {
+          contactNumberField.classList.add('hidden');
+          businessFields.classList.add('hidden'); // Hide business fields
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>

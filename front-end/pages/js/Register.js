@@ -1,25 +1,25 @@
 
 // Dynamic height adjustment
-function adjustHeights() {
-    const mainContainer = document.getElementById('mainContainer');
-    const bannerSection = document.getElementById('bannerSection');
-    const formSection = document.getElementById('formSection');
-    const formWrapper = document.getElementById('formWrapper');
+// function adjustHeights() {
+//     const mainContainer = document.getElementById('mainContainer');
+//     const bannerSection = document.getElementById('bannerSection');
+//     const formSection = document.getElementById('formSection');
+//     const formWrapper = document.getElementById('formWrapper');
 
-    // Reset heights
-    bannerSection.style.height = 'auto';
-    formSection.style.height = 'auto';
-    mainContainer.style.height = 'auto';
+//     // Reset heights
+//     // bannerSection.style.height = 'auto';
+//     // formSection.style.height = 'auto';
+//     // mainContainer.style.height = 'auto';
 
-    // Get form height and apply to both sections
-    const formHeight = formWrapper.scrollHeight;
-    const minHeight = window.innerHeight; // Viewport height
-    const targetHeight = Math.max(formHeight + 100, minHeight); // Add padding, ensure min viewport height
+//     // Get form height and apply to both sections
+//     const formHeight = formWrapper.scrollHeight;
+//     const minHeight = window.innerHeight; // Viewport height
+//     const targetHeight = Math.max(formHeight + 100, minHeight); // Add padding, ensure min viewport height
 
-    bannerSection.style.minHeight = `${targetHeight}px`;
-    formSection.style.minHeight = `${targetHeight}px`;
-    mainContainer.style.minHeight = `${targetHeight}px`;
-}
+//     bannerSection.style.minHeight = `${targetHeight}px`;
+//     formSection.style.minHeight = `${targetHeight}px`;
+//     mainContainer.style.minHeight = `${targetHeight}px`;
+// }
 
 // Show/hide business fields and Google button
 const accountType = document.getElementById('accountType');
@@ -27,20 +27,20 @@ const businessFields = document.getElementById('businessFields');
 const googleButton = document.getElementById('googleButton');
 const socialSignupSection = document.getElementById('socialSignupSection');
 
-function updateAccountTypeDependentUI(selectedType) {
-    const isBusiness = selectedType === 'business';
-    businessFields.classList.toggle('hidden', !isBusiness);
-    if (googleButton) googleButton.classList.toggle('hidden', isBusiness);
-    if (socialSignupSection) socialSignupSection.classList.toggle('hidden', isBusiness);
-    setTimeout(adjustHeights, 100);
-}
+// function updateAccountTypeDependentUI(selectedType) {
+//     const isBusiness = selectedType === 'business';
+//     businessFields.classList.toggle('hidden', !isBusiness);
+//     if (googleButton) googleButton.classList.toggle('hidden', isBusiness);
+//     if (socialSignupSection) socialSignupSection.classList.toggle('hidden', isBusiness);
+//     setTimeout(adjustHeights, 100);
+// }
 
-accountType.addEventListener('change', function () {
-    updateAccountTypeDependentUI(this.value);
-});
+// accountType.addEventListener('change', function () {
+//     updateAccountTypeDependentUI(this.value);
+// });
 
 // Initialize UI on load
-updateAccountTypeDependentUI(accountType.value);
+// updateAccountTypeDependentUI(accountType.value);
 
 // Form submit handler
 const signupForm = document.getElementById('signupForm');
@@ -100,18 +100,6 @@ signupForm.addEventListener('submit', async (e) => {
     }
 });
 
-// Google/Twitter Sign-Up (Placeholder)
-// document.getElementById('googleSignUp').addEventListener('click', () => {
-//   alert('Google Sign-Up not implemented yet. Add OAuth logic.');
-// });
-// document.getElementById('twitterSignUp').addEventListener('click', () => {
-//   alert('Twitter Sign-Up not implemented yet. Add OAuth logic.');
-// });
-
-// Initial height adjustment and on resize
-window.addEventListener('resize', adjustHeights);
-adjustHeights(); // Run on page load
-
 // Password toggle functionality
 document.addEventListener('DOMContentLoaded', function () {
     // Password field toggle
@@ -160,14 +148,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
 $('#createAccountBtn').on('click', function () {
 
-
-
     let accountType = $('#accountType').val();
     let userName = $('#userName').val().trim();
     let email = $('#email').val().trim();
     let password = $('#password').val();
     let confirmPassword = $('#confirmPassword').val();
     let termsAgreed = $('#terms').is(':checked');
+
+    console.log('accountType:', accountType);
+    console.log('userName:', userName);
+    console.log('email:', email);
+    console.log('password:', password);
+    console.log('confirmPassword:', confirmPassword);
+    console.log('Terms Agreed:', termsAgreed);
+
+
+
 
     console.log('Account Type:', accountType);
 
@@ -293,8 +289,12 @@ $('#createAccountBtn').on('click', function () {
 
     if (accountType === 'business') {
         let businessType = $('#businessType').val().toUpperCase();
-        let contactNumber = $('#contact').val().trim();
+        let contactNumber = $('#contactNumber').val().trim();
         let role = 'BUSINESS';
+
+        console.log('Business Type:', businessType);
+        console.log('Contact Number:', contactNumber);
+        console.log('userName:', userName);
 
         if (!businessType || userName === '' || contactNumber === '') {
             Swal.fire({

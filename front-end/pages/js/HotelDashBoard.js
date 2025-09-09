@@ -98,6 +98,7 @@ $(document).ready(function () {
   getAllPackages();
   getAllSpecialOffers();
   validateAndLoadDashboard();
+  initCalendar();
 
   setInterval(validateAndLoadDashboard, 10000);
 
@@ -662,6 +663,7 @@ function getUserinfo() {
       $('#longitude').val(businessData.longitude || '');
       $('#address').val(businessData.address || '');
       $('#district').val(businessData.district || '');
+      console.log($('#district').val(businessData.district || ''));
 
       if (businessData.latitude && businessData.longitude) {
         updateMapLocation(businessData.latitude, businessData.longitude);
@@ -1189,6 +1191,7 @@ function confirmDateStatusChange() {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
       success: function (response) {
         console.log("Special offer saved successfully!" + response);
+        generateCalendar();
         // getClosedDates();
         Swal.fire("Success!", "Successfully to add close date offer.", "success");
       },

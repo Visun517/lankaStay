@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tourist Dashboard - LankaStay</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+  <script src="../lib/jquery-3.7.1.min.js"></script>
+  <script src="../js/TouristDash.js"></script>
   <script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbK6ZSQgHb67i6tbwwojGFNBkTRBt2dVM&callback=initMap">
-</script>
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbK6ZSQgHb67i6tbwwojGFNBkTRBt2dVM&callback=initializeMap">
+    </script>
+
 </head>
+
 <body class="bg-blue-50 min-h-screen">
   <!-- Navigation Bar -->
   <nav class="bg-white shadow-lg px-6 py-4">
@@ -29,16 +34,14 @@
     <section class="text-center mb-12">
       <h2 class="text-2xl font-bold text-gray-800 mb-4">Welcome Back, <span id="welcomeUserName">Tourist</span>!</h2>
       <p class="text-gray-600 mb-8">Find best hotel deals across Sri Lanka.</p>
-      
+
       <!-- Action Buttons -->
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <button 
-          id="exploreBtn"
-          class="px-6 py-3 bg-yellow-200 hover:bg-yellow-300 text-gray-800 font-semibold rounded-lg shadow-md transition-all duration-200 hover:shadow-lg"
-        >
+        <button id="exploreBtn"
+          class="px-6 py-3 bg-yellow-200 hover:bg-yellow-300 text-gray-800 font-semibold rounded-lg shadow-md transition-all duration-200 hover:shadow-lg">
           Explore Nearby Deals
         </button>
-   
+
       </div>
     </section>
 
@@ -51,21 +54,41 @@
 
         <!-- Search Bar & Filters -->
         <div class="absolute top-0 left-0 w-full flex flex-col items-center z-20 pt-6 px-2">
-          <form id="searchForm" class="w-full max-w-2xl flex flex-col sm:flex-row bg-white bg-opacity-95 rounded-2xl shadow-2xl p-3 gap-2 items-center border border-blue-100 backdrop-blur-md">
-            <div class="flex-1 w-full flex items-center gap-2">
-              <span class="inline-flex items-center px-3 py-2 bg-blue-100 rounded-l-lg text-blue-500 text-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" /></svg>
-              </span>
-              <input id="locationInput" type="text" placeholder="Search for a city or area (e.g. Colombo, Kandy)" class="flex-1 px-4 py-2 border-0 rounded-r-lg focus:ring-2 focus:ring-blue-400 text-gray-700 bg-blue-50 placeholder-blue-400 outline-none" />
+          <form id="searchForm"
+            class="w-full max-w-2xl flex flex-col sm:flex-row bg-white bg-opacity-95 rounded-2xl shadow-2xl p-3 gap-2 items-center border border-blue-100 backdrop-blur-md">
+            <div class="flex-1 w-full relative">
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center px-3 py-2 bg-blue-100 rounded-l-lg text-blue-500 text-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
+                  </svg>
+                </span>
+                <input id="locationInput" type="text" placeholder="Search for a city or area (e.g. Colombo, Kandy)"
+                  class="flex-1 px-4 py-2 border-0 w-full rounded-r-lg focus:ring-2 focus:ring-blue-400 text-gray-700 bg-blue-50 placeholder-blue-400 outline-none" />
+              </div>
+              <ul id="suggestionList" class="absolute bg-white border rounded-lg shadow w-full mt-1 ml-5 hidden z-10 top-full"></ul>
             </div>
-            <button type="submit" class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold shadow hover:from-blue-600 hover:to-blue-700 transition-all duration-200 focus:ring-2 focus:ring-blue-400">Search</button>
+
+               
+            <button type="button" id="searchBtn"
+              class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold shadow hover:from-blue-600 hover:to-blue-700 transition-all duration-200 focus:ring-2 focus:ring-blue-400">Search</button>
           </form>
           <!-- Filter Section -->
           <div class="w-full max-w-2xl flex flex-wrap justify-center gap-2 mt-3">
-            <button class="filter-btn px-4 py-2 rounded-full bg-white border border-blue-200 text-blue-600 font-medium shadow-sm hover:bg-blue-100 hover:text-blue-800 transition-all duration-150 focus:ring-2 focus:ring-blue-400" data-type="Hotel">Hotel</button>
-            <button class="filter-btn px-4 py-2 rounded-full bg-white border border-blue-200 text-blue-600 font-medium shadow-sm hover:bg-blue-100 hover:text-blue-800 transition-all duration-150 focus:ring-2 focus:ring-blue-400" data-type="Restaurant">Restaurant</button>
-            <button class="filter-btn px-4 py-2 rounded-full bg-white border border-blue-200 text-blue-600 font-medium shadow-sm hover:bg-blue-100 hover:text-blue-800 transition-all duration-150 focus:ring-2 focus:ring-blue-400" data-type="Spa">Spa</button>
-            <button class="filter-btn px-4 py-2 rounded-full bg-white border border-blue-200 text-blue-600 font-medium shadow-sm hover:bg-blue-100 hover:text-blue-800 transition-all duration-150 focus:ring-2 focus:ring-blue-400" data-type="Guest House">Guest House</button>
+            <button id="filterHotelBtn"
+              class="filter-btn px-4 py-2 rounded-full bg-white border border-blue-200 text-blue-600 font-medium shadow-sm hover:bg-blue-100 hover:text-blue-800 transition-all duration-150 focus:ring-2 focus:ring-blue-400"
+              data-type="Hotel">Hotel</button>
+            <button id="filterRestaurantBtn"
+              class="filter-btn px-4 py-2 rounded-full bg-white border border-blue-200 text-blue-600 font-medium shadow-sm hover:bg-blue-100 hover:text-blue-800 transition-all duration-150 focus:ring-2 focus:ring-blue-400"
+              data-type="Restaurant">Restaurant</button>
+            <button id="filterSpaBtn"
+              class="filter-btn px-4 py-2 rounded-full bg-white border border-blue-200 text-blue-600 font-medium shadow-sm hover:bg-blue-100 hover:text-blue-800 transition-all duration-150 focus:ring-2 focus:ring-blue-400"
+              data-type="Spa">Spa</button>
+            <button id="filterGuestHouseBtn"
+              class="filter-btn px-4 py-2 rounded-full bg-white border border-blue-200 text-blue-600 font-medium shadow-sm hover:bg-blue-100 hover:text-blue-800 transition-all duration-150 focus:ring-2 focus:ring-blue-400"
+              data-type="Guest House">Guest House</button>
           </div>
         </div>
         <!-- Hotel Markers (Placeholder) -->
@@ -150,14 +173,22 @@
   </main>
 
   <!-- Modal for Hotel Details -->
-  <div id="hotelModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden transition-all duration-300">
+  <div id="hotelModal"
+    class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden transition-all duration-300">
     <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 relative flex flex-col items-center animate-fadeIn">
-      <button id="closeModal" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
-      <img id="hotelImage" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=400&q=80" alt="Hotel" class="w-32 h-32 object-cover rounded-xl mb-4 shadow" />
+      <button id="closeModal" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition"><svg
+          xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg></button>
+      <img id="hotelImage"
+        src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=400&q=80"
+        alt="Hotel" class="w-32 h-32 object-cover rounded-xl mb-4 shadow" />
       <h3 id="hotelName" class="text-xl font-bold text-blue-700 mb-2">Hotel Name</h3>
       <p id="hotelOffer" class="text-blue-500 font-semibold mb-1">Special Offer: 20% Off!</p>
       <p id="hotelRooms" class="text-gray-600 mb-4">Available Rooms: 5</p>
-      <button class="px-6 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-all duration-200 shadow">Book Now</button>
+      <button
+        class="px-6 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-all duration-200 shadow">Book
+        Now</button>
     </div>
   </div>
 
@@ -176,17 +207,28 @@
 
   <style>
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-    .animate-fadeIn { animation: fadeIn 0.3s ease; }
+
+    .animate-fadeIn {
+      animation: fadeIn 0.3s ease;
+    }
+
     #mapCanvas {
       position: absolute !important;
       z-index: 0 !important;
     }
   </style>
 
-  <script src="../lib/jquery-3.7.1.min.js"></script>
-  <script src="../js/TouristDash.js"></script>
+
 </body>
-</html> 
+
+</html>
