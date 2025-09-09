@@ -828,6 +828,48 @@
     </div>
   </footer>
 
+  <script>
+    (function () {
+      const editBtn = document.getElementById('editProfileBtn');
+      const saveBtn = document.getElementById('submitProfileBtn');
+      if (!editBtn || !saveBtn) return;
+
+      const inputIds = ['businessName', 'contactNumber', 'description', 'district', 'address'];
+      const latLngIds = ['latitude', 'longitude']; // keep readonly always
+      const inputs = inputIds
+        .map(id => document.getElementById(id))
+        .filter(Boolean);
+
+      function setEditable(isEditable) {
+        inputs.forEach(el => {
+          el.readOnly = !isEditable;
+          el.classList.toggle('bg-blue-50', !isEditable);
+          el.classList.toggle('bg-white', isEditable);
+          el.classList.toggle('border-blue-300', isEditable);
+        });
+        editBtn.disabled = isEditable;
+        saveBtn.disabled = !isEditable;
+        saveBtn.classList.toggle('opacity-60', !isEditable);
+        saveBtn.classList.toggle('cursor-not-allowed', !isEditable);
+      }
+
+      // initial state: readonly, disable save
+      setEditable(false);
+
+      editBtn.addEventListener('click', function () {
+        setEditable(true);
+      });
+
+      saveBtn.addEventListener('click', function () {
+        // TODO: hook up API saving here
+        setEditable(false);
+        if (window.Swal) {
+          Swal.fire({ icon: 'success', title: 'Saved', text: 'Profile updated successfully.' });
+        }
+      });
+    })();
+  </script>
+
 </body>
 
 </html>

@@ -212,7 +212,7 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: `http://localhost:8080/packages/deleteOffer/${offerId}`,
+          url: `http://localhost:8080/offers/deleteOffer/${offerId}`,
           method: 'DELETE',
           headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
           success: function (response) {
@@ -409,13 +409,6 @@ function getAllPackages() {
     }
   });
 }
-
-
-
-
-
-
-
 
 
 // =================================================================
@@ -887,7 +880,7 @@ function handleSpecialOfferSave() {
   formData.append('image', offerImage);
 
   $.ajax({
-    url: 'http://localhost:8080/packages/addSpecialOffer',
+    url: 'http://localhost:8080/offers/addSpecialOffer',
     method: 'POST',
     data: formData,
     processData: false,
@@ -914,7 +907,7 @@ function getAllSpecialOffers() {
   console.log("Fetching special offers...");
 
   $.ajax({
-    url: 'http://localhost:8080/packages/getAllOffers',
+    url: 'http://localhost:8080/offers/getAllOffers',
     method: 'GET',
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     success: function (response) {
