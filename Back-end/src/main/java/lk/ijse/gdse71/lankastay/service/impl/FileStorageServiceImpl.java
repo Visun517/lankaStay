@@ -44,8 +44,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public org.springframework.core.io.Resource loadFile(String filename, String subDirectory) {
-        // ❌ Not needed for imgbb
-        // ✅ You can just return the URL string saved in DB
+
         throw new UnsupportedOperationException("Use URL from DB for imgbb");
     }
 

@@ -13,4 +13,5 @@ public interface BusinessService {
      Object getProfile(Long id);
      List<BusinessDto> getBusinessByDistrict(String district, Long id);
      List<BusinessDto> getBusinessByDistrictAndCategory(String district, String category, Long id);
+     BusinessDto getProfileAndContact(String businessId, Long id);
 }

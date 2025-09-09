@@ -69,7 +69,6 @@ public class BusinessServiceImpl implements BusinessService {
         Business business = businessRepository.findById(user.getId())
                 .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
 
-
         return business.getImageUrl();
     }
 
@@ -108,6 +107,7 @@ public class BusinessServiceImpl implements BusinessService {
                         .businessName(Optional.ofNullable(business.getUser())
                                 .map(User::getName)
                                 .orElse("Unknown"))
+                        .id(business.getId())
                         .build()
                 )
                 .toList();
@@ -134,9 +134,24 @@ public class BusinessServiceImpl implements BusinessService {
                         .businessName(Optional.ofNullable(business.getUser())
                                 .map(User::getName)
                                 .orElse("Unknown"))
+                        .id(business.getId())
                         .build()
                 )
                 .toList();
+    }
+
+    @Override
+    public BusinessDto getProfileAndContact(String businessId, Long id) {
+
+        User user = userRepository.findById(Long.valueOf(businessId))
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
+
+        Business business = businessRepository.getImageUrlAndPhoneNumberByUserId(user.getId());
+
+        return BusinessDto.builder()
+                .phoneNumber(business.getPhoneNumber())
+                .imageUrl(business.getImageUrl())
+                .build();
     }
 
 }

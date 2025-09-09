@@ -1,9 +1,9 @@
 package lk.ijse.gdse71.lankastay.controller;
 
 import lk.ijse.gdse71.lankastay.dto.ApiResponseDto;
-import lk.ijse.gdse71.lankastay.dto.ImageGalleryDto;
+import lk.ijse.gdse71.lankastay.dto.SpecialOffersDto;
 import lk.ijse.gdse71.lankastay.entity.User;
-import lk.ijse.gdse71.lankastay.service.BusinessImageService;
+import lk.ijse.gdse71.lankastay.service.impl.SpecialOffersServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,24 +13,24 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/images")
+@RequestMapping("/offers")
 @RequiredArgsConstructor
-public class BusinessImagesController {
-    private final BusinessImageService businessImageService;
+public class SpecialOffersController {
 
+    private final SpecialOffersServiceImpl specialOffersService;
 
-    @PostMapping("/imageGallery")
-    public ResponseEntity<ApiResponseDto> uploadImageToGallery(@ModelAttribute ImageGalleryDto imageGalleryDto, Authentication authentication) {
+    @PostMapping("/addSpecialOffer")
+    public ResponseEntity<ApiResponseDto> updatePackage(@ModelAttribute SpecialOffersDto specialOffersDto, Authentication authentication) {
         if (authentication == null) {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
-        String email = authentication.getName();
+        User user = (User) authentication.getPrincipal();
         try {
             return ResponseEntity.ok(
                     new ApiResponseDto(
                             200,
-                            "Image uploaded successfully",
-                            businessImageService.uploadImageToGallery(imageGalleryDto,email)
+                            "Package updated successfully",
+                            specialOffersService.addPackage(specialOffersDto,user.getId())
                     )
             );
         } catch (IOException e) {
@@ -38,8 +38,8 @@ public class BusinessImagesController {
         }
     }
 
-    @GetMapping("/getImages")
-    public ResponseEntity<ApiResponseDto> getImages(Authentication authentication) {
+    @GetMapping("/getAllOffers")
+    public ResponseEntity<ApiResponseDto> getAllOffers(Authentication authentication) {
         if (authentication == null) {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
@@ -47,14 +47,14 @@ public class BusinessImagesController {
         return ResponseEntity.ok(
                 new ApiResponseDto(
                         200,
-                        "Images fetched successfully",
-                        businessImageService.getImages(user.getId())
+                        "Packages fetched successfully",
+                        specialOffersService.getAllOffers(user.getId())
                 )
         );
     }
 
-    @DeleteMapping("/deleteImage/{imageId}")
-    public ResponseEntity<ApiResponseDto> deleteImage(@PathVariable Long imageId, Authentication authentication) {
+    @DeleteMapping("/deleteOffer/{offerId}")
+    public ResponseEntity<ApiResponseDto> deleteOffer(@PathVariable Long offerId, Authentication authentication) {
         if (authentication == null) {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
@@ -64,11 +64,12 @@ public class BusinessImagesController {
                     new ApiResponseDto(
                             200,
                             "Image deleted successfully",
-                            businessImageService.deleteImage(imageId,user.getId())
+                            specialOffersService.deleteOffer(offerId,user.getId())
                     )
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 }

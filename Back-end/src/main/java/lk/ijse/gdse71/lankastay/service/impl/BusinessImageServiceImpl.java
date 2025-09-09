@@ -47,13 +47,12 @@ public class BusinessImageServiceImpl implements BusinessImageService {
     }
 
     @Override
-    public List<ImageGalleryDto> getImages(User user) {
-        User user1 = userRepository.findByEmail(user.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + user.getEmail()));
+    public List<ImageGalleryDto> getImages(Long id) {
+        User user1 = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
 
-        Business business = businessRepository.findById(user1.getId())
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + user.getId()));
-        System.out.println(user.getId());
+        Business business = businessRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
 
         List<BusinessImage> images = businessImageRepository.findAllByBusinessId(business.getId());
 
