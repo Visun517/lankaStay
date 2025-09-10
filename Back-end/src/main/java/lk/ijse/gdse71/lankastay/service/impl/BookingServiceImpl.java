@@ -1,6 +1,6 @@
 package lk.ijse.gdse71.lankastay.service.impl;
+import lk.ijse.gdse71.lankastay.dto.BookingAddDto;
 import lk.ijse.gdse71.lankastay.dto.BookingDto;
-import lk.ijse.gdse71.lankastay.dto.SpecialOffersDto;
 import lk.ijse.gdse71.lankastay.entity.*;
 import lk.ijse.gdse71.lankastay.entity.types.StatusTypes;
 import lk.ijse.gdse71.lankastay.repository.*;
@@ -23,24 +23,26 @@ public class BookingServiceImpl implements BookingService {
     private final HotelPackageRepository packageRepository;
 
     @Override
-    public String addBooking(BookingDto bookingDto, Long id) {
+    public String addBooking(BookingAddDto bookingAddDto, Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
 
-        Tourist tourist = touristRepository.findById(bookingDto.getTouristId())
+        Tourist tourist = touristRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tourist not found with id: " + id));
 
-        Business business = businessRepository.findById(bookingDto.getBusinessId())
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
-
-        HotelPackages hotelPackages = packageRepository.findById(bookingDto.getPackageId())
+        HotelPackages hotelPackages = packageRepository.findById(bookingAddDto.getPackageId())
                 .orElseThrow(() -> new RuntimeException("Package not found with id: " + id));
 
+        Business business = businessRepository.findById(hotelPackages.getBusiness().getId())
+                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+
+
+
         Booking booking = Booking.builder()
-                .bookingDate(bookingDto.getBookingDate())
+                .bookingDate(LocalDate.now())
                 .status(StatusTypes.PENDING)
-                .checkInDate(bookingDto.getCheckInDate())
-                .checkOutDate(bookingDto.getCheckOutDate())
+                .checkInDate(bookingAddDto.getCheckInDate())
+                .checkOutDate(bookingAddDto.getCheckOutDate())
                 .createdAt(LocalDate.now())
                 .updatedAt(LocalDate.now())
                 .tourist(tourist)

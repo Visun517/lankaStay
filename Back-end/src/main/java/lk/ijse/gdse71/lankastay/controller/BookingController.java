@@ -1,6 +1,7 @@
 package lk.ijse.gdse71.lankastay.controller;
 
 import lk.ijse.gdse71.lankastay.dto.ApiResponseDto;
+import lk.ijse.gdse71.lankastay.dto.BookingAddDto;
 import lk.ijse.gdse71.lankastay.dto.BookingDto;
 import lk.ijse.gdse71.lankastay.entity.User;
 import lk.ijse.gdse71.lankastay.service.BookingService;
@@ -18,21 +19,17 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping("addBooking")
-    public ResponseEntity<ApiResponseDto> addBooking(@RequestBody BookingDto bookingDto, Authentication authentication) {
+    public ResponseEntity<ApiResponseDto> addBooking(@RequestBody BookingAddDto bookingAddDto, Authentication authentication) {
         if (authentication == null) {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
-        System.out.println(bookingDto);
         User user = (User) authentication.getPrincipal();
-
-        System.out.println("Authentication Principal Class: " + authentication.getPrincipal().getClass());
-        System.out.println("Authentication Principal: " + authentication.getPrincipal());
 
         return ResponseEntity.ok(
                 new ApiResponseDto(
                         200,
                         "Add Booking successfully",
-                        bookingService.addBooking(bookingDto , bookingDto.getTouristId())
+                        bookingService.addBooking(bookingAddDto , user.getId())
                 )
         );
     }
