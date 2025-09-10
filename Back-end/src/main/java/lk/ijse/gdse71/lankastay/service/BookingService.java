@@ -9,4 +9,5 @@ public interface BookingService {
     List<BookingDto> getBookingsForTourist(Long id);
     List<BookingDto> getBookingsForBusiness(Long id);
     String updateBooking(BookingDto bookingDto, Long id);
+    String deleteBooking(Long bookingId, Long id);
 }

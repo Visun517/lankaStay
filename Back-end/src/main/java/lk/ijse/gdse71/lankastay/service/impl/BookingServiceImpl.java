@@ -112,4 +112,16 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.save(booking);
         return "Booking updated successfully";
     }
+
+    @Override
+    public String deleteBooking(Long bookingId, Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
+
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found with id: " + bookingId));
+
+        bookingRepository.delete(booking);
+        return "Booking deleted successfully";
+    }
 }
