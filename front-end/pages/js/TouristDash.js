@@ -54,6 +54,104 @@ $(document).ready(function () {
 
   console.log("Document is ready. Attaching event listeners.");
 
+  getRecommendedPackages();
+  function getRecommendedPackages() {
+    $.ajax({
+      url: 'http://localhost:8080/packages/getRecommendedPackages',
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+      success: (response) => {
+        console.log("all packages received:", response);
+
+        let container = $("#reccommendedPackages");
+        container.empty(); // clear old content
+
+        const today = new Date().toISOString().split("T")[0];
+
+        response.data.forEach(pkg => {
+          if (pkg.availability_end >= today) {
+
+            let mealInclusionText = pkg.meal_inclusion
+              ? pkg.meal_inclusion.replaceAll("_", " ")
+              : "Meals not specified";
+
+            const colors = [
+              { bg: "bg-blue-50", border: "border-blue-200" },
+              { bg: "bg-green-50", border: "border-green-200" },
+              { bg: "bg-yellow-50", border: "border-yellow-200" }
+            ];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            // Card HTML
+            const packageCardHtml = `
+          <div class="package-card group relative ${color.bg} rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border ${color.border}">
+              <div class="relative h-40">
+                  <img src="${pkg.imageUrl}"
+                      alt="${pkg.packageName || 'Package Image'}"
+                      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+              </div>
+
+              <div class="p-5">
+                  <div class="flex items-center gap-4 mb-3">
+                      <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                      </div>
+                      <div>
+                          <h3 class="font-bold text-gray-800 text-lg leading-tight">${pkg.packageName || 'Unnamed Package'}</h3>
+                          <p class="text-sm text-blue-600 font-medium">${pkg.packageType || 'Room'}</p>
+                      </div>
+                  </div>
+                  
+                  <p class="text-gray-600 text-sm mb-4 h-12 overflow-hidden">${pkg.description || 'No description available.'}</p>
+
+                  <div class="space-y-2 mb-4 text-sm">
+                      <div class="flex items-center gap-3 text-gray-700">
+                          <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                          <span>${pkg.availability_start} to ${pkg.availability_end}</span>
+                      </div>
+                      <div class="flex items-center gap-3 text-gray-700">
+                          <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                          <span>${mealInclusionText}</span>
+                      </div>
+                  </div>
+
+                  <div class="mt-5 pt-4 border-t border-gray-200">
+                      <div class="flex items-center justify-between">
+                          <div>
+                              <div class="text-2xl font-bold text-gray-800">Rs ${pkg.price}</div>
+                              <span class="text-sm text-gray-500">per night</span>
+                          </div>
+                          <div class="flex items-center gap-2 text-sm font-medium text-green-600 bg-green-100 px-3 py-1 rounded-full">
+                              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                              Available
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="flex gap-3 mt-4">
+                      <button class="book-now-btn flex-1 py-2 px-4 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors duration-300" data-package-id="${pkg.id}">Book Now</button>
+                  </div>
+              </div>
+          </div>
+        `;
+
+            container.append(packageCardHtml);
+          }
+          container.find(`[data-package-id="${pkg.id}"]`).on('click', function () {
+            const id = $(this).data('package-id');
+            window.openBookingModal(id);
+          });
+        });
+
+
+
+
+      }
+
+    });
+
+  }
 
   $('#logoutBtn').on('click', function () {
     Swal.fire({
@@ -73,8 +171,8 @@ $(document).ready(function () {
     });
   });
 
-    setInterval(getAllPackages, 10000);
-  function getAllPackages() {
+  setInterval(getAllBookings, 10000);
+  function getAllBookings() {
     $.ajax({
       url: 'http://localhost:8080/business/getBookings/tourist',
       method: 'GET',
@@ -131,48 +229,48 @@ $(document).ready(function () {
   }
 
   $(document).on("click", ".remove-booking-btn", function () {
-  const bookingId = $(this).data("package-id");
-  console.log("remove booking " + bookingId);
+    const bookingId = $(this).data("package-id");
+    console.log("remove booking " + bookingId);
 
-  Swal.fire({
-    title: 'Are you sure?',
-    text: "Do you really want to delete this booking?",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // User confirmed → Delete request
-      $.ajax({
-        url: `http://localhost:8080/business/deleteBooking/${bookingId}`,
-        method: 'DELETE',
-        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
-        success: (response) => {
-          console.log("response data received:", response);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you really want to delete this booking?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // User confirmed → Delete request
+        $.ajax({
+          url: `http://localhost:8080/business/deleteBooking/${bookingId}`,
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+          success: (response) => {
+            console.log("response data received:", response);
 
-          Swal.fire(
-            'Deleted!',
-            'The booking has been successfully removed.',
-            'success'
-          );
+            Swal.fire(
+              'Deleted!',
+              'The booking has been successfully removed.',
+              'success'
+            );
 
-          // refresh bookings list after delete
-          getAllPackages();
-        },
-        error: function (error) {
-          Swal.fire(
-            'Error!',
-            'Could not remove the booking.',
-            'error'
-          );
-        }
-      });
-    }
+            // refresh bookings list after delete
+            getAllBookings();
+          },
+          error: function (error) {
+            Swal.fire(
+              'Error!',
+              'Could not remove the booking.',
+              'error'
+            );
+          }
+        });
+      }
+    });
   });
-});
 
 
   let debounceTimer;
@@ -1009,7 +1107,7 @@ $(document).ready(function () {
         contentType: 'application/json',
         success: function (response) {
           console.log('Booking submitted successfully:', response);
-          getAllPackages();
+          getAllBookings();
           Swal.fire({
             icon: 'success',
             title: 'Booking Confirmed!',
