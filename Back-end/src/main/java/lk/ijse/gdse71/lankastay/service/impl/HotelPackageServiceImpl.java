@@ -1,5 +1,6 @@
 package lk.ijse.gdse71.lankastay.service.impl;
 
+import lk.ijse.gdse71.lankastay.dto.BusinessDto;
 import lk.ijse.gdse71.lankastay.dto.PackageDto;
 import lk.ijse.gdse71.lankastay.entity.Business;
 import lk.ijse.gdse71.lankastay.entity.HotelPackages;
@@ -13,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,6 +91,34 @@ public class HotelPackageServiceImpl implements HotelPackageService {
         packageRepository.delete(hotelPackages);
 
         return "Business deleted successfully";
+    }
+
+    @Override
+    public List<PackageDto> getRecommendedPackages(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+
+        List<HotelPackages> allPackages = packageRepository.findAll();
+
+        List<HotelPackages> recommendedPackages = allPackages.stream()
+                .sorted(Comparator.comparingDouble(HotelPackages::getPrice))
+                .limit(5)
+                .collect(Collectors.toList());
+
+        List<PackageDto> updatedPackages = recommendedPackages.stream()
+                .map(packageDto -> PackageDto.builder()
+                        .id(packageDto.getPackage_id())
+                        .packageName(packageDto.getPackageName())
+                        .description(packageDto.getDescription())
+                        .price(packageDto.getPrice())
+                        .availability_start(packageDto.getAvailability_start())
+                        .availability_end(packageDto.getAvailability_end())
+                        .meal_inclusion(packageDto.getMeal_inclusion())
+                        .imageUrl(packageDto.getImageUrl())
+                        .build()
+                )
+                .collect(Collectors.toList());
+        return updatedPackages;
     }
 }
 

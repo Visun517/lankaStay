@@ -72,4 +72,19 @@ public class HotelPackagesController {
             throw new RuntimeException(e);
         }
     }
+
+    @GetMapping("/getRecommendedPackages")
+    public ResponseEntity<ApiResponseDto> getRecommendedPackages(Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Packages fetched successfully",
+                        hotelPackageService.getRecommendedPackages(user.getId())
+                )
+        );
+    }
 }
