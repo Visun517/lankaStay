@@ -1,0 +1,85 @@
+package lk.ijse.gdse71.lankastay.controller;
+
+import lk.ijse.gdse71.lankastay.dto.ApiResponseDto;
+import lk.ijse.gdse71.lankastay.dto.BookingDto;
+import lk.ijse.gdse71.lankastay.entity.User;
+import lk.ijse.gdse71.lankastay.service.BookingService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/business")
+@RequiredArgsConstructor
+public class BookingController {
+
+    private final BookingService bookingService;
+
+    @PostMapping("addBooking")
+    public ResponseEntity<ApiResponseDto> addBooking(@RequestBody BookingDto bookingDto, Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        System.out.println(bookingDto);
+        User user = (User) authentication.getPrincipal();
+
+        System.out.println("Authentication Principal Class: " + authentication.getPrincipal().getClass());
+        System.out.println("Authentication Principal: " + authentication.getPrincipal());
+
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Add Booking successfully",
+                        bookingService.addBooking(bookingDto , bookingDto.getTouristId())
+                )
+        );
+    }
+
+    @GetMapping("getBookings/tourist")
+    public ResponseEntity<ApiResponseDto> getBookingsTourist( Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Get Bookings successfully",
+                        bookingService.getBookingsForTourist(user.getId())
+                )
+        );
+    }
+
+    @GetMapping("getBookings/business")
+    public ResponseEntity<ApiResponseDto> getBookingsBusiness( Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Get Bookings successfully",
+                        bookingService.getBookingsForBusiness(user.getId())
+                )
+        );
+    }
+
+    @PatchMapping("updateBooking")
+    public ResponseEntity<ApiResponseDto> updateBooking(@RequestBody BookingDto bookingDto, Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+        System.out.println(bookingDto);
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Update Booking successfully",
+                        bookingService.updateBooking(bookingDto , user.getId())
+                )
+        );
+    }
+}

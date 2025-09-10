@@ -1,0 +1,23 @@
+package lk.ijse.gdse71.lankastay.dto;
+
+
+import lk.ijse.gdse71.lankastay.entity.types.StatusTypes;
+import lombok.Builder;
+import lombok.Data;
+
+import java.time.LocalDate;
+
+@Data
+@Builder
+public class BookingDto {
+    private Long bookingId;
+    private LocalDate bookingDate;
+    private StatusTypes status;
+    private LocalDate checkInDate;
+    private LocalDate checkOutDate;
+    private LocalDate createdAt;
+    private LocalDate updatedAt;
+    private Long touristId;
+    private Long businessId;
+    private Long packageId;
+}

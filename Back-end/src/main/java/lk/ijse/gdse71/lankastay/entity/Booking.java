@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lk.ijse.gdse71.lankastay.entity.types.StatusTypes;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "bookings")
 public class Booking {
 
@@ -21,7 +23,7 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long booking_id;
 
-    private String bookingDate;
+    private LocalDate bookingDate;
 
     @Enumerated(EnumType.STRING)
     private StatusTypes status; // PENDING, CONFIRMED, CANCELLED
