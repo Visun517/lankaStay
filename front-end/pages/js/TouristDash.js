@@ -46,10 +46,13 @@ window.initMap = initializeMap;
 // All code that interacts with the DOM should be inside this function.
 // It ensures that the HTML page is fully loaded before the script runs.
 
+// Browser back button catch
+
+
+
 $(document).ready(function () {
 
   console.log("Document is ready. Attaching event listeners.");
-
 
 
   $('#logoutBtn').on('click', function () {
@@ -70,10 +73,111 @@ $(document).ready(function () {
     });
   });
 
+    setInterval(getAllPackages, 10000);
+  function getAllPackages() {
+    $.ajax({
+      url: 'http://localhost:8080/business/getBookings/tourist',
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+      success: (response) => {
+        console.log("all bookings received:", response);
+
+        const bookings = Array.isArray(response) ? response : response.data;
+        const bookingContainer = $("#bookingContainer .space-y-4");
+        bookingContainer.empty();
+
+        if (!bookings || bookings.length === 0) {
+          bookingContainer.append(`
+      <div class="text-gray-600 text-center">No bookings found.</div>
+    `);
+          return;
+        }
+
+        bookings.forEach(booking => {
+          const bookingDate = new Date(booking.bookingDate).toDateString();
+          const checkInDate = new Date(booking.checkInDate).toDateString();
+          const checkOutDate = new Date(booking.checkOutDate).toDateString();
+
+          const statusColor =
+            booking.status === "CONFIRMED"
+              ? "bg-green-100 text-green-800"
+              : booking.status === "PENDING"
+                ? "bg-yellow-100 text-yellow-800"
+                : "bg-red-100 text-red-800";
+
+          const bookingItem = `
+      <div class="bg-white rounded-lg p-4 shadow-md">
+        <div class="flex items-center ">
+          <div>
+            <p class="font-semibold text-gray-800">Booking ID: ${booking.bookingId}</p>
+            <p class="text-sm text-gray-600">Booking Date: ${bookingDate}</p>
+            <p class="text-sm text-gray-600">Check-in: ${checkInDate} | Check-out: ${checkOutDate}</p>
+          </div>
+          <div class="ml-auto">
+          <span class="px-3 py-1 ${statusColor} rounded-full text-sm font-medium mr-2">
+            ${booking.status}
+          </span>
+          <button class="remove-booking-btn px-3 py-1 bg-blue-600 text-white rounded-full text-sm font-medium" data-package-id="${booking.bookingId}")"> Remove </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+          bookingContainer.append(bookingItem);
+        });
+      },
+      error: () => console.error("Failed to get image data.")
+    })
+  }
+
+  $(document).on("click", ".remove-booking-btn", function () {
+  const bookingId = $(this).data("package-id");
+  console.log("remove booking " + bookingId);
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "Do you really want to delete this booking?",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // User confirmed → Delete request
+      $.ajax({
+        url: `http://localhost:8080/business/deleteBooking/${bookingId}`,
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+        success: (response) => {
+          console.log("response data received:", response);
+
+          Swal.fire(
+            'Deleted!',
+            'The booking has been successfully removed.',
+            'success'
+          );
+
+          // refresh bookings list after delete
+          getAllPackages();
+        },
+        error: function (error) {
+          Swal.fire(
+            'Error!',
+            'Could not remove the booking.',
+            'error'
+          );
+        }
+      });
+    }
+  });
+});
+
 
   let debounceTimer;
 
-  // Sri Lanka districts list
+  // Sri Lanka districts list 
   const districts = [
     "Colombo", "Gampaha", "Kalutara",
     "Kandy", "Matale", "Nuwara Eliya",
@@ -127,14 +231,14 @@ $(document).ready(function () {
   });
 
 
-  let location;
+  let uselocation;
 
   $('#searchBtn').on('click', function () {
-    location = $('#locationInput').val().trim();
-    console.log(location);
+    uselocation = $('#locationInput').val().trim();
+    console.log(uselocation);
 
     $.ajax({
-      url: `http://localhost:8080/search/getAllLocations/${location}`,
+      url: `http://localhost:8080/search/getAllLocations/${uselocation}`,
       method: 'GET',
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
       success: (response) => {
@@ -554,11 +658,21 @@ $(document).ready(function () {
                         </div>
                     </div>
                 </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 mt-4">
+                    <button class="book-now-btn flex-1 py-2 px-4 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors duration-300" data-package-id="${pkg.id}">Book Now</button>
+                </div>
             </div>
         </div>
     `;
 
             packageGrid.append(packageCardHtml);
+
+            packageGrid.find(`[data-package-id="${pkg.id}"]`).on('click', function () {
+              const id = $(this).data('package-id');
+              window.openBookingModal(id);
+            });
           });
 
         } else {
@@ -835,6 +949,91 @@ $(document).ready(function () {
       }
     );
   }
+
+  // Booking Modal Functionality
+  // This function is responsible for handling the display and closure of the booking pop-up.
+  // It listens for clicks on the 'Book Now' button to open the modal and on the 'closeBookingModal' button to close it.
+  // It also includes a placeholder for future form submission logic.
+
+
+  (function () {
+    const bookingModal = document.getElementById('bookingModal');
+    const closeBookingModalBtn = document.getElementById('closeBookingModal');
+    const bookingForm = document.getElementById('bookingForm');
+
+    let selectedPackageId = null;
+
+
+    if (!bookingModal || !closeBookingModalBtn || !bookingForm) {
+      console.error('One or more booking modal elements not found.');
+      return;
+    }
+
+    function openBookingModal(packageId) {
+      selectedPackageId = packageId;
+      document.getElementById('packageId').value = selectedPackageId;
+      console.log('Opening booking modal for package ID:', selectedPackageId);
+      bookingModal.classList.remove('hidden');
+    }
+
+    function closeBookingModal() {
+      bookingModal.classList.add('hidden');
+      bookingForm.reset();
+    }
+
+    closeBookingModalBtn.addEventListener('click', closeBookingModal);
+
+    $(bookingModal).on('click', function (e) {
+      if ($(e.target).is(bookingModal)) {
+        closeBookingModal();
+      }
+    });
+
+    $('#confirmBooking').on('click', function () {
+      const checkInDate = document.getElementById('checkInDate').value;
+      const checkOutDate = document.getElementById('checkOutDate').value;
+      let packageId = document.getElementById('packageId').value;
+
+
+      const bookingData = {
+        checkInDate: checkInDate,
+        checkOutDate: checkOutDate,
+        packageId: packageId
+      };
+
+      $.ajax({
+        url: 'http://localhost:8080/business/addBooking',
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+        data: JSON.stringify(bookingData),
+        contentType: 'application/json',
+        success: function (response) {
+          console.log('Booking submitted successfully:', response);
+          getAllPackages();
+          Swal.fire({
+            icon: 'success',
+            title: 'Booking Confirmed!',
+            text: `Your booking successfully submitted.`,
+            showConfirmButton: false
+          })
+        },
+        error: function (xhr, status, error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Booking not Confirmed!',
+            text: `Your booking not successfully submitted.`,
+            showConfirmButton: false
+          })
+        }
+      });
+
+      closeBookingModal();
+    });
+
+    // Expose openBookingModal to the global scope or where getPackages can access it
+    window.openBookingModal = openBookingModal;
+
+  })();
 
   // --- API Calls ---
   // (You can add your functions to fetch packages, bookings, etc., here)

@@ -99,8 +99,32 @@ $(document).ready(function () {
   getAllSpecialOffers();
   validateAndLoadDashboard();
   initCalendar();
+  getAllBookings();
 
   setInterval(validateAndLoadDashboard, 10000);
+
+  // Event listeners for bookings notification
+  const bookingsNotificationBtn = $('#bookingsNotificationBtn');
+  const bookingsNotificationContainer = $('#bookingsNotificationContainer');
+  const closeBookingsNotificationBtn = $('#closeBookingsNotification');
+
+  bookingsNotificationBtn.on('click', function () {
+    bookingsNotificationContainer.toggleClass('hidden');
+    // Optionally fetch new bookings when opening the container
+    // if (!bookingsNotificationContainer.hasClass('hidden')) {
+    //   fetchBookings(); 
+    // }
+  });
+
+  closeBookingsNotificationBtn.on('click', function () {
+    bookingsNotificationContainer.addClass('hidden');
+  });
+
+  $(document).on('click', function (event) {
+    if (!$(event.target).closest('#bookingsNotificationBtn, #bookingsNotificationContainer').length) {
+      bookingsNotificationContainer.addClass('hidden');
+    }
+  });
 
 
   $('#logoutButton').click(function () {
@@ -139,7 +163,7 @@ $(document).ready(function () {
           success: function (response) {
             Swal.fire('Deleted!', 'The photo has been successfully removed.', 'success');
 
-            getImages(); 
+            getImages();
           },
           error: function (jqXHR) {
             console.error("Failed to delete image:", jqXHR.responseText);
@@ -230,57 +254,167 @@ $(document).ready(function () {
     });
   });
 
-  
-     $('#calendarDays').on('click', '.calendar-day', function () {
-        
-        const clickedDayElement = $(this);
-        
-        const dateKey = clickedDayElement.data('date');
 
-         closedDateId = clickedDayElement.data('id');
+  $('#calendarDays').on('click', '.calendar-day', function () {
 
-        console.log("Date clicked:", dateKey);
-        console.log("Associated Closed Date ID:", closedDateId);
-      
-    });
+    const clickedDayElement = $(this);
+
+    const dateKey = clickedDayElement.data('date');
+
+    closedDateId = clickedDayElement.data('id');
+
+    console.log("Date clicked:", dateKey);
+    console.log("Associated Closed Date ID:", closedDateId);
+
+  });
 
 
 });
 
+function getAllBookings() {
+  $.ajax({
+    url: 'http://localhost:8080/business/getBookings/business',
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+    success: function (response) {
+      renderBookings(response.data);          // Render bookings in container
+      updateBookingBadge(response.data);      // Update red dot badge
+      $('#totalBookings').text(response.data.length);
+    },
+    error: function (jqXHR) {
+      console.error("Failed to fetch bookings:", jqXHR.responseText);
+    }
+  });
+}
+
+// Render pending bookings in the notification container
+function renderBookings(bookings) {
+  const bookingList = $('#bookingList');
+  bookingList.empty(); // clear previous content
+
+  const pendingBookings = bookings.filter(b => b.status === 'PENDING');
+
+  if (pendingBookings.length === 0) {
+    bookingList.append('<p class="text-gray-500 text-sm">No pending bookings.</p>');
+    return;
+  }
+
+  pendingBookings.forEach(booking => {
+    const bookingItem = `
+            <div class="p-3 bg-gray-50 rounded-lg shadow-sm flex justify-between items-center">
+                <div>
+                    <p class="font-medium text-gray-800">Booking ID: ${booking.bookingId}</p>
+                    <p class="text-gray-600 text-sm">Check-in: ${booking.checkInDate}</p>
+                    <p class="text-gray-600 text-sm">Check-out: ${booking.checkOutDate}</p>
+                </div>
+                <div class="flex gap-2">
+                    <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded cancel-booking-btn" data-booking-id="${booking.bookingId}">Cancel</button>
+                    <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded confirm-booking-btn" data-booking-id="${booking.bookingId}">Confirm</button>
+                </div>
+            </div>
+        `;
+    bookingList.append(bookingItem);
+  });
+}
+
+// Update notification red dot badge
+function updateBookingBadge(bookings) {
+  const pendingCount = bookings.filter(b => b.status === 'PENDING').length;
+  const badge = $('#newBookingCount');
+
+  if (pendingCount > 0) {
+    badge.text(pendingCount).removeClass('hidden'); // show badge
+  } else {
+    badge.addClass('hidden'); // hide badge if no pending
+  }
+}
+
+$('#bookingNotificationBtn').on('click', function () {
+  $('#bookingsNotificationContainer').toggleClass('hidden'); // show/hide container
+  $('#newBookingCount').addClass('hidden'); // reset badge when opened
+});
+
+// Close button in container
+$('#closeBookingsNotification').on('click', function () {
+  $('#bookingsNotificationContainer').addClass('hidden');
+});
+
+
+// Handle Cancel booking
+$(document).on('click', '.cancel-booking-btn', function () {
+  const bookingId = $(this).data('booking-id');
+  updateBookingStatus(bookingId, 'CANCELLED', 'Cancelled!', 'The Booking has been successfully cancelled.');
+});
+
+// Handle Confirm booking
+$(document).on('click', '.confirm-booking-btn', function () {
+  const bookingId = $(this).data('booking-id');
+  updateBookingStatus(bookingId, 'CONFIRMED', 'Confirmed!', 'The Booking has been successfully confirmed.');
+});
+
+// Reusable function to update booking status
+function updateBookingStatus(bookingId, status, title, message) {
+  let updatedBooking = { bookingId: bookingId, status: status };
+
+  $.ajax({
+    url: "http://localhost:8080/business/updateBooking",
+    method: 'PATCH',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      'Content-Type': 'application/json'
+    },
+    data: JSON.stringify(updatedBooking),
+    success: function () {
+      Swal.fire(title, message, 'success');
+      getAllBookings(); // Refresh list and badge
+    },
+    error: function () {
+      Swal.fire('Error!', `The Booking has been unsuccessfully ${status.toLowerCase()}.`, 'error');
+    }
+  });
+}
+
+// Toggle notification container and reset badge
+$('#bookingNotificationBtn').on('click', function () {
+  $('#bookingsNotificationContainer').toggleClass('hidden'); // show/hide container
+  $('#newBookingCount').addClass('hidden'); // reset badge
+});
+
+
 function validateAndLoadDashboard() {
-    let token = localStorage.getItem('token');
+  let token = localStorage.getItem('token');
 
-    if (!token) {
-         window.location.href = '../Login.html';
-        return;
+  if (!token) {
+    window.location.href = '../Login.html';
+    return;
+  }
+
+  const tokenParts = token.split('.');
+
+  if (tokenParts.length !== 3) {
+    window.location.href = '../Login.html';
+    return;
+  }
+
+  try {
+    const tokenPayload = JSON.parse(atob(tokenParts[1]));
+
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    console.log("Current timestamp:", currentTimestamp);
+    console.log("Token expiration timestamp:", tokenPayload.exp);
+
+    if (tokenPayload.exp && currentTimestamp >= tokenPayload.exp) {
+      alert('Session expired. Please login again.');
+      localStorage.removeItem('token');
+      window.location.href = '../Login.html';
+      return;
     }
 
-    const tokenParts = token.split('.');
 
-    if (tokenParts.length !== 3) {
-         window.location.href = '../Login.html';
-        return;
-    }
-
-    try {
-        const tokenPayload = JSON.parse(atob(tokenParts[1]));
-
-        const currentTimestamp = Math.floor(Date.now() / 1000);
-        console.log("Current timestamp:", currentTimestamp);
-        console.log("Token expiration timestamp:", tokenPayload.exp);
-
-        if (tokenPayload.exp && currentTimestamp >= tokenPayload.exp) {
-            alert('Session expired. Please login again.');
-             localStorage.removeItem('token');
-            window.location.href = '../Login.html';
-            return;
-        }
-
-
-    } catch (error) { 
-        console.error('Invalid token:', error);
-        window.location.href = '../Login.html';
-    }
+  } catch (error) {
+    console.error('Invalid token:', error);
+    window.location.href = '../Login.html';
+  }
 }
 /**
  * Fetches packages from the backend and dynamically renders them in the packages grid.
@@ -656,7 +790,6 @@ function getUserinfo() {
       $('#longitude').val(businessData.longitude || '');
       $('#address').val(businessData.address || '');
       $('#district').val(businessData.district || '');
-      console.log($('#district').val(businessData.district || ''));
 
       if (businessData.latitude && businessData.longitude) {
         updateMapLocation(businessData.latitude, businessData.longitude);
@@ -774,7 +907,7 @@ function handleGalleryImageSave() {
     contentType: false,
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     success: function (response) {
-      $('#closeModal').click(); 
+      $('#closeModal').click();
       Swal.fire("Success!", "Image added to gallery.", "success");
     },
     error: function (jqXHR) {
@@ -1035,7 +1168,7 @@ function initCalendar() {
   generateCalendar();
   updateSummary();
 
-  }
+}
 
 function setupCalendarListeners() {
   $('#prevMonthBtn').on('click', () => {
@@ -1075,47 +1208,47 @@ function updateMonthDisplay() {
 }
 
 function generateCalendar() {
-    const calendarDays = $('#calendarDays');
-    calendarDays.empty().append('<div class="col-span-7 text-center p-4">Loading Availability...</div>');
+  const calendarDays = $('#calendarDays');
+  calendarDays.empty().append('<div class="col-span-7 text-center p-4">Loading Availability...</div>');
 
-    $.ajax({
-        url: `http://localhost:8080/calender/getAllDates?year=${calendar_currentYear}&month=${calendar_currentMonth + 1}`,
-        method: 'GET',
-        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
-        success: function (response) {
-    if (!response.data || !Array.isArray(response.data)) {
+  $.ajax({
+    url: `http://localhost:8080/calender/getAllDates?year=${calendar_currentYear}&month=${calendar_currentMonth + 1}`,
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+    success: function (response) {
+      if (!response.data || !Array.isArray(response.data)) {
         console.error("Invalid data received for closed dates.");
         calendarDays.html('<p class="col-span-7 text-red-500 text-center">Error: Invalid data format.</p>');
         return;
-    }
+      }
 
-    const closedDatesMap = new Map();
-    response.data.forEach(item => {
+      const closedDatesMap = new Map();
+      response.data.forEach(item => {
         if (item.date && item.id) {
-            closedDatesMap.set(item.date, item.id);
+          closedDatesMap.set(item.date, item.id);
         }
-    });
+      });
 
-    console.log("Closed dates map for this month:", closedDatesMap);
+      console.log("Closed dates map for this month:", closedDatesMap);
 
-    calendarDays.empty(); 
-    
-    const firstDayOfMonth = new Date(calendar_currentYear, calendar_currentMonth, 1).getDay();
-    const daysInMonth = new Date(calendar_currentYear, calendar_currentMonth + 1, 0).getDate();
+      calendarDays.empty();
+
+      const firstDayOfMonth = new Date(calendar_currentYear, calendar_currentMonth, 1).getDay();
+      const daysInMonth = new Date(calendar_currentYear, calendar_currentMonth + 1, 0).getDate();
 
 
-    const startOffset = (firstDayOfMonth === 0) ? 6 : firstDayOfMonth - 1;
-    
+      const startOffset = (firstDayOfMonth === 0) ? 6 : firstDayOfMonth - 1;
 
-    for (let i = 0; i < startOffset; i++) {
+
+      for (let i = 0; i < startOffset; i++) {
         calendarDays.append('<div class="p-2"></div>');
-    }
+      }
 
-    for (let day = 1; day <= daysInMonth; day++) {
+      for (let day = 1; day <= daysInMonth; day++) {
         const dateKey = `${calendar_currentYear}-${String(calendar_currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        
+
         const isClosed = closedDatesMap.has(dateKey);
-        
+
         const closedDateId = isClosed ? closedDatesMap.get(dateKey) : '';
 
         const dayClass = isClosed ? 'bg-red-200 text-red-800' : 'bg-green-200 text-green-800';
@@ -1129,15 +1262,15 @@ function generateCalendar() {
         `);
         calendarDays.append(dayElement);
         $('#closedDaysCount').text(calendarDays.length);
-        
-    }
 
-    updateSummary();
-},
-        error: function (jqXHR) {
-            calendarDays.html('<p class="col-span-7 text-red-500 text-center">Could not load availability.</p>');
-        }
-    });
+      }
+
+      updateSummary();
+    },
+    error: function (jqXHR) {
+      calendarDays.html('<p class="col-span-7 text-red-500 text-center">Could not load availability.</p>');
+    }
+  });
 }
 
 let selectedDateKey = null;
@@ -1171,9 +1304,9 @@ function confirmDateStatusChange() {
 
   if (selectedStatus === 'closed') {
 
-    
-  const formData = new FormData();
-  formData.append('date', selectedDateKey);
+
+    const formData = new FormData();
+    formData.append('date', selectedDateKey);
 
     $.ajax({
       url: 'http://localhost:8080/calender/addClosedDate',
@@ -1193,33 +1326,33 @@ function confirmDateStatusChange() {
       }
     });
 
-  } 
-  
+  }
+
   if (selectedStatus === 'open') {
 
     console.log("Show date confirmation modal for date:", closedDateId);
 
-      const formData = new FormData();
-      formData.append('date', selectedDateKey);
+    const formData = new FormData();
+    formData.append('date', selectedDateKey);
 
 
-        $.ajax({
-          url: `http://localhost:8080/calender/removeClosedDate/${closedDateId}`,
-          method: 'DELETE',
-          data: formData,
-          processData: false,
-          contentType: false,
-          headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
-          success: function (response) {
-            
-            console.log("Special offer saved successfully!" + response);
-            initCalendar();
-            Swal.fire("Success!", "Successfully to delete close date .", "success");
-          },
-          error: function (jqXHR) {
-            Swal.fire("Error!", "Failed to delete close date .", "error");
-          }
-        });
+    $.ajax({
+      url: `http://localhost:8080/calender/removeClosedDate/${closedDateId}`,
+      method: 'DELETE',
+      data: formData,
+      processData: false,
+      contentType: false,
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+      success: function (response) {
+
+        console.log("Special offer saved successfully!" + response);
+        initCalendar();
+        Swal.fire("Success!", "Successfully to delete close date .", "success");
+      },
+      error: function (jqXHR) {
+        Swal.fire("Error!", "Failed to delete close date .", "error");
+      }
+    });
   }
 
 
@@ -1229,16 +1362,16 @@ function confirmDateStatusChange() {
 
 
 function updateSummary() {
-    const totalDays = new Date(calendar_currentYear, calendar_currentMonth + 1, 0).getDate();
+  const totalDays = new Date(calendar_currentYear, calendar_currentMonth + 1, 0).getDate();
 
-    const closedCount = $('#calendarDays .bg-red-200').length;
+  const closedCount = $('#calendarDays .bg-red-200').length;
 
-    const openCount = totalDays - closedCount;
+  const openCount = totalDays - closedCount;
 
-    $('#openDaysCount').text(openCount);
-    $('#closedDaysCount').text(closedCount);
-    $('#totalDaysCount').text(totalDays);
-    
-    console.log(`Summary Updated: Total=${totalDays}, Open=${openCount}, Closed=${closedCount}`);
+  $('#openDaysCount').text(openCount);
+  $('#closedDaysCount').text(closedCount);
+  $('#totalDaysCount').text(totalDays);
+
+  console.log(`Summary Updated: Total=${totalDays}, Open=${openCount}, Closed=${closedCount}`);
 }
 

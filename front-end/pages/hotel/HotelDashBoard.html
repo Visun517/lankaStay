@@ -132,8 +132,8 @@
         <div class="md:col-span-2">
           <label class="block text-sm font-semibold text-gray-600 mb-1">Description</label>
           <textarea id="description"
-            class="w-full p-3 rounded-lg border border-gray-300 bg-blue-50 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="2"
-            placeholder="Describe your hotel..." readonly></textarea>
+            class="w-full p-3 rounded-lg border border-gray-300 bg-blue-50 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            rows="2" placeholder="Describe your hotel..." readonly></textarea>
         </div>
 
 
@@ -144,9 +144,11 @@
 
           <div class="inline-flex gap-8">
             <!-- Hidden inputs for lat/lng -->
-            <input type="text" id="latitude" class="mt-2 w-full p-3 rounded-lg border border-gray-300 bg-blue-50 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            <input type="text" id="latitude"
+              class="mt-2 w-full p-3 rounded-lg border border-gray-300 bg-blue-50 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Latitude" readonly />
-            <input type="text" id="longitude" class="mt-2 w-full p-3 rounded-lg border border-gray-300 bg-blue-50 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            <input type="text" id="longitude"
+              class="mt-2 w-full p-3 rounded-lg border border-gray-300 bg-blue-50 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Longitude" readonly />
           </div>
 
@@ -722,7 +724,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Modal Footer -->
         <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200">
           <button id="cancelDateBtn"
@@ -742,7 +744,7 @@
       <h2 class="text-xl font-bold text-blue-700 mb-2">Stats</h2>
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="bg-blue-100 rounded-lg p-4 flex flex-col items-center">
-          <div class="text-2xl font-bold text-blue-700">128</div>
+          <div id="totalBookings" class="text-2xl font-bold text-blue-700">128</div>
           <div class="text-sm text-gray-600">Total Bookings</div>
         </div>
         <div class="bg-green-100 rounded-lg p-4 flex flex-col items-center">
@@ -762,14 +764,35 @@
   </div>
 
   <!-- Floating Realtime Messaging Button -->
-  <button
-    class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full shadow-lg px-6 py-3 font-bold text-lg flex items-center gap-2 hover:bg-blue-700 transition">
+  <button id="bookingsNotificationBtn"
+    class="fixed bottom-6 w-fit right-6 bg-blue-600 text-white rounded-full shadow-lg px-6 py-3 font-bold text-lg flex items-center gap-2 hover:bg-blue-700 transition">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round"
         d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.77 9.77 0 01-4-.8L3 21l1.8-4A7.97 7.97 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
     </svg>
-    Realtime Messaging
+    Bookings
+    <span id="newBookingCount"
+        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
   </button>
+
+  <!-- Bookings Notification Container -->
+  <div id="bookingsNotificationContainer"
+    class="fixed bottom-[84px] right-6 w-96 bg-white rounded-lg shadow-xl p-4 hidden z-40">
+    <div class="flex justify-between items-center mb-4">
+      <h4 class="text-lg font-bold text-gray-800">Recent Bookings</h4>
+      <button id="closeBookingsNotification" class="text-gray-400 hover:text-gray-600 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+    </div>
+    <div id="bookingList" class="space-y-3 max-h-80 overflow-y-auto custom-scrollbar">
+      <!-- Booking items will be loaded here dynamically -->
+      <p class="text-gray-500 text-sm">No new bookings.</p>
+    </div>
+  </div>
+
 
   <!-- Footer -->
   <footer class="w-full bg-gray-900 text-gray-200 pt-10 pb-6 mt-10">
@@ -818,8 +841,11 @@
       <div>
         <h3 class="text-lg font-semibold mb-4 text-white">Newsletter Subscription</h3>
         <form class="flex flex-col sm:flex-row items-center gap-2">
-          <input type="email" placeholder="Subscribe to our newsletter" class="w-full px-3 py-2 rounded bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-          <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white font-semibold transition">Subscribe</button>
+          <input type="email" placeholder="Subscribe to our newsletter"
+            class="w-full px-3 py-2 rounded bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required>
+          <button type="submit"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white font-semibold transition">Subscribe</button>
         </form>
       </div>
     </div>
@@ -827,49 +853,6 @@
       © 2024 StayLanka. All rights reserved.
     </div>
   </footer>
-
-  <script>
-    (function () {
-      const editBtn = document.getElementById('editProfileBtn');
-      const saveBtn = document.getElementById('submitProfileBtn');
-      if (!editBtn || !saveBtn) return;
-
-      const inputIds = ['businessName', 'contactNumber', 'description', 'district', 'address'];
-      const latLngIds = ['latitude', 'longitude']; // keep readonly always
-      const inputs = inputIds
-        .map(id => document.getElementById(id))
-        .filter(Boolean);
-
-      function setEditable(isEditable) {
-        inputs.forEach(el => {
-          el.readOnly = !isEditable;
-          el.classList.toggle('bg-blue-50', !isEditable);
-          el.classList.toggle('bg-white', isEditable);
-          el.classList.toggle('border-blue-300', isEditable);
-        });
-        editBtn.disabled = isEditable;
-        saveBtn.disabled = !isEditable;
-        saveBtn.classList.toggle('opacity-60', !isEditable);
-        saveBtn.classList.toggle('cursor-not-allowed', !isEditable);
-      }
-
-      // initial state: readonly, disable save
-      setEditable(false);
-
-      editBtn.addEventListener('click', function () {
-        setEditable(true);
-      });
-
-      saveBtn.addEventListener('click', function () {
-        // TODO: hook up API saving here
-        setEditable(false);
-        if (window.Swal) {
-          Swal.fire({ icon: 'success', title: 'Saved', text: 'Profile updated successfully.' });
-        }
-      });
-    })();
-  </script>
-
 </body>
 
 </html>
