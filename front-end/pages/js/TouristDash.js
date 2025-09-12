@@ -54,6 +54,59 @@ $(document).ready(function () {
 
   console.log("Document is ready. Attaching event listeners.");
 
+  setInterval(validateAndLoadDashboard, 1000);
+
+  getUserName();
+  function getUserName(){
+
+    $.ajax({
+      url: 'http://localhost:8080/user/getUserName',
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+      success: (response) => {
+        $('#userName').text(response.data);
+        $('#welcomeUserName').text(response.data);
+      },
+      error: () => console.error("Failed to get user name.")
+    });
+  }
+
+  function validateAndLoadDashboard() {
+  let token = localStorage.getItem('token');
+
+  if (!token) {
+    window.location.href = '../Login.html';
+    return;
+  }
+
+  const tokenParts = token.split('.');
+
+  if (tokenParts.length !== 3) {
+    window.location.href = '../Login.html';
+    return;
+  }
+
+  try {
+    const tokenPayload = JSON.parse(atob(tokenParts[1]));
+
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    // console.log("Current timestamp:", currentTimestamp);
+    // console.log("Token expiration timestamp:", tokenPayload.exp);
+
+    if (tokenPayload.exp && currentTimestamp >= tokenPayload.exp) {
+      alert('Session expired. Please login again.');
+      localStorage.removeItem('token');
+      window.location.href = '../Login.html';
+      return;
+    }
+
+
+  } catch (error) {
+    console.error('Invalid token:', error);
+    window.location.href = '../Login.html';
+  }
+}
+
   getRecommendedPackages();
   function getRecommendedPackages() {
     $.ajax({

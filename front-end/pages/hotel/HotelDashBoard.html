@@ -160,6 +160,8 @@
           <input type="text" id="district"
             class="w-full p-3 rounded-lg border border-gray-300 bg-blue-50 text-gray-800 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="District" readonly />
+          <ul id="suggestionList"
+            class="border border-gray-300 mt-1 rounded-lg bg-white max-h-40 overflow-y-auto hidden"></ul>
         </div>
 
         <div class="md:col-span-2">
@@ -772,7 +774,7 @@
     </svg>
     Bookings
     <span id="newBookingCount"
-        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+      class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
   </button>
 
   <!-- Bookings Notification Container -->

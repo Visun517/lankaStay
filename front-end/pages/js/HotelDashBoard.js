@@ -269,7 +269,58 @@ $(document).ready(function () {
   });
 
 
+
+  //District input auto complete
+  const districts = [
+  "Colombo", "Gampaha", "Kalutara",
+  "Kandy", "Matale", "Nuwara Eliya",
+  "Galle", "Matara", "Hambantota",
+  "Jaffna", "Kilinochchi", "Mannar",
+  "Vavuniya", "Mullaitivu", "Batticaloa",
+  "Ampara", "Trincomalee", "Kurunegala",
+  "Puttalam", "Anuradhapura", "Polonnaruwa",
+  "Badulla", "Monaragala", "Ratnapura",
+  "Kegalle"
+];
+
+const input = document.getElementById("district");
+const suggestionList = document.getElementById("suggestionList");
+
+input.addEventListener("input", function() {
+  const value = this.value.toLowerCase();
+  suggestionList.innerHTML = "";
+
+  if (!value) {
+    suggestionList.classList.add("hidden");
+    return;
+  }
+
+  const filtered = districts.filter(d => d.toLowerCase().startsWith(value));
+  filtered.forEach(d => {
+    const li = document.createElement("li");
+    li.textContent = d;
+    li.classList.add("p-2", "hover:bg-blue-100", "cursor-pointer");
+    li.addEventListener("click", () => {
+      input.value = d;
+      suggestionList.classList.add("hidden");
+    });
+    suggestionList.appendChild(li);
+  });
+
+  suggestionList.classList.toggle("hidden", filtered.length === 0);
 });
+
+// Click outside to close suggestion list
+document.addEventListener("click", function(e) {
+  if (!e.target.closest("#district") && !e.target.closest("#suggestionList")) {
+    suggestionList.classList.add("hidden");
+  }
+});
+
+
+});
+
+
 
 function getAllBookings() {
   $.ajax({
