@@ -5,11 +5,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tourist Dashboard - LankaStay</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script src="../lib/jquery-3.7.1.min.js"></script>
-  <script src="../js/TouristDash.js"></script>
   <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbK6ZSQgHb67i6tbwwojGFNBkTRBt2dVM&callback=initializeMap">
     </script>
@@ -228,21 +228,49 @@
           <div id="bdPackages" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
         </div>
       </div>
+      <section id="reviewContainer" class="max-w-4xl mx-auto px-6 py-12 bg-blue-50 rounded-2xl shadow-inner mb-10">
+        <!-- Section Title -->
+        <h2 class="text-2xl md:text-3xl font-bold text-center mb-10 text-blue-900">
+          What our customers say
+        </h2>
+
+        <!-- Reviews Summary -->
+        <div class="flex items-center justify-center gap-4 mb-10">
+          <button type="button" id="reviewBtn"
+            class="px-5 py-2.5 bg-blue-600 text-white rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg transition transform hover:-translate-y-0.5">
+            Add Review
+          </button>
+        </div>
+
+        <!-- Reviews Container -->
+        <div id="reviewsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Reviews will be loaded here dynamically -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-between mt-8">
+          <button id="prevPageBtn"
+            class="px-5 py-2 bg-blue-100 text-blue-700 rounded-lg shadow hover:bg-blue-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled>
+            Previous
+          </button>
+          <button id="nextPageBtn"
+            class="px-5 py-2 bg-blue-100 text-blue-700 rounded-lg shadow hover:bg-blue-200 transition disabled:opacity-50 disabled:cursor-not-allowed">
+            Next
+          </button>
+        </div>
+      </section>
+
+
     </div>
 
     <!-- Recommended Packages -->
+
     <section class="mb-12">
       <h3 class="text-xl font-bold text-gray-800 mb-6">Recommended Packages</h3>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="reccommendedPackages">
         <!-- Package Card 1 -->
-        <div class="bg-blue-100 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
-          <h4 class="text-lg font-semibold text-gray-800 mb-2">Ocean View Package</h4>
-          <p class="text-gray-600 mb-4">Luxury beachfront experience with stunning ocean views</p>
-          <div class="flex justify-between items-center">
-            <span class="text-2xl font-bold text-blue-600">$120</span>
-            <button class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Book</button>
-          </div>
-        </div>
+
       </div>
     </section>
 
@@ -250,17 +278,10 @@
     <section class="mb-12" id="bookingContainer">
       <h3 class="text-xl font-bold text-gray-800 mb-6">My Bookings</h3>
       <div class="space-y-4">
-        <!-- Booking Item 1 -->
-        <div class="bg-white rounded-lg p-4 shadow-md">
-          <div class="flex justify-between items-center">
-            <div>
-              <p class="font-semibold text-gray-800">Amaya Hills</p>
-              <p class="text-sm text-gray-600">12th July 2025</p>
-            </div>
-            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Confirmed</span>
-          </div>
-        </div>
+
     </section>
+
+
   </main>
 
   <!-- Modal for Hotel Details -->
@@ -313,16 +334,116 @@
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="bg-green-100 py-6 mt-12">
-    <div class="text-center text-gray-600">
-      <div class="flex justify-center space-x-6">
-        <a href="#" class="hover:text-green-800 transition">Footer</a>
-        <a href="#" class="hover:text-green-800 transition">Contact</a>
-        <a href="#" class="hover:text-green-800 transition">Terms</a>
-        <a href="#" class="hover:text-green-800 transition">Privacy</a>
+  <!-- Review Modal -->
+  <div id="reviewModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div
+      class="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl shadow-2xl w-full max-w-md mx-4 relative border border-blue-200">
+
+      <!-- Close Button -->
+      <button id="closeReviewModal"
+        class="absolute top-4 right-4 text-gray-500 hover:text-red-500 text-3xl font-bold transition duration-200">
+        &times;
+      </button>
+
+      <!-- Title -->
+      <h3 class="text-3xl font-extrabold mb-6 text-center text-blue-700 drop-shadow-sm">
+        Share Your Experience
+      </h3>
+
+      <!-- Text Area -->
+      <textarea id="reviewComment"
+        class="w-full p-4 border border-blue-300 rounded-lg mb-4 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-200 resize-y shadow-sm"
+        placeholder="Write your review here (e.g., 'Great place, loved the service!')..." rows="4"></textarea>
+
+      <!-- Rating Stars -->
+      <div class="rating flex justify-center space-x-2 mb-6 text-yellow-400">
+        <input type="radio" id="modalStar5" name="modalRating" value="5" class="hidden" />
+        <label for="modalStar5" title="5 stars"
+          class="text-4xl cursor-pointer transition-transform duration-200 hover:scale-125">&#9733;</label>
+
+        <input type="radio" id="modalStar4" name="modalRating" value="4" class="hidden" />
+        <label for="modalStar4" title="4 stars"
+          class="text-4xl cursor-pointer transition-transform duration-200 hover:scale-125">&#9733;</label>
+
+        <input type="radio" id="modalStar3" name="modalRating" value="3" class="hidden" />
+        <label for="modalStar3" title="3 stars"
+          class="text-4xl cursor-pointer transition-transform duration-200 hover:scale-125">&#9733;</label>
+        
+        <input type="radio" id="modalStar2" name="modalRating" value="2" class="hidden" />
+        <label for="modalStar2" title="2 stars"
+          class="text-4xl cursor-pointer transition-transform duration-200 hover:scale-125">&#9733;</label>
+
+        <input type="radio" id="modalStar1" name="modalRating" value="1" class="hidden" />
+        <label for="modalStar1" title="1 star"
+          class="text-4xl cursor-pointer transition-transform duration-200 hover:scale-125">&#9733;</label>
       </div>
-      <p class="mt-2 text-sm">© 2025 LankaStay. All rights reserved.</p>
+
+      <!-- Submit Button -->
+      <button id="submitReviewModal"
+        class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-semibold text-lg shadow-md">
+        Submit Review
+      </button>
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+  <footer class="w-full bg-gray-900 text-gray-200 pt-10 pb-6 mt-10">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-5 gap-8">
+      <!-- Brand -->
+      <div>
+        <h3 class="text-xl font-bold mb-4 text-white">StayLanka</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:underline">About Us</a></li>
+          <li><a href="#" class="hover:underline">Contact Us</a></li>
+          <li><a href="#" class="hover:underline">Terms of Use</a></li>
+          <li><a href="#" class="hover:underline">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <!-- Social -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-white">Social</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:underline">Facebook</a></li>
+          <li><a href="#" class="hover:underline">Twitter</a></li>
+          <li><a href="#" class="hover:underline">Instagram</a></li>
+          <li><a href="#" class="hover:underline">YouTube</a></li>
+        </ul>
+      </div>
+      <!-- Service -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-white">Service</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:underline">Compare</a></li>
+          <li><a href="#" class="hover:underline">Download</a></li>
+          <li><a href="#" class="hover:underline">Feedback</a></li>
+          <li><a href="#" class="hover:underline">Support</a></li>
+        </ul>
+      </div>
+      <!-- Activity -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-white">Activity</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:underline">Offers</a></li>
+          <li><a href="#" class="hover:underline">Affiliate</a></li>
+          <li><a href="#" class="hover:underline">Giveaway</a></li>
+          <li><a href="#" class="hover:underline">Events</a></li>
+        </ul>
+      </div>
+      <!-- Newsletter -->
+      <div>
+        <h3 class="text-lg font-semibold mb-4 text-white">Newsletter Subscription</h3>
+        <form class="flex flex-col sm:flex-row items-center gap-2">
+          <input type="email" placeholder="Subscribe to our newsletter"
+            class="w-full px-3 py-2 rounded bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required>
+          <button type="submit"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white font-semibold transition">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 mt-8 border-t border-gray-700 pt-4 text-center text-gray-400 text-sm">
+      © 2024 StayLanka. All rights reserved.
     </div>
   </footer>
 
@@ -349,6 +470,7 @@
     }
   </style>
 
+  <script src="../js/TouristDash.js"></script>
 
 
 </body>

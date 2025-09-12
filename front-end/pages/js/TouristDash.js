@@ -170,7 +170,7 @@ $(document).ready(function () {
       }
     });
   });
-
+  getAllBookings();
   setInterval(getAllBookings, 10000);
   function getAllBookings() {
     $.ajax({
@@ -179,6 +179,9 @@ $(document).ready(function () {
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
       success: (response) => {
         console.log("all bookings received:", response);
+        touristId = response.data.touristId;
+        localStorage.setItem("touristId", response.data[0].touristId);
+
 
         const bookings = Array.isArray(response) ? response : response.data;
         const bookingContainer = $("#bookingContainer .space-y-4");
@@ -487,6 +490,8 @@ $(document).ready(function () {
           getImages(businessId);
           getOffers(businessId);
           getPackages(businessId);
+          getReviews(businessId); // Call to fetch and display reviews
+          // getOverallReviewsSummary(businessId); // Call to fetch overall review summary
 
 
         });
@@ -496,6 +501,150 @@ $(document).ready(function () {
       alert("No businesses found for this location.");
     }
   }
+
+
+  // get all reviews for business
+
+  let currentPage = 0;
+  const pageSize = 3;
+
+
+  function getReviews(businessId, page = 0) {
+    $.ajax({
+      url: `http://localhost:8080/review/getAllReviews/${businessId}?page=${page}&size=${pageSize}`,
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+      success: (response) => {
+        console.log("Reviews received successfully:", response.data);
+
+        const reviewsContainer = $('#reviewsContainer');
+        reviewsContainer.empty(); // Clear existing reviews
+        let loggedInTouristId = localStorage.getItem('touristId'); // logged-in tourist ID
+
+        if (response.status === 200 && Array.isArray(response.data) && response.data.length > 0) {
+          response.data.forEach(review => {
+            const starsHtml = Array(review.rating).fill('<span class="text-yellow-500">&#9733;</span>').join('');
+            const emptyStarsHtml = Array(5 - review.rating).fill('<span class="text-gray-300">&#9733;</span>').join('');
+            const reviewDate = review.createdAt ? new Date(review.createdAt).toLocaleDateString() : '';
+
+            // check if this review belongs to the logged-in tourist
+            let isMyReview = (review.touristId && review.touristId.toString() === loggedInTouristId);
+
+            // add extra classes for highlight if it's my review
+            let cardClasses = isMyReview
+              ? "bg-blue-50 border border-blue-400 rounded-xl shadow-lg p-6" // highlighted
+              : "bg-white rounded-xl shadow-md p-6";
+
+            // delete button only if it's my review
+            let deleteBtnHtml = isMyReview
+              ? `<button data-review-id="${review.review_id}" 
+                        class=" delete-review-btn ml-auto text-red-500 hover:text-red-700 text-sm">
+                        Delete
+               </button>`
+              : "";
+
+            const reviewCardHtml = `
+            <div class="${cardClasses}">
+              <div class="flex items-center mb-2">
+                <h4 class="font-bold text-gray-800">${review.userName || 'Anonymous'}</h4>
+                <div class="flex items-center ml-2 text-xl">${starsHtml}${emptyStarsHtml}</div>
+                ${deleteBtnHtml}
+              </div>
+              <p class="text-gray-700 text-sm">${review.comment}</p>
+              <p class="text-gray-400 text-xs mt-2">${reviewDate}</p>
+            </div>
+          `;
+            reviewsContainer.append(reviewCardHtml);
+
+
+          });
+
+
+          $(document).on("click", ".delete-review-btn", function () {
+            let reviewId = $(this).data("review-id");
+            console.log(reviewId)
+            deleteReview(reviewId);
+          });
+
+          // Enable/Disable buttons based on page
+          $('#prevPageBtn').prop('disabled', page <= 0);
+          $('#nextPageBtn').prop('disabled', response.data.length < pageSize);
+
+          currentPage = page;
+        } else {
+          reviewsContainer.append(`
+  <div id="noReviewsMessage" 
+       class="col-span-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl shadow-sm py-10 px-6">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+            d="M11 17a4 4 0 100-8 4 4 0 000 8zm0 0v4m-7-4h14" />
+    </svg>
+    <p class="text-gray-600 text-lg font-medium">No reviews yet</p>
+    <p class="text-blue-600 mt-1 font-semibold">Be the first to review!</p>
+  </div>
+`);
+
+          $('#prevPageBtn, #nextPageBtn').prop('disabled', true);
+        }
+      },
+      error: () => console.error("Failed to get reviews.")
+    });
+
+  }
+
+  // Delete review function (AJAX call)
+  function deleteReview(reviewId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you really want to delete this booking?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // User confirmed → Delete request
+        $.ajax({
+          url: `http://localhost:8080/review/removeReview/${reviewId}`,
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+          success: (response) => {
+            console.log("response data received:", response);
+
+            Swal.fire(
+              'Deleted!',
+              'The review has been successfully removed.',
+              'success'
+            );
+
+            getReviews(businessId, currentPage);
+          },
+          error: function (error) {
+            Swal.fire(
+              'Error!',
+              'Could not remove the review .',
+              'error'
+            );
+          }
+        });
+      }
+    });
+  }
+
+
+
+  // Pagination button handlers
+  $('#prevPageBtn').on('click', () => {
+    if (currentPage > 0) {
+      getReviews(businessId, currentPage - 1);
+    }
+  });
+
+  $('#nextPageBtn').on('click', () => {
+    getReviews(businessId, currentPage + 1);
+  });
 
   function getImages(businessId) {
 
@@ -804,11 +953,6 @@ $(document).ready(function () {
       closeBtn: document.getElementById('bdCloseBtn')
     };
 
-    function clearContainer(container) {
-      if (!container) return;
-      while (container.firstChild) container.removeChild(container.firstChild);
-    }
-
     function openPanel() {
       panel.classList.remove('hidden');
     }
@@ -989,40 +1133,6 @@ $(document).ready(function () {
     window.location.href = '../tourist/NearByBusiness.html';
   });
 
-  // Function to show the custom location permission popup
-  function showLocationPopup() {
-    // Remove any existing popup to avoid duplicates
-    $('.location-popup').remove();
-
-    const popupHTML = `
-              <div class="location-popup fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                  <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-6 relative animate-fadeIn text-center">
-                      <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                      </div>
-                      <h3 class="text-xl font-bold text-gray-800 mb-2">Location Access Required</h3>
-                      <p class="text-gray-600 mb-6">To explore nearby deals, please allow access to your location.</p>
-                      <div class="flex gap-3 justify-center">
-                          <button id="allowLocation" class="px-6 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-all duration-200 shadow">Allow</button>
-                          <button id="denyLocation" class="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-400 transition-all duration-200">Not Now</button>
-                      </div>
-                  </div>
-              </div>
-          `;
-    $('body').append(popupHTML);
-
-    // Attach event listeners for the new popup buttons
-    $('#allowLocation').on('click', function () {
-      $('.location-popup').remove();
-      requestAndGetCurrentLocation();
-    });
-
-    $('#denyLocation').on('click', function () {
-      $('.location-popup').remove();
-      alert('Location access denied. You can still search for hotels manually.');
-    });
-  }
-
   // Function to handle the actual geolocation request
   function requestAndGetCurrentLocation() {
     navigator.geolocation.getCurrentPosition(
@@ -1148,5 +1258,105 @@ $(document).ready(function () {
   // Call functions to load initial data
   fetchRecommendedPackages();
   fetchBookingHistory();
+
+  // Star Rating Functionality
+  (function () {
+    const reviewModal = $('#reviewModal');
+    const reviewBtn = $('#reviewBtn');
+    const closeReviewModalBtn = $('#closeReviewModal');
+    const reviewCommentInput = $('#reviewComment');
+    const modalRatingInputs = $('input[name="modalRating"]');
+    const submitReviewModalBtn = $('#submitReviewModal');
+
+    if (!reviewModal.length || !reviewBtn.length || !closeReviewModalBtn.length || !reviewCommentInput.length || !modalRatingInputs.length || !submitReviewModalBtn.length) {
+      console.error('One or more review modal elements not found.');
+      return;
+    }
+
+    function resetReviewForm() {
+      reviewCommentInput.val('');
+      modalRatingInputs.prop('checked', false);
+      $('.rating label').css('color', '#ccc'); // Reset star colors
+    }
+
+    reviewBtn.on('click', function () {
+      reviewModal.removeClass('hidden');
+      resetReviewForm();
+    });
+
+    closeReviewModalBtn.on('click', function () {
+      reviewModal.addClass('hidden');
+      resetReviewForm();
+    });
+
+    reviewModal.on('click', function (e) {
+      if ($(e.target).is(reviewModal)) {
+        reviewModal.addClass('hidden');
+        resetReviewForm();
+      }
+    });
+
+    modalRatingInputs.on('change', function () {
+      const selectedRating = $(this).val();
+      modalRatingInputs.each(function () {
+        const starLabel = $(`label[for="${$(this).attr('id')}"`);
+        if (parseInt($(this).val()) <= selectedRating) {
+          starLabel.css('color', '#FFD700'); // Gold for selected stars
+        } else {
+          starLabel.css('color', '#ccc'); // Grey out unselected stars
+        }
+      });
+    });
+
+    submitReviewModalBtn.on('click', function () {
+      const reviewComment = reviewCommentInput.val();
+      const rating = parseInt(modalRatingInputs.filter(':checked').val());
+
+      if (!rating) {
+        Swal.fire('Please select a star rating.', '', 'warning');
+        return;
+      }
+      if (!reviewComment.trim()) {
+        Swal.fire('Please write a review comment.', '', 'warning');
+        return;
+      }
+
+      console.log("Review Comment:", reviewComment);
+      console.log("Rating:", rating);
+      console.log("Business ID:", businessId);
+
+      // Assuming businessId is available in this scope from marker click
+      if (!businessId) {
+        Swal.fire('Error', 'Please select a business first.', 'error');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('comment', reviewComment);
+      formData.append('rating', rating);
+      formData.append('businessId', businessId);
+
+      console.log("Form Data:", formData);
+
+      $.ajax({
+        url: "http://localhost:8080/review/addReview",
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          Swal.fire('Review Submitted!', 'Thank you for your feedback.', 'success');
+          resetReviewForm(); // Clear and reset modal form
+          reviewModal.addClass('hidden'); // Hide modal
+          getReviews(businessId); // Refresh reviews after submission
+          // getOverallReviewsSummary(businessId); // Refresh overall review summary after submission
+        },
+        error: function () {
+          Swal.fire('Error', 'Failed to submit review.', 'error');
+        }
+      });
+    });
+  })();
 
 });
