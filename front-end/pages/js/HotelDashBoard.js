@@ -926,6 +926,7 @@ function updateProfile() {
     success: (response) => {
       Swal.fire("Success!", "Profile details updated.", "success");
       $('#editProfileBtn').click(); // Exit edit mode
+      getUserinfo();
     },
     error: () => Swal.fire("Error!", "Profile update failed.", "error")
   });
