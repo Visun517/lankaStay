@@ -1,6 +1,7 @@
 package lk.ijse.gdse71.lankastay.service;
 
 import lk.ijse.gdse71.lankastay.dto.BusinessDto;
+import lk.ijse.gdse71.lankastay.dto.UserLocation;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -14,4 +15,7 @@ public interface BusinessService {
      List<BusinessDto> getBusinessByDistrict(String district, Long id);
      List<BusinessDto> getBusinessByDistrictAndCategory(String district, String category, Long id);
      BusinessDto getProfileAndContact(String businessId, Long id);
+     List<BusinessDto> getNearByBusinesses(UserLocation userLocation, double radius, Long id);
+     List<BusinessDto> getNearByBusinessesByType(String type,UserLocation userLocation, double radius, Long id);
+
 }

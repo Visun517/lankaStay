@@ -195,29 +195,6 @@ public class BusinessServiceImpl implements BusinessService {
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
 
         List<Business> businesses = businessRepository.findAllByBusinessType(BusinessType.valueOf(type));
-        System.out.println(businesses.size());
-
-        return businesses.stream()
-                .filter(business -> GeoUtils.distance(
-                        userLocation.getLatitude(),
-                        userLocation.getLongitude(),
-                        business.getLatitude(),
-                        business.getLongitude()
-                ) <= radius)
-                .map(business -> BusinessDto.builder()
-                        .id(business.getId())
-                        .district(business.getDistrict())
-                        .latitude(business.getLatitude())
-                        .longitude(business.getLongitude())
-                        .description(business.getDescription())
-                        .address(business.getAddress())
-                        .phoneNumber(business.getPhoneNumber())
-                        .businessName(business.getUser().getName())
-                        .type(business.getBusinessType().name())
-                        .imageUrl(business.getImageUrl())
-                        .build()
-                )
-                .collect(Collectors.toList());
 
     }
 }

@@ -106,9 +106,8 @@ public class BusinessController {
         );
     }
 
-    @GetMapping("/getBusiness/{type}")
+    @GetMapping("/getBusiness/*")
     public ResponseEntity<ApiResponseDto> getNearByBusinessesByHotel(
-            @PathVariable String type,
             @RequestParam double latitude,
             @RequestParam double longitude,
             @RequestParam(defaultValue = "5000") double radius,
@@ -128,7 +127,7 @@ public class BusinessController {
                 new ApiResponseDto(
                         200,
                         "Near by businesses fetched successfully",
-                        businessService.getNearByBusinessesByType(type , userLocation, radius, user.getId())
+                        businessService.getNearByBusinessesByType(userLocation, radius, user.getId())
                 )
         );
     }

@@ -14,4 +14,5 @@ public interface BusinessRepository extends JpaRepository<Business , Long> {
     List<Business> findAllByDistrict(String district);
     List<Business> findAllByDistrictAndBusinessType(String district, BusinessType businessType);
     Business getImageUrlAndPhoneNumberByUserId(Long id);
+    List<Business> findAllByBusinessType(BusinessType businessType);
 }
