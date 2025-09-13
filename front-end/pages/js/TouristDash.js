@@ -1187,30 +1187,6 @@ $(document).ready(function () {
   });
 
   // Function to handle the actual geolocation request
-  function requestAndGetCurrentLocation() {
-    navigator.geolocation.getCurrentPosition(
-      function (position) { // Success
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-        alert('Location found! Redirecting...');
-        // Redirect to a page that uses these coordinates
-        window.location.href = `../NearbyHotelOffersOnly.html?lat=${lat}&lon=${lon}`;
-      },
-      function (error) { // Error
-        let errorMessage = 'An error occurred while getting your location.';
-        if (error.code === 1) { // PERMISSION_DENIED
-          errorMessage = 'Location access was denied. Please enable it in your browser settings to use this feature.';
-        }
-        alert(errorMessage);
-      },
-      { // Options
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 60000
-      }
-    );
-  }
-
   // Booking Modal Functionality
   // This function is responsible for handling the display and closure of the booking pop-up.
   // It listens for clicks on the 'Book Now' button to open the modal and on the 'closeBookingModal' button to close it.
@@ -1311,6 +1287,7 @@ $(document).ready(function () {
   // Call functions to load initial data
   fetchRecommendedPackages();
   fetchBookingHistory();
+  
 
   // Star Rating Functionality
   (function () {
