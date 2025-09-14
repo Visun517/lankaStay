@@ -13,6 +13,4 @@ public class BusinessRegisterDto {
     private String password;
     private String email;
     private RoleTypes role;
-    private String type;
-    private String phoneNumber;
 }

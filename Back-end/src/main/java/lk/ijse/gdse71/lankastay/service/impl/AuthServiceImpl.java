@@ -1,5 +1,7 @@
 package lk.ijse.gdse71.lankastay.service.impl;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.json.webtoken.JsonWebToken;
 import lk.ijse.gdse71.lankastay.dto.AuthDto;
 import lk.ijse.gdse71.lankastay.dto.AuthResponseDto;
 import lk.ijse.gdse71.lankastay.dto.BusinessRegisterDto;
@@ -8,6 +10,7 @@ import lk.ijse.gdse71.lankastay.entity.Business;
 import lk.ijse.gdse71.lankastay.entity.types.BusinessType;
 import lk.ijse.gdse71.lankastay.entity.Tourist;
 import lk.ijse.gdse71.lankastay.entity.User;
+import lk.ijse.gdse71.lankastay.entity.types.RoleTypes;
 import lk.ijse.gdse71.lankastay.repository.BusinessRepository;
 import lk.ijse.gdse71.lankastay.repository.TouristRepository;
 import lk.ijse.gdse71.lankastay.repository.UserRepository;
@@ -88,8 +91,6 @@ public class AuthServiceImpl implements AuthService {
 
         Business business = Business.builder()
                 .user(save)
-                .businessType(BusinessType.valueOf(businessRegisterDto.getType()))
-                .phoneNumber(businessRegisterDto.getPhoneNumber())
                 .createdAt(LocalDate.now())
                 .updatedAt(LocalDate.now())
                 .build();
@@ -100,5 +101,59 @@ public class AuthServiceImpl implements AuthService {
         return "User registered successfully";
     }
 
+    public AuthResponseDto authenticateGoogle(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Google login users: skip password check
+        String token = jwtUtil.generateToken(user.getEmail(), String.valueOf(user.getRole()));
+
+        return new AuthResponseDto(token);
+
+    }
+
+    @Override
+    public String registerGoogle(GoogleIdToken.Payload payload, String businessType) {
+        if (userRepository.findByEmail(payload.getEmail())
+                .isPresent()){
+            throw new RuntimeException("User already exists with username: " + payload.get("name"));
+        }
+        if (businessType.equals("TOURIST")) {
+            User user = User.builder()
+                    .email(payload.getEmail())
+                    .name((String) payload.get("name"))
+                    .password("GOOGLE")
+                    .role(RoleTypes.valueOf(businessType))
+                    .build();
+            User save = userRepository.save(user);
+
+            Tourist tourist = Tourist.builder()
+                    .user(save)
+                    .createdAt(LocalDate.now())
+                    .updatedAt(LocalDate.now())
+                    .build();
+
+            touristRepository.save(tourist);
+        }else if (businessType.equals("BUSINESS")) {
+            User user = User.builder()
+                    .email(payload.getEmail())
+                    .name((String) payload.get("name"))
+                    .password("GOOGLE")
+                    .role(RoleTypes.valueOf(businessType))
+                    .build();
+            System.out.println(user);
+            User save = userRepository.save(user);
+            System.out.println(save);
+
+            Business business = Business.builder()
+                    .user(save)
+                    .createdAt(LocalDate.now())
+                    .updatedAt(LocalDate.now())
+                    .build();
+
+            System.out.println(business);
+            businessRepository.save(business);
+        }
+        return "User registered successfully";
+    }
 }

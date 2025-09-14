@@ -85,6 +85,8 @@ public class BusinessServiceImpl implements BusinessService {
         business.setDistrict(businessDetails.getDistrict());
         business.setDescription(businessDetails.getDescription());
         business.setAddress(businessDetails.getAddress());
+        business.setPhoneNumber(businessDetails.getPhoneNumber());
+        business.setBusinessType(BusinessType.valueOf(businessDetails.getType()));
         businessRepository.save(business);
 
         return "Business details updated successfully";
