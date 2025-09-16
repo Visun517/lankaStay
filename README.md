@@ -1,6 +1,3 @@
-"# lankaStay" 
-
-<img width="1902" height="912" alt="image" src="https://github.com/user-attachments/assets/70cb1002-b7cc-4103-b941-36ed686438e6" /><img width="1914" height="909" alt="image" src="https://github.com/user-attachments/assets/ca572ef9-6f33-456c-a887-058ef6ea026b" />"# lankaStay" 
 # LankaStay - Advanced API Development Final Project
 
 This is the final project for the **Advanced API Development (ITS 1114)** module, part of the Higher Diploma in Software Engineering at the Institute of Software Engineering (IJSE).
