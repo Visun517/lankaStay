@@ -3,7 +3,6 @@ import lk.ijse.gdse71.lankastay.dto.BookingAddDto;
 import lk.ijse.gdse71.lankastay.dto.BookingDto;
 import lk.ijse.gdse71.lankastay.entity.*;
 import lk.ijse.gdse71.lankastay.entity.types.StatusTypes;
-import lk.ijse.gdse71.lankastay.exception.ResourceNotFoundException;
 import lk.ijse.gdse71.lankastay.repository.*;
 import lk.ijse.gdse71.lankastay.service.BookingService;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +25,16 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public String addBooking(BookingAddDto bookingAddDto, Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + id));
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
 
         Tourist tourist = touristRepository.findById(id)
-                .orElseThrow(() ->  new ResourceNotFoundException("Tourist not found with email: " + id));
+                .orElseThrow(() -> new RuntimeException("Tourist not found with id: " + id));
 
         HotelPackages hotelPackages = packageRepository.findById(bookingAddDto.getPackageId())
-                .orElseThrow(() ->  new ResourceNotFoundException("Package not found with email: " + id));
+                .orElseThrow(() -> new RuntimeException("Package not found with id: " + id));
 
         Business business = businessRepository.findById(hotelPackages.getBusiness().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Business not found with email: " + id));
+                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
 
 
 
@@ -58,7 +57,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingDto> getBookingsForTourist(Long id) {
         Tourist tourist = touristRepository.findById(id)
-                .orElseThrow(() ->  new ResourceNotFoundException("Tourist not found with email: " + id));
+                .orElseThrow(() -> new RuntimeException("Tourist not found with id: " + id));
 
         List<Booking> bookings = bookingRepository.findAllByTourist(tourist);
 
@@ -81,7 +80,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingDto> getBookingsForBusiness(Long id) {
         Business business = businessRepository.findById(id)
-                .orElseThrow(() ->  new ResourceNotFoundException("Business not found with email: " + id));
+                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
 
         List<Booking> bookings = bookingRepository.findAllByBusiness(business);
 
@@ -105,10 +104,11 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public String updateBooking(BookingDto bookingDto, Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() ->  new ResourceNotFoundException("User not found with email: " + id));
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
 
+        System.out.println(bookingDto.getBookingId());
         Booking booking = bookingRepository.findById(bookingDto.getBookingId())
-                .orElseThrow(() ->  new ResourceNotFoundException("Booking not found with email: " + bookingDto.getBookingId()));
+                .orElseThrow(() -> new RuntimeException("Booking not found with id: " + bookingDto.getBookingId()));
 
         booking.setStatus(bookingDto.getStatus());
         bookingRepository.save(booking);
@@ -118,10 +118,10 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public String deleteBooking(Long bookingId, Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + id));
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
 
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() ->  new ResourceNotFoundException("Booking not found with email: " + bookingId));
+                .orElseThrow(() -> new RuntimeException("Booking not found with id: " + bookingId));
 
         bookingRepository.delete(booking);
         return "Booking deleted successfully";

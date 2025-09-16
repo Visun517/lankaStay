@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.List;
 
 public interface HotelPackageService {
-    String addPackage(PackageDto packageDto, Long userId) throws IOException;
+    String addPackage(PackageDto packageDto, Long userId);
     List<PackageDto> getAllPackages(Long id);
-    Object deletePackage(Long packageId, Long id) throws IOException;
+    String deletePackage(Long packageId, Long id);
     List<PackageDto> getRecommendedPackages(Long id);
 }

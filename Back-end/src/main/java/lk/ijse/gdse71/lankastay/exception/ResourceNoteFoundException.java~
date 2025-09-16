@@ -1,0 +1,10 @@
+package lk.ijse.gdse71.back_end.exception;
+
+//custom exception
+public class ResourceNoteFoundException extends RuntimeException {
+
+    public ResourceNoteFoundException(String message) {
+        super(message);
+    }
+
+}

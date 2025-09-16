@@ -6,6 +6,7 @@ import lk.ijse.gdse71.lankastay.entity.Business;
 import lk.ijse.gdse71.lankastay.entity.ClosedDate;
 import lk.ijse.gdse71.lankastay.entity.HotelPackages;
 import lk.ijse.gdse71.lankastay.entity.User;
+import lk.ijse.gdse71.lankastay.exception.ResourceNotFoundException;
 import lk.ijse.gdse71.lankastay.repository.BusinessRepository;
 import lk.ijse.gdse71.lankastay.repository.ClosedDatesRepository;
 import lk.ijse.gdse71.lankastay.repository.UserRepository;
@@ -28,10 +29,10 @@ public class ClosedDatesServiceImpl implements ClosedDatesService {
     public String addClosedDate(Long id, CloseDateDto closeDateDto) {
 
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + id));
 
         Business business = businessRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("business not found with email: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found with email: " + id));
 
         ClosedDate closedDate = ClosedDate.builder()
                 .date(closeDateDto.getDate())
@@ -47,10 +48,10 @@ public class ClosedDatesServiceImpl implements ClosedDatesService {
     @Override
     public String removeClosedDate(Long id, Long dateId) {
         Business business = businessRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found with id: " + id));
 
         ClosedDate closedDate = closedDatesRepository.findById(dateId)
-                .orElseThrow(() -> new RuntimeException("Closed date not found with id: " + dateId + " for business id: " + business.getId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Closed date not found with id: " + dateId + " for business id: " + business.getId()));
 
         closedDatesRepository.delete(closedDate);
 
@@ -60,7 +61,7 @@ public class ClosedDatesServiceImpl implements ClosedDatesService {
     @Override
     public List<CloseDateDto> getAllDates(Long id) {
         Business business = businessRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found with id: " + id));
 
         List<ClosedDate> allDates = closedDatesRepository.findAllByBusinessId(business.getId());
 

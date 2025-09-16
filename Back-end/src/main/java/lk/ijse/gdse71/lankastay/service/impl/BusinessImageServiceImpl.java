@@ -4,6 +4,9 @@ import lk.ijse.gdse71.lankastay.dto.ImageGalleryDto;
 import lk.ijse.gdse71.lankastay.entity.Business;
 import lk.ijse.gdse71.lankastay.entity.BusinessImage;
 import lk.ijse.gdse71.lankastay.entity.User;
+import lk.ijse.gdse71.lankastay.exception.FileOperationException;
+import lk.ijse.gdse71.lankastay.exception.ResourceNotFoundException;
+import lk.ijse.gdse71.lankastay.exception.UnauthorizedActionException;
 import lk.ijse.gdse71.lankastay.repository.BusinessImageRepository;
 import lk.ijse.gdse71.lankastay.repository.BusinessRepository;
 import lk.ijse.gdse71.lankastay.repository.UserRepository;
@@ -25,14 +28,19 @@ public class BusinessImageServiceImpl implements BusinessImageService {
 
 
     @Override
-    public Object uploadImageToGallery(ImageGalleryDto imageGalleryDto, String email) throws IOException {
+    public String uploadImageToGallery(ImageGalleryDto imageGalleryDto, String email){
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+                .orElseThrow(() ->  new ResourceNotFoundException("User not found with email: " + email));
 
         Business business = businessRepository.findById(user.getId())
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + user.getId()));
+                .orElseThrow(() ->  new ResourceNotFoundException("Business not found with email: " + user.getId()));
 
-        String imageUrl = fileStorageService.saveFile(imageGalleryDto.getImage(), "business-gallery");
+        String imageUrl = null;
+        try {
+            imageUrl = fileStorageService.saveFile(imageGalleryDto.getImage(), "business-gallery");
+        } catch (IOException e) {
+            throw new FileOperationException("File upload failed");
+        }
 
         BusinessImage galleryImage = BusinessImage.builder()
                 .imageUrl(imageUrl)
@@ -49,10 +57,10 @@ public class BusinessImageServiceImpl implements BusinessImageService {
     @Override
     public List<ImageGalleryDto> getImages(Long id) {
         User user1 = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + id));
 
         Business business = businessRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+                .orElseThrow(() ->  new ResourceNotFoundException("Business not found with email: " + id));
 
         List<BusinessImage> images = businessImageRepository.findAllByBusinessId(business.getId());
 
@@ -69,15 +77,19 @@ public class BusinessImageServiceImpl implements BusinessImageService {
     }
 
     @Override
-    public Object deleteImage(Long imageId, Long id) throws IOException {
-        BusinessImage image = businessImageRepository.findById(imageId)
-                .orElseThrow(() -> new RuntimeException("Image not found with id: " + imageId));
+    public String deleteImage(Long imageId, Long id){
+        BusinessImage imageData = businessImageRepository.findById(imageId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + id));
 
-        if (!image.getBusiness().getId().equals(id)) {
-            throw new RuntimeException("You are not authorized to delete this image");
+        if (!imageData.getBusiness().getId().equals(id)) {
+            throw new UnauthorizedActionException("You are not authorized to delete this image");
         }
-        fileStorageService.deleteFile(image.getImageUrl(), "business-gallery");
-        businessImageRepository.delete(image);
+        try {
+            fileStorageService.deleteFile(imageData.getImageUrl(), "business-gallery");
+        } catch (IOException e) {
+            throw new FileOperationException("Error deleting file");
+        }
+        businessImageRepository.delete(imageData);
 
         return "Image deleted successfully";
     }

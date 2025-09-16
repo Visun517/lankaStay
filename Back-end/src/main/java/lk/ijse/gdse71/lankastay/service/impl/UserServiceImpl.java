@@ -1,6 +1,7 @@
 package lk.ijse.gdse71.lankastay.service.impl;
 
 import lk.ijse.gdse71.lankastay.entity.User;
+import lk.ijse.gdse71.lankastay.exception.ResourceNotFoundException;
 import lk.ijse.gdse71.lankastay.repository.UserRepository;
 import lk.ijse.gdse71.lankastay.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String getUserName(Long id) {
         User user =  userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
         return user.getName();
     }

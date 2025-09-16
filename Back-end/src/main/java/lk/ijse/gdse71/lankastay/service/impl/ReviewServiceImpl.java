@@ -1,11 +1,10 @@
 package lk.ijse.gdse71.lankastay.service.impl;
-
-import lk.ijse.gdse71.lankastay.dto.PackageDto;
 import lk.ijse.gdse71.lankastay.dto.ReviewDto;
 import lk.ijse.gdse71.lankastay.entity.Business;
 import lk.ijse.gdse71.lankastay.entity.Review;
 import lk.ijse.gdse71.lankastay.entity.Tourist;
 import lk.ijse.gdse71.lankastay.entity.User;
+import lk.ijse.gdse71.lankastay.exception.ResourceNotFoundException;
 import lk.ijse.gdse71.lankastay.repository.BusinessRepository;
 import lk.ijse.gdse71.lankastay.repository.ReviewRepository;
 import lk.ijse.gdse71.lankastay.repository.TouristRepository;
@@ -35,13 +34,13 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public String addReview(ReviewDto reviewDto, Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + id));
 
         Tourist tourist = touristRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tourist not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Tourist not found with id: " + id));
 
         Business business = businessRepository.findById(reviewDto.getBusinessId())
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + reviewDto.getBusinessId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found with id: " + reviewDto.getBusinessId()));
 
         Review review = Review.builder()
                 .comment(reviewDto.getComment())
@@ -59,7 +58,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<ReviewDto> getAllReviews(Long businessId, int page, int size, Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Tourist not found with id: " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("Tourist not found with id: " + userId));
         System.out.println(user);
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("reviewId").descending());
@@ -79,12 +78,11 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public String removeReview(Long reviewId , Long userId) {
-        System.out.println("2");
         User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("Tourist not found with id: " + userId));
+                    .orElseThrow(() -> new ResourceNotFoundException("Tourist not found with id: " + userId));
 
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new RuntimeException("Review not found with id: " + reviewId));
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found with id: " + reviewId));
         reviewRepository.delete(review);
         return "Successfully delete review..!";
     }

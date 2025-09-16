@@ -40,7 +40,7 @@ public class ShowCardController {
                 new ApiResponseDto(
                         200,
                         "Profile fetched successfully",
-                        businessService.getProfileAndContact(businessId , user.getId())
+                        businessService.getProfileAndContact(businessId, user.getId())
                 )
         );
     }
@@ -87,6 +87,7 @@ public class ShowCardController {
                 )
         );
     }
+
     @GetMapping("/getAllPackages/{businessId}")
     public ResponseEntity<ApiResponseDto> getAllPackages(@PathVariable Long businessId, Authentication authentication) {
         if (authentication == null) {

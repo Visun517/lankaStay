@@ -29,13 +29,13 @@ public class BookingController {
                 new ApiResponseDto(
                         200,
                         "Add Booking successfully",
-                        bookingService.addBooking(bookingAddDto , user.getId())
+                        bookingService.addBooking(bookingAddDto, user.getId())
                 )
         );
     }
 
     @GetMapping("getBookings/tourist")
-    public ResponseEntity<ApiResponseDto> getBookingsTourist( Authentication authentication) {
+    public ResponseEntity<ApiResponseDto> getBookingsTourist(Authentication authentication) {
         if (authentication == null) {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
@@ -50,7 +50,7 @@ public class BookingController {
     }
 
     @GetMapping("getBookings/business")
-    public ResponseEntity<ApiResponseDto> getBookingsBusiness( Authentication authentication) {
+    public ResponseEntity<ApiResponseDto> getBookingsBusiness(Authentication authentication) {
         if (authentication == null) {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
@@ -75,12 +75,12 @@ public class BookingController {
                 new ApiResponseDto(
                         200,
                         "Update Booking successfully",
-                        bookingService.updateBooking(bookingDto , user.getId())
+                        bookingService.updateBooking(bookingDto, user.getId())
                 )
         );
     }
 
-        @DeleteMapping("deleteBooking/{bookingId}")
+    @DeleteMapping("deleteBooking/{bookingId}")
     public ResponseEntity<ApiResponseDto> deleteBooking(@PathVariable Long bookingId, Authentication authentication) {
         if (authentication == null) {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
@@ -90,7 +90,7 @@ public class BookingController {
                 new ApiResponseDto(
                         200,
                         "Delete Booking successfully",
-                        bookingService.deleteBooking(bookingId , user.getId())
+                        bookingService.deleteBooking(bookingId, user.getId())
                 )
         );
     }

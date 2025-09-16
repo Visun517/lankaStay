@@ -81,10 +81,8 @@ public class AuthController {
     @PostMapping("/register/google/{businessType}")
     public ResponseEntity<ApiResponseDto> registerWithGoogle(@PathVariable String businessType , @RequestBody GoogleAuthDto googleAuthDto) {
         String googleToken = googleAuthDto.getToken();
-        System.out.println(googleToken);
 
         GoogleIdToken.Payload payload = googleTokenService.verifyToken(googleToken);
-        System.out.println(payload);
         if(payload == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponseDto(401, "Invalid token", null));
@@ -94,7 +92,7 @@ public class AuthController {
                 new ApiResponseDto(
                         201,
                         "User registered in successfully",
-                        authService.registerGoogle(payload ,businessType )
+                        authService.registerGoogle(payload ,businessType)
                 )
         );
 

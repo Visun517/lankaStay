@@ -25,17 +25,14 @@ public class SpecialOffersController {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
         User user = (User) authentication.getPrincipal();
-        try {
-            return ResponseEntity.ok(
-                    new ApiResponseDto(
-                            200,
-                            "Package updated successfully",
-                            specialOffersService.addPackage(specialOffersDto,user.getId())
-                    )
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Package updated successfully",
+                        specialOffersService.addPackage(specialOffersDto, user.getId())
+                )
+        );
     }
 
     @GetMapping("/getAllOffers")
@@ -59,17 +56,15 @@ public class SpecialOffersController {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
         User user = (User) authentication.getPrincipal();
-        try {
-            return ResponseEntity.ok(
-                    new ApiResponseDto(
-                            200,
-                            "Image deleted successfully",
-                            specialOffersService.deleteOffer(offerId,user.getId())
-                    )
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Image deleted successfully",
+                        specialOffersService.deleteOffer(offerId, user.getId())
+                )
+        );
+
     }
 
 }

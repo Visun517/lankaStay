@@ -26,17 +26,15 @@ public class HotelPackagesController {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
         User user = (User) authentication.getPrincipal();
-        try {
-            return ResponseEntity.ok(
-                    new ApiResponseDto(
-                            200,
-                            "HotelPackages added successfully",
-                            hotelPackageService.addPackage(packageDto,user.getId())
-                    )
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "HotelPackages added successfully",
+                        hotelPackageService.addPackage(packageDto, user.getId())
+                )
+        );
+
     }
 
     @GetMapping("/getAllPackages")
@@ -60,17 +58,15 @@ public class HotelPackagesController {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
         User user = (User) authentication.getPrincipal();
-        try {
-            return ResponseEntity.ok(
-                    new ApiResponseDto(
-                            200,
-                            "Business deleted successfully",
-                            hotelPackageService.deletePackage(packageId,user.getId())
-                    )
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Business deleted successfully",
+                        hotelPackageService.deletePackage(packageId, user.getId())
+                )
+        );
+
     }
 
     @GetMapping("/getRecommendedPackages")

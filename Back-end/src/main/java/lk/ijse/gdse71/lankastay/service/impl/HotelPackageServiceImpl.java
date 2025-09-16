@@ -5,6 +5,8 @@ import lk.ijse.gdse71.lankastay.dto.PackageDto;
 import lk.ijse.gdse71.lankastay.entity.Business;
 import lk.ijse.gdse71.lankastay.entity.HotelPackages;
 import lk.ijse.gdse71.lankastay.entity.User;
+import lk.ijse.gdse71.lankastay.exception.FileOperationException;
+import lk.ijse.gdse71.lankastay.exception.ResourceNotFoundException;
 import lk.ijse.gdse71.lankastay.repository.BusinessRepository;
 import lk.ijse.gdse71.lankastay.repository.HotelPackageRepository;
 import lk.ijse.gdse71.lankastay.repository.UserRepository;
@@ -17,6 +19,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,16 +31,19 @@ public class HotelPackageServiceImpl implements HotelPackageService {
     private final HotelPackageRepository packageRepository;
 
     @Override
-    public String addPackage(PackageDto packageDto, Long userId) throws IOException {
+    public String addPackage(PackageDto packageDto, Long userId){
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+                .orElseThrow(() -> new RejectedExecutionException("User not found with id: " + userId));
 
         Business business = businessRepository.findById(user.getId())
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + user.getId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found with id: " + user.getId()));
 
-        String imageUrl = fileStorageService.saveFile(packageDto.getImage(), "package-images");
-
-
+        String imageUrl = null;
+        try {
+            imageUrl = fileStorageService.saveFile(packageDto.getImage(), "package-images");
+        } catch (IOException e) {
+            throw new FileOperationException("Error saving file");
+        }
         HotelPackages hotelPackages = HotelPackages.builder()
                 .packageName(packageDto.getPackageName())
                 .description(packageDto.getDescription())
@@ -59,7 +65,7 @@ public class HotelPackageServiceImpl implements HotelPackageService {
     @Override
     public List<PackageDto> getAllPackages(Long id) {
         Business business = businessRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found with id: " + id));
 
         List<HotelPackages> allPackages = packageRepository.findAllByBusinessId(business.getId());
 
@@ -80,14 +86,18 @@ public class HotelPackageServiceImpl implements HotelPackageService {
     }
 
     @Override
-    public Object deletePackage(Long packageId, Long id) throws IOException {
+    public String deletePackage(Long packageId, Long id){
         Business business = businessRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found with id: " + id));
 
         HotelPackages hotelPackages = packageRepository.findById(packageId)
-                .orElseThrow(() -> new RuntimeException("Package not found with id: " + packageId + " for business id: " + business.getId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Package not found with id: " + packageId + " for business id: " + business.getId()));
 
-        fileStorageService.deleteFile(hotelPackages.getImageUrl(), "package-images");
+        try {
+            fileStorageService.deleteFile(hotelPackages.getImageUrl(), "package-images");
+        } catch (IOException e) {
+            throw new FileOperationException("Error deleting file");
+        }
         packageRepository.delete(hotelPackages);
 
         return "Business deleted successfully";
@@ -96,7 +106,7 @@ public class HotelPackageServiceImpl implements HotelPackageService {
     @Override
     public List<PackageDto> getRecommendedPackages(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
         List<HotelPackages> allPackages = packageRepository.findAll();
 

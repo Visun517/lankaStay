@@ -25,17 +25,14 @@ public class BusinessImagesController {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
         String email = authentication.getName();
-        try {
-            return ResponseEntity.ok(
-                    new ApiResponseDto(
-                            200,
-                            "Image uploaded successfully",
-                            businessImageService.uploadImageToGallery(imageGalleryDto,email)
-                    )
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Image uploaded successfully",
+                        businessImageService.uploadImageToGallery(imageGalleryDto, email)
+                )
+        );
+
     }
 
     @GetMapping("/getImages")
@@ -59,16 +56,14 @@ public class BusinessImagesController {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
         User user = (User) authentication.getPrincipal();
-        try {
-            return ResponseEntity.ok(
-                    new ApiResponseDto(
-                            200,
-                            "Image deleted successfully",
-                            businessImageService.deleteImage(imageId,user.getId())
-                    )
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Image deleted successfully",
+                        businessImageService.deleteImage(imageId, user.getId())
+                )
+        );
+
     }
 }

@@ -8,10 +8,10 @@ import java.io.IOException;
 import java.util.List;
 
 public interface BusinessService {
-     Object updateProfilePicture(MultipartFile file , String email) throws IOException;
-     Object updateBusiness(Long id , BusinessDto businessDetails);
+     String updateProfilePicture(MultipartFile file , String email) throws IOException;
+     String updateBusiness(Long id , BusinessDto businessDetails);
      BusinessDto getBusinessDetails(Long id);
-     Object getProfile(Long id);
+     String getProfile(Long id);
      List<BusinessDto> getBusinessByDistrict(String district, Long id);
      List<BusinessDto> getBusinessByDistrictAndCategory(String district, String category, Long id);
      BusinessDto getProfileAndContact(String businessId, Long id);

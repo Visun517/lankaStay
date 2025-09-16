@@ -6,6 +6,8 @@ import lk.ijse.gdse71.lankastay.entity.Business;
 import lk.ijse.gdse71.lankastay.entity.HotelPackages;
 import lk.ijse.gdse71.lankastay.entity.SpecialOffer;
 import lk.ijse.gdse71.lankastay.entity.User;
+import lk.ijse.gdse71.lankastay.exception.FileOperationException;
+import lk.ijse.gdse71.lankastay.exception.ResourceNotFoundException;
 import lk.ijse.gdse71.lankastay.repository.BusinessRepository;
 import lk.ijse.gdse71.lankastay.repository.SpecialOfferRepository;
 import lk.ijse.gdse71.lankastay.repository.UserRepository;
@@ -26,17 +28,21 @@ public class SpecialOffersServiceImpl implements SpecialOfferService {
     private final UserRepository userRepository;
     private final FileStorageService fileStorageService;
     private final SpecialOfferRepository specialOfferRepository;
-    private final ModelMapper modelMapper;
 
     @Override
-    public Object addPackage(SpecialOffersDto specialOffersDto, Long id) throws IOException {
+    public String addPackage(SpecialOffersDto specialOffersDto, Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
         Business business = businessRepository.findById(user.getId())
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + user.getId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found with id: " + user.getId()));
 
-        String imageUrl = fileStorageService.saveFile(specialOffersDto.getImage(), "special-offers-images");
+        String imageUrl = null;
+        try {
+            imageUrl = fileStorageService.saveFile(specialOffersDto.getImage(), "special-offers-images");
+        } catch (IOException e) {
+            throw new FileOperationException("Error saving file");
+        }
 
         SpecialOffer specialOffer = SpecialOffer.builder()
                 .title(specialOffersDto.getTitle())
@@ -59,7 +65,7 @@ public class SpecialOffersServiceImpl implements SpecialOfferService {
     @Override
     public List<SpecialOffersDto> getAllOffers(Long id) {
         Business business = businessRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found with id: " + id));
 
         List<SpecialOffer> allPackages = specialOfferRepository.findAllByBusinessId(business.getId());
 
@@ -80,17 +86,21 @@ public class SpecialOffersServiceImpl implements SpecialOfferService {
     }
 
     @Override
-    public Object deleteOffer(Long offerId, Long id) throws IOException {
+    public String deleteOffer(Long offerId, Long id) {
         Business business = businessRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found with id: " + id));
 
         SpecialOffer specialOffer = specialOfferRepository.findById(offerId)
-                .orElseThrow(() -> new RuntimeException("Special offer not found with id: " + offerId));
+                .orElseThrow(() -> new ResourceNotFoundException("Special offer not found with id: " + offerId));
 
         if (!specialOffer.getBusiness().getId().equals(business.getId())) {
             throw new RuntimeException("Unauthorized to delete this special offer");
         }
-        fileStorageService.deleteFile(specialOffer.getImageUrl(), "business-gallery");
+        try {
+            fileStorageService.deleteFile(specialOffer.getImageUrl(), "business-gallery");
+        } catch (IOException e) {
+            throw new FileOperationException("File deletion failed");
+        }
         specialOfferRepository.delete(specialOffer);
 
         return "Special offer deleted successfully";

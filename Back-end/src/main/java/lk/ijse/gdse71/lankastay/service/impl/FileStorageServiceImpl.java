@@ -1,5 +1,6 @@
 package lk.ijse.gdse71.lankastay.service.impl;
 
+import lk.ijse.gdse71.lankastay.exception.ImageUploadException;
 import lk.ijse.gdse71.lankastay.service.FileStorageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,11 +22,11 @@ public class FileStorageServiceImpl implements FileStorageService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
-    public String saveFile(MultipartFile file, String subDirectory) throws IOException {
+    public String saveFile(MultipartFile file, String subDirectory) {
         String url = "https://api.imgbb.com/1/upload?key=" + imgbbApiKey;
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("image", file.getResource()); // MultipartFile → Resource
+        body.add("image", file.getResource());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -36,22 +37,14 @@ public class FileStorageServiceImpl implements FileStorageService {
 
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
             Map data = (Map) response.getBody().get("data");
-            return (String) data.get("url"); // ✅ hosted image URL
+            return (String) data.get("url");
         } else {
-            throw new RuntimeException("Failed to upload image to imgbb");
+            throw new ImageUploadException("Failed to upload image to imgbb");
         }
     }
 
     @Override
-    public org.springframework.core.io.Resource loadFile(String filename, String subDirectory) {
-
-        throw new UnsupportedOperationException("Use URL from DB for imgbb");
-    }
-
-    @Override
-    public void deleteFile(String filename, String subDirectory) throws IOException {
-        // imgbb response එකේ "delete_url" DB එකේ save කරගන්න
-        // Then call that delete_url directly:
+    public void deleteFile(String filename, String subDirectory){
         restTemplate.getForEntity(filename, String.class);
     }
 }

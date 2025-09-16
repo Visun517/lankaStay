@@ -5,6 +5,7 @@ import lk.ijse.gdse71.lankastay.dto.UserLocation;
 import lk.ijse.gdse71.lankastay.entity.Business;
 import lk.ijse.gdse71.lankastay.entity.User;
 import lk.ijse.gdse71.lankastay.entity.types.BusinessType;
+import lk.ijse.gdse71.lankastay.exception.ResourceNotFoundException;
 import lk.ijse.gdse71.lankastay.repository.BusinessImageRepository;
 import lk.ijse.gdse71.lankastay.repository.BusinessRepository;
 import lk.ijse.gdse71.lankastay.repository.HotelPackageRepository;
@@ -33,16 +34,16 @@ public class BusinessServiceImpl implements BusinessService {
     private final ModelMapper modelMapper;
     private final HotelPackageRepository packageRepository;
 
-    public Object updateProfilePicture(MultipartFile file, String email) throws IOException {
+    public String updateProfilePicture(MultipartFile file, String email) throws IOException {
 
         if(file.isEmpty()) {
-            throw new RuntimeException("Profile picture is empty");
+            throw new ResourceNotFoundException("Profile picture is empty");
         }
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
 
         Business business = businessRepository.findById(user.getId())
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + user.getId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found with id: " + user.getId()));
 
         String imageUrl = fileStorageService.saveFile(file, "business-profiles");
         business.setImageUrl(imageUrl);
@@ -53,10 +54,10 @@ public class BusinessServiceImpl implements BusinessService {
 
     public BusinessDto getBusinessDetails(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + id));
 
         Business business = businessRepository.findById(user.getId())
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found with id: " + id));
 
        BusinessDto businessDto = modelMapper.map(business, BusinessDto.class);
        businessDto.setBusinessName(user.getName());
@@ -66,18 +67,18 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public String getProfile(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + id));
 
         Business business = businessRepository.findById(user.getId())
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found with id: " + id));
 
         return business.getImageUrl();
     }
 
     @Override
-    public Object updateBusiness(Long id,BusinessDto businessDetails) {
+    public String updateBusiness(Long id,BusinessDto businessDetails) {
         Business business = businessRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Business not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Business not found with id: " + id));
 
         business.setLatitude(businessDetails.getLatitude());
         business.setLongitude(businessDetails.getLongitude());
@@ -95,7 +96,7 @@ public class BusinessServiceImpl implements BusinessService {
     public List<BusinessDto> getBusinessByDistrict(String district, Long id) {
 
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + id));
 
         List<Business> businessList = businessRepository.findAllByDistrict(district);
 
@@ -121,7 +122,7 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public List<BusinessDto> getBusinessByDistrictAndCategory(String district, String category, Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
         List<Business> businessList = businessRepository
                 .findAllByDistrictAndBusinessType(district, BusinessType.valueOf(category));
@@ -148,7 +149,7 @@ public class BusinessServiceImpl implements BusinessService {
     public BusinessDto getProfileAndContact(String businessId, Long id) {
 
         User user = userRepository.findById(Long.valueOf(businessId))
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + id));
 
         Business business = businessRepository.getImageUrlAndPhoneNumberByUserId(user.getId());
 
@@ -161,7 +162,7 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public List<BusinessDto> getNearByBusinesses(UserLocation userLocation, double radius, Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + id));
 
         List<Business> businesses = businessRepository.findAll();
 
@@ -194,7 +195,7 @@ public class BusinessServiceImpl implements BusinessService {
     public List<BusinessDto> getNearByBusinessesByType(String type ,UserLocation userLocation, double radius, Long id) {
 
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + id));
 
         List<Business> businesses = businessRepository.findAllByBusinessType(BusinessType.valueOf(type));
         System.out.println(businesses.size());

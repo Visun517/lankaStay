@@ -70,7 +70,6 @@ public class BusinessController {
 
     @PatchMapping("/updateBusiness")
     public ResponseEntity<ApiResponseDto> updateBusiness(@RequestBody BusinessDto businessDetails, Authentication authentication) {
-        System.out.println(businessDetails);
         User user = (User) authentication.getPrincipal();
         return ResponseEntity.ok(
                 new ApiResponseDto(

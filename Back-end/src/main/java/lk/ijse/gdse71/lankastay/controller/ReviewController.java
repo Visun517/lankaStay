@@ -28,13 +28,13 @@ public class ReviewController {
                 new ApiResponseDto(
                         200,
                         "Add Review successfully",
-                        reviewService.addReview(reviewDto , user.getId())
+                        reviewService.addReview(reviewDto, user.getId())
                 )
         );
     }
 
     @GetMapping("/getAllReviews/{businessId}")
-    public ResponseEntity<ApiResponseDto> getAllReviews(@PathVariable Long businessId ,
+    public ResponseEntity<ApiResponseDto> getAllReviews(@PathVariable Long businessId,
                                                         @RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue = "5") int size,
                                                         Authentication authentication) {
@@ -47,13 +47,13 @@ public class ReviewController {
                 new ApiResponseDto(
                         200,
                         "Get Reviews successfully",
-                        reviewService.getAllReviews(businessId ,page , size, user.getId())
+                        reviewService.getAllReviews(businessId, page, size, user.getId())
                 )
         );
     }
 
     @DeleteMapping("removeReview/{reviewId}")
-    public ResponseEntity<ApiResponseDto> removeReview(@PathVariable Long reviewId , Authentication authentication) {
+    public ResponseEntity<ApiResponseDto> removeReview(@PathVariable Long reviewId, Authentication authentication) {
         if (authentication == null) {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
@@ -64,7 +64,7 @@ public class ReviewController {
                 new ApiResponseDto(
                         200,
                         "Delete Reviews successfully",
-                        reviewService.removeReview(reviewId , user.getId())
+                        reviewService.removeReview(reviewId, user.getId())
                 )
         );
 

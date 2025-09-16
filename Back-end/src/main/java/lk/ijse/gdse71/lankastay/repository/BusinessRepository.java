@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface BusinessRepository extends JpaRepository<Business , Long> {
-    Business findByUserId(Long userId);
     List<Business> findAllByDistrict(String district);
     List<Business> findAllByDistrictAndBusinessType(String district, BusinessType businessType);
     Business getImageUrlAndPhoneNumberByUserId(Long id);
