@@ -92,13 +92,13 @@ The application is designed using a **Layered Architecture** to ensure a clean s
 ![Login Page](screenshots/screenshot-login.png)
 
 **2. Tourist Dashboard with Map**
-![Tourist Dashboard](Screenshot-tourist-dash.png)
+![Tourist Dashboard](screenshots/Screenshot-tourist-dash.png)
 
 **3. Business Owner Dashboard**
-![Business Dashboard](Screenshot-business-dash.png)
+![Business Dashboard](screenshots/Screenshot-business-dash.png)
 
 **4. Package Management Modal**
-![Package Modal](sScreenshot-add-package-modal.png)
+![Package Modal](screenshots/Screenshot-add-package-modal.png)
 
 ---
 
