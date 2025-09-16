@@ -1,6 +1,6 @@
-$('#loginBtn').click(function() {
+$('#loginBtn').click(function () {
     let email = $('#email').val();
-    let password = $('#password').val(); 
+    let password = $('#password').val();
 
     if (email === '') {
         Swal.fire({
@@ -9,10 +9,10 @@ $('#loginBtn').click(function() {
             icon: "error",
             confirmButtonText: "OK"
         });
-        return; 
+        return;
     }
 
-    if ( password === '') {
+    if (password === '') {
         Swal.fire({
             title: "Error!",
             text: "password cannot be empty.",
@@ -23,68 +23,68 @@ $('#loginBtn').click(function() {
     }
 
     const loginData = {
-        email: email, 
+        email: email,
         password: password
     };
 
-  console.log('login data:', loginData);
+    console.log('login data:', loginData);
 
-   $.ajax({
-            url: 'http://localhost:8080/auth/login',   
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(loginData),
-            success: function (response) {
-                console.log('login successful:', response);
-
-                
-                localStorage.setItem('token', response.data.accessToken);
-                formClear();
-              
-                Swal.fire({
-                    title: "Success!",
-                    text: "Login successful! Redirecting to login...",
-                    icon: "success",
-                    confirmButtonText: "OK"
-                }).then(() => {
-                    //window.location.href = 'login.html'; 
-                    let token = localStorage.getItem('token');
-                    const payloadBase64 = token.split('.')[1];
-                    const decodedPayload = atob(payloadBase64);
-                    const payloadObject = JSON.parse(decodedPayload);
-                    const userRole = payloadObject.role;
-                    const userEmail = payloadObject.sub;
-
-                    console.log("Decoded Payload:", payloadObject);
+    $.ajax({
+        url: 'http://localhost:8080/auth/login',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(loginData),
+        success: function (response) {
+            console.log('login successful:', response);
 
 
-                    if (userRole === 'TOURIST') {
-                        window.location.href = './tourist/TouristDashBoard.html';
-                    } else if (userRole === 'BUSINESS') {
-                        window.location.href = './hotel/HotelDashBoard.html';
-                    }
+            localStorage.setItem('token', response.data.accessToken);
+            formClear();
 
-                });
-            },
-            error: function (xhr, status, error) {
-               console.log('Registration failed:', error);
-                Swal.fire({
-                    title: "Error!",
-                    text: "login failed. Please try again.",
-                    icon: "error",
-                    confirmButtonText: "OK"
-                });
-            }
-        })
+            Swal.fire({
+                title: "Success!",
+                text: "Login successful! Redirecting to login...",
+                icon: "success",
+                confirmButtonText: "OK"
+            }).then(() => {
+                //window.location.href = 'login.html'; 
+                let token = localStorage.getItem('token');
+                const payloadBase64 = token.split('.')[1];
+                const decodedPayload = atob(payloadBase64);
+                const payloadObject = JSON.parse(decodedPayload);
+                const userRole = payloadObject.role;
+                const userEmail = payloadObject.sub;
+
+                console.log("Decoded Payload:", payloadObject);
+
+
+                if (userRole === 'TOURIST') {
+                    window.location.href = './tourist/TouristDashBoard.html';
+                } else if (userRole === 'BUSINESS') {
+                    window.location.href = './hotel/HotelDashBoard.html';
+                }
+
+            });
+        },
+        error: function (xhr, status, error) {
+            console.log('Registration failed:', error);
+            Swal.fire({
+                title: "Error!",
+                text: "login failed. Please try again.",
+                icon: "error",
+                confirmButtonText: "OK"
+            });
+        }
+    })
 });
 
 function formClear() {
-    $('#email').val(''); 
-    $('#password').val(''); 
+    $('#email').val('');
+    $('#password').val('');
 }
 
 // Toggle password visibility
-$('#togglePassword').on('click', function() {
+$('#togglePassword').on('click', function () {
     const passwordField = $('#password');
     const passwordFieldType = passwordField.attr('type');
     const toggleIcon = $(this).find('svg');
@@ -98,3 +98,33 @@ $('#togglePassword').on('click', function() {
         toggleIcon.html('<path fill-rule="evenodd" d="M3.987 2.147a.75.75 0 00-1.06 1.06l16.5 16.5a.75.75 0 101.06-1.06l-16.5-16.5zM12 9a3 3 0 100 6 3 3 0 000-6z" clip-rule="evenodd" />');
     }
 });
+
+function handleCredentialResponse(response) {
+    console.log("Encoded JWT ID token: " + response.credential);
+
+    const googleAuth ={
+        token: response.credential
+    }
+
+    // Send this token to backend to exchange for app JWT
+    $.ajax({
+        url: 'http://localhost:8080/auth/login/google',  // backend endpoint
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(googleAuth),
+        success: function (res) {
+            localStorage.setItem('token', res.data.accessToken);
+            // redirect based on role
+            const payload = JSON.parse(atob(res.data.accessToken.split('.')[1]));
+            if (payload.role === 'TOURIST') {
+                window.location.href = './tourist/TouristDashBoard.html';
+            } else {
+                window.location.href = './hotel/HotelDashBoard.html';
+            }
+        },
+        error: function (err) {
+            console.error(err);
+        }
+    });
+}
+

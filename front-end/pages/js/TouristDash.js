@@ -57,7 +57,7 @@ $(document).ready(function () {
   setInterval(validateAndLoadDashboard, 1000);
 
   getUserName();
-  function getUserName(){
+  function getUserName() {
 
     $.ajax({
       url: 'http://localhost:8080/user/getUserName',
@@ -72,40 +72,40 @@ $(document).ready(function () {
   }
 
   function validateAndLoadDashboard() {
-  let token = localStorage.getItem('token');
+    let token = localStorage.getItem('token');
 
-  if (!token) {
-    window.location.href = '../Login.html';
-    return;
-  }
-
-  const tokenParts = token.split('.');
-
-  if (tokenParts.length !== 3) {
-    window.location.href = '../Login.html';
-    return;
-  }
-
-  try {
-    const tokenPayload = JSON.parse(atob(tokenParts[1]));
-
-    const currentTimestamp = Math.floor(Date.now() / 1000);
-    // console.log("Current timestamp:", currentTimestamp);
-    // console.log("Token expiration timestamp:", tokenPayload.exp);
-
-    if (tokenPayload.exp && currentTimestamp >= tokenPayload.exp) {
-      alert('Session expired. Please login again.');
-      localStorage.removeItem('token');
+    if (!token) {
       window.location.href = '../Login.html';
       return;
     }
 
+    const tokenParts = token.split('.');
 
-  } catch (error) {
-    console.error('Invalid token:', error);
-    window.location.href = '../Login.html';
+    if (tokenParts.length !== 3) {
+      window.location.href = '../Login.html';
+      return;
+    }
+
+    try {
+      const tokenPayload = JSON.parse(atob(tokenParts[1]));
+
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      // console.log("Current timestamp:", currentTimestamp);
+      // console.log("Token expiration timestamp:", tokenPayload.exp);
+
+      if (tokenPayload.exp && currentTimestamp >= tokenPayload.exp) {
+        alert('Session expired. Please login again.');
+        localStorage.removeItem('token');
+        window.location.href = '../Login.html';
+        return;
+      }
+
+
+    } catch (error) {
+      console.error('Invalid token:', error);
+      window.location.href = '../Login.html';
+    }
   }
-}
 
   getRecommendedPackages();
   function getRecommendedPackages() {
@@ -231,19 +231,28 @@ $(document).ready(function () {
       method: 'GET',
       headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
       success: (response) => {
-        console.log("all bookings received:", response);
-        touristId = response.data.touristId;
-        localStorage.setItem("touristId", response.data[0].touristId);
-
 
         const bookings = Array.isArray(response) ? response : response.data;
+        console.log("Bookings received successfully -------:", bookings);
         const bookingContainer = $("#bookingContainer .space-y-4");
-        bookingContainer.empty();
 
         if (!bookings || bookings.length === 0) {
+
           bookingContainer.append(`
-      <div class="text-gray-600 text-center">No bookings found.</div>
-    `);
+         <div class="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-2xl shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2h6v2m-7-7h8m-9 0H7a2 2 0 00-2 2v7h14v-7a2 2 0 00-2-2h-2" />
+            </svg>
+            <p class="text-gray-700 font-medium text-lg">No bookings found</p>
+            <p class="text-gray-500 text-sm">Your upcoming reservations will appear here.</p>
+        </div>
+        `);
+
+          // console.log("all bookings received:", response);
+          // touristId = response.data.touristId;
+          // localStorage.setItem("touristId", response.data[0].touristId);
+
+          // bookingContainer.empty();
           return;
         }
 
@@ -1287,7 +1296,7 @@ $(document).ready(function () {
   // Call functions to load initial data
   fetchRecommendedPackages();
   fetchBookingHistory();
-  
+
 
   // Star Rating Functionality
   (function () {

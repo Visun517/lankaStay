@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 
 @RestController
@@ -91,17 +92,21 @@ public class BusinessController {
             return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
         }
 
+        System.out.println(latitude + " " + longitude + " " + radius);
         User user = (User) authentication.getPrincipal();
         UserLocation userLocation = UserLocation.builder()
                 .latitude(latitude)
                 .longitude(longitude)
                 .build();
 
+        List<BusinessDto> nearByBusinesses = businessService.getNearByBusinesses(userLocation, radius, user.getId());
+        System.out.println(nearByBusinesses);
+
         return ResponseEntity.ok(
                 new ApiResponseDto(
                         200,
                         "Near by businesses fetched successfully",
-                        businessService.getNearByBusinesses(userLocation, radius, user.getId())
+                        nearByBusinesses
                 )
         );
     }

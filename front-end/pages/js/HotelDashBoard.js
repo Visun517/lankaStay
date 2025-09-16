@@ -841,6 +841,7 @@ function getUserinfo() {
       $('#longitude').val(businessData.longitude || '');
       $('#address').val(businessData.address || '');
       $('#district').val(businessData.district || '');
+      $('#businessType').val(businessData.type || '');
 
       if (businessData.latitude && businessData.longitude) {
         updateMapLocation(businessData.latitude, businessData.longitude);
@@ -853,6 +854,7 @@ function getUserinfo() {
       if (!businessData.latitude) incompleteFields.push("Location");
       if (!businessData.address) incompleteFields.push("Address");
       if (!businessData.district) incompleteFields.push("District");
+      if (!businessData.type) incompleteFields.push("Type");
 
       if (incompleteFields.length > 0) {
         const alertMessage = "Welcome! Please complete your business profile. The following fields are missing:\n\n- " + incompleteFields.join("\n- ");
@@ -909,13 +911,18 @@ function getProfilePicture() {
  * Sends updated profile details to the backend.
  */
 function updateProfile() {
+
   const updatedData = {
     description: $('#description').val().trim(),
     latitude: $('#latitude').val().trim(),
     longitude: $('#longitude').val().trim(),
     address: $('#address').val().trim(),
-    district: $('#district').val().trim()
+    district: $('#district').val().trim(),
+    phoneNumber : $('#contactNumber').val().trim(),
+    type : $('#businessType').val().trim()
   };
+
+  console.log("Updating profile with data:", updatedData);
 
   $.ajax({
     url: 'http://localhost:8080/business/updateBusiness',

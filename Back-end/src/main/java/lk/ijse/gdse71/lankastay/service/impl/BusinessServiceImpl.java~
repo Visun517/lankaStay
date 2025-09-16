@@ -1,6 +1,7 @@
 package lk.ijse.gdse71.lankastay.service.impl;
 
 import lk.ijse.gdse71.lankastay.dto.BusinessDto;
+import lk.ijse.gdse71.lankastay.dto.ImageGalleryDto;
 import lk.ijse.gdse71.lankastay.dto.UserLocation;
 import lk.ijse.gdse71.lankastay.entity.Business;
 import lk.ijse.gdse71.lankastay.entity.User;

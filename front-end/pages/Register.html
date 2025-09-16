@@ -30,6 +30,7 @@
       background: #2563eb;
     }
   </style>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body class="bg-gray-100 font-sans antialiased">
@@ -73,15 +74,15 @@
           </div>
 
           <!-- Contact Number Input (initially hidden) -->
-          <div id="contactNumberField" class="mt-4 hidden">
+          <!-- <div id="contactNumberField" class="mt-4 hidden">
             <label for="contactNumber" class="block text-sm font-medium text-gray-700 mb-2">Contact Number</label>
             <input type="tel" id="contactNumber" name="contactNumber"
               class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-800"
               placeholder="Enter contact number" pattern="[0-9]{10}" title="Ten digit phone number" />
-          </div>
+          </div> -->
 
           <div id="businessFields" class="hidden space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols0 gap-4">
+            <!-- <div class="grid grid-cols-1 md:grid-cols0 gap-4">
               <div>
                 <label for="businessType" class="block text-sm font-medium text-gray-700 mb-2">
                   Business Type
@@ -96,8 +97,7 @@
                   <option value="guest_house">RESTAURANT</option>
                 </select>
               </div>
-
-            </div>
+            </div> -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
             </div>
@@ -209,65 +209,41 @@
           </p>
         </div>
 
-        <div id="socialSignupSection" class="mt-8">
-          <div class="relative flex justify-center py-5">
-            <div class="absolute inset-0 flex items-center">
-              <div class="w-full border-t border-gray-300"></div>
-            </div>
-            <div class="relative flex justify-center text-sm">
-              <span class="px-2 bg-white text-gray-500">Or sign up with</span>
-            </div>
+        <div class="relative flex justify-center py-5">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
           </div>
-
-          <div class="mt-6">
-            <a id="googleButton" href="http://localhost:8080/oauth2/authorization/google"
-              class="w-full inline-flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-base font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-200 items-center">
-              <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
-                <!-- Google Icon SVG Code මෙතනට එයි -->
-                <path fill="currentColor"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                <path fill="currentColor"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                <path fill="currentColor"
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                <path fill="currentColor"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-              </svg>
-              <span>Continue with Google</span>
-            </a>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">Or continue with</span>
           </div>
         </div>
+
+        <!-- Google Sign-In button container -->
+        <div id="gsiButton" class="g_id_signin"></div>
+
+        <!-- Account Type Modal -->
+        <div id="accountTypeModal"
+          class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden transition-opacity duration-300 ease-out">
+          <div
+            class="bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-80 text-center transform scale-95 transition-transform duration-300 ease-out"
+            id="modalContent">
+            <h2 class="text-xl font-extrabold mb-6 text-gray-800">Select Account Type</h2>
+            <button
+              class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-3 px-4 rounded-xl mb-3 shadow hover:shadow-lg hover:scale-[1.02] transform transition"data-type="TOURIST">
+              Tourist
+            </button>
+            <button
+              class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 px-4 rounded-xl shadow hover:shadow-lg hover:scale-[1.02] transform transition " data-type="BUSINESS">
+              Business
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
   <script src="../pages/lib/jquery-3.7.1.min.js"></script>
   <script src="../pages/js/Register.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const accountTypeSelector = document.getElementById('accountType');
-      const contactNumberField = document.getElementById('contactNumberField');
-      const businessFields = document.getElementById('businessFields'); // Get the business fields container
-
-      // Initial check on page load
-      if (accountTypeSelector.value === 'business') {
-        contactNumberField.classList.remove('hidden');
-        businessFields.classList.remove('hidden'); // Show business fields initially if business is selected
-      } else {
-        contactNumberField.classList.add('hidden');
-        businessFields.classList.add('hidden'); // Hide business fields initially
-      }
-
-      accountTypeSelector.addEventListener('change', function () {
-        if (this.value === 'business') {
-          contactNumberField.classList.remove('hidden');
-          businessFields.classList.remove('hidden'); // Show business fields
-        } else {
-          contactNumberField.classList.add('hidden');
-          businessFields.classList.add('hidden'); // Hide business fields
-        }
-      });
-    });
-  </script>
 </body>
 
 </html>

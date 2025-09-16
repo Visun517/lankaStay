@@ -1,104 +1,7 @@
-
-// Dynamic height adjustment
-// function adjustHeights() {
-//     const mainContainer = document.getElementById('mainContainer');
-//     const bannerSection = document.getElementById('bannerSection');
-//     const formSection = document.getElementById('formSection');
-//     const formWrapper = document.getElementById('formWrapper');
-
-//     // Reset heights
-//     // bannerSection.style.height = 'auto';
-//     // formSection.style.height = 'auto';
-//     // mainContainer.style.height = 'auto';
-
-//     // Get form height and apply to both sections
-//     const formHeight = formWrapper.scrollHeight;
-//     const minHeight = window.innerHeight; // Viewport height
-//     const targetHeight = Math.max(formHeight + 100, minHeight); // Add padding, ensure min viewport height
-
-//     bannerSection.style.minHeight = `${targetHeight}px`;
-//     formSection.style.minHeight = `${targetHeight}px`;
-//     mainContainer.style.minHeight = `${targetHeight}px`;
-// }
-
 // Show/hide business fields and Google button
 const accountType = document.getElementById('accountType');
-const businessFields = document.getElementById('businessFields');
 const googleButton = document.getElementById('googleButton');
 const socialSignupSection = document.getElementById('socialSignupSection');
-
-// function updateAccountTypeDependentUI(selectedType) {
-//     const isBusiness = selectedType === 'business';
-//     businessFields.classList.toggle('hidden', !isBusiness);
-//     if (googleButton) googleButton.classList.toggle('hidden', isBusiness);
-//     if (socialSignupSection) socialSignupSection.classList.toggle('hidden', isBusiness);
-//     setTimeout(adjustHeights, 100);
-// }
-
-// accountType.addEventListener('change', function () {
-//     updateAccountTypeDependentUI(this.value);
-// });
-
-// Initialize UI on load
-// updateAccountTypeDependentUI(accountType.value);
-
-// Form submit handler
-const signupForm = document.getElementById('signupForm');
-const errorMessage = document.getElementById('errorMessage');
-signupForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    errorMessage.classList.add('hidden');
-
-    const formData = new FormData(signupForm);
-    const data = Object.fromEntries(formData);
-
-    // Client-side validation
-    if (!data.accountType) {
-        errorMessage.textContent = 'Please select an account type';
-        errorMessage.classList.remove('hidden');
-        return;
-    }
-    if (data.accountType === 'business' && (!data.businessType || !data.businessName || !data.latitude || !data.longitude || !data.address || !data.contact)) {
-        errorMessage.textContent = 'Please fill all business fields';
-        errorMessage.classList.remove('hidden');
-        return;
-    }
-    if (data.password !== data.confirmPassword) {
-        errorMessage.textContent = 'Passwords do not match';
-        errorMessage.classList.remove('hidden');
-        return;
-    }
-    if (!data.terms) {
-        errorMessage.textContent = 'You must agree to the terms';
-        errorMessage.classList.remove('hidden');
-        return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-        errorMessage.textContent = 'Invalid email format';
-        errorMessage.classList.remove('hidden');
-        return;
-    }
-
-    // Backend call
-    try {
-        const response = await fetch('http://your-backend-url/api/auth/signup', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-        const result = await response.json();
-        if (response.ok) {
-            window.location.href = 'login.html';
-        } else {
-            errorMessage.textContent = result.message || 'Registration failed';
-            errorMessage.classList.remove('hidden');
-        }
-    } catch (err) {
-        errorMessage.textContent = 'An error occurred. Please try again.';
-        errorMessage.classList.remove('hidden');
-        console.error(err);
-    }
-});
 
 // Password toggle functionality
 document.addEventListener('DOMContentLoaded', function () {
@@ -161,9 +64,6 @@ $('#createAccountBtn').on('click', function () {
     console.log('password:', password);
     console.log('confirmPassword:', confirmPassword);
     console.log('Terms Agreed:', termsAgreed);
-
-
-
 
     console.log('Account Type:', accountType);
 
@@ -288,31 +188,19 @@ $('#createAccountBtn').on('click', function () {
     }
 
     if (accountType === 'business') {
-        let businessType = $('#businessType').val().toUpperCase();
-        let contactNumber = $('#contactNumber').val().trim();
+        // let businessType = $('#businessType').val().toUpperCase();
+        // let contactNumber = $('#contactNumber').val().trim();
         let role = 'BUSINESS';
 
-        console.log('Business Type:', businessType);
-        console.log('Contact Number:', contactNumber);
+        // console.log('Business Type:', businessType);
+        // console.log('Contact Number:', contactNumber);
         console.log('userName:', userName);
-
-        if (!businessType || userName === '' || contactNumber === '') {
-            Swal.fire({
-                title: "Error!",
-                text: "Please fill all required business fields.",
-                icon: "error",
-                confirmButtonText: "OK"
-            });
-            return;
-        }
 
         let businessData = {
             userName: userName,
             password: password,
             email: email,
-            role: role,
-            type: businessType,
-            phoneNumber: contactNumber
+            role: role
         };
 
         console.log('Registering Business:', businessData);
@@ -354,3 +242,68 @@ function formClear() {
     $('#businessType').val('');
 }
 
+// Initialize Google Identity Services
+window.onload = function () {
+    google.accounts.id.initialize({
+        client_id: "373965543020-5meekfomuteiphtavsohv76ag75abd7n.apps.googleusercontent.com",
+        callback: handleCredentialResponse,
+        ux_mode: "popup" // popup mode required
+    });
+
+    // Render Google Sign-In button
+    google.accounts.id.renderButton(
+        document.getElementById("gsiButton"),
+        { theme: "outline", size: "large" }
+    );
+};
+
+
+
+// Callback after Google login
+function handleCredentialResponse(response) {
+    console.log("JWT token:", response.credential);
+
+    const modal = document.getElementById("accountTypeModal");
+    modal.classList.remove("hidden");
+
+    modal.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const accountType = btn.getAttribute("data-type");
+            console.log("Selected account type:", accountType);
+
+            modal.classList.add("hidden");
+
+            const googleAuth = {
+                token:  response.credential
+            }
+
+            $.ajax({
+                url: `http://localhost:8080/auth/register/google/${accountType}`,  // backend endpoint
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(googleAuth),
+                success: function (res) {
+                    localStorage.setItem('token', res.data.accessToken);
+                    //const payload = JSON.parse(atob(res.data.accessToken.split('.')[1]));
+                    Swal.fire({
+                        title: "Success!",
+                        text: "Registration successful! Redirecting to login...",
+                        icon: "success",
+                        confirmButtonText: "OK"
+                    }).then(() => {
+                        window.location.href = 'login.html';
+                    });
+
+                },
+                error: function (err) {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Registration failed. Please try again.",
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                }
+            });
+        });
+    });
+}

@@ -727,7 +727,44 @@ function reviewModal() {
 
 $(document).ready(function () {
 
-    reviewModal();
+  reviewModal();
+  setInterval(validateAndLoadDashboard, 10000 );
+
+  function validateAndLoadDashboard() {
+    let token = localStorage.getItem('token');
+
+    if (!token) {
+      window.location.href = '../Login.html';
+      return;
+    }
+
+    const tokenParts = token.split('.');
+
+    if (tokenParts.length !== 3) {
+      window.location.href = '../Login.html';
+      return;
+    }
+
+    try {
+      const tokenPayload = JSON.parse(atob(tokenParts[1]));
+
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      // console.log("Current timestamp:", currentTimestamp);
+      // console.log("Token expiration timestamp:", tokenPayload.exp);
+
+      if (tokenPayload.exp && currentTimestamp >= tokenPayload.exp) {
+        alert('Session expired. Please login again.');
+        localStorage.removeItem('token');
+        window.location.href = '../Login.html';
+        return;
+      }
+
+
+    } catch (error) {
+      console.error('Invalid token:', error);
+      window.location.href = '../Login.html';
+    }
+  }
 
   $('#hotelBtn').click(function () {
 
