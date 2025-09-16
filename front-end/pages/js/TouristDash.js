@@ -54,6 +54,29 @@ $(document).ready(function () {
 
   console.log("Document is ready. Attaching event listeners.");
 
+  //explore button click
+
+  const exploreBtn = document.getElementById("exploreBtn");
+  const locationPopup = document.getElementById("locationPopup");
+  const closePopup = document.getElementById("closePopup");
+  const confirmExplore = document.getElementById("confirmExplore");
+
+  // Show popup when Explore button clicked
+  exploreBtn.addEventListener("click", () => {
+    locationPopup.classList.remove("hidden");
+  });
+
+  // Close popup
+  closePopup.addEventListener("click", () => {
+    locationPopup.classList.add("hidden");
+  });
+
+  // Continue button -> redirect to nearbybusiness page
+  confirmExplore.addEventListener("click", () => {
+    locationPopup.classList.add("hidden");
+    window.location.href = "nearbybusiness.html"; // redirect
+  });
+
   setInterval(validateAndLoadDashboard, 1000);
 
   getUserName();
@@ -1190,10 +1213,10 @@ $(document).ready(function () {
 
 
 
-  // "Explore Nearby Deals" button click event
-  $('#exploreBtn').on('click', function () {
-    window.location.href = '../tourist/NearByBusiness.html';
-  });
+  // // "Explore Nearby Deals" button click event
+  // $('#exploreBtn').on('click', function () {
+  //   window.location.href = '../tourist/NearByBusiness.html';
+  // });
 
   // Function to handle the actual geolocation request
   // Booking Modal Functionality

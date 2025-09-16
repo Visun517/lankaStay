@@ -1,15 +1,69 @@
 let map;
-const defaultLocation = { lat: 6.759018, lng: 80.36472 }; // Rathnapura
-let userCircle; // Circle variable
+let userMarker;
+let userCircle;
 let markers = [];
+const defaultLocation = { lat: 6.705528779227924, lng: 79.9166308071775 }; // fallback
 
+// Update user location, clear markers, call backend
+function updateUserLocation(lat, lng) {
+  const newLocation = { lat, lng };
+  console.log("Updating user location to:", newLocation);
+
+  // Update marker and circle
+  if (!userMarker) {
+    userMarker = new google.maps.Marker({
+      position: newLocation,
+      map: map,
+      draggable: true,
+      title: "Drag me to set your location",
+      icon: {
+        url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+        scaledSize: new google.maps.Size(40, 40)
+      }
+    });
+
+    // attach dragend event
+    google.maps.event.addListener(userMarker, "dragend", function(event) {
+      updateUserLocation(event.latLng.lat(), event.latLng.lng());
+    });
+  } else {
+    userMarker.setPosition(newLocation);
+  }
+
+  if (!userCircle) {
+    userCircle = new google.maps.Circle({
+      strokeColor: "#3b82f6",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "#3b82f6",
+      fillOpacity: 0.2,
+      map: map,
+      center: newLocation,
+      radius: 5000
+    });
+  } else {
+    userCircle.setCenter(newLocation);
+  }
+
+  map.setCenter(newLocation);
+
+  // Clear old business markers
+  markers.forEach(marker => marker.setMap(null));
+  markers = [];
+
+  // Call backend to fetch businesses
+  getNearByBusinesses(lat, lng);
+}
+
+// Initialize map
 function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
+  map = new google.maps.Map(document.getElementById("map"), {
     zoom: 14,
-    mapTypeId: 'roadmap',
-    center: defaultLocation
+    center: defaultLocation,
+    mapTypeId: "roadmap"
   });
 
+  // Try geolocation
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -17,41 +71,23 @@ function initMap() {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
-        console.log('User location:', userLocation);
-        map.setCenter(userLocation);
-
-        userMarker = new google.maps.Marker({
-          position: userLocation,
-          map: map,
-          title: "Your Location",
-          icon: {
-            url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png", // blue marker
-            scaledSize: new google.maps.Size(40, 40)
-          }
-        });
-
-        // Circle draw කිරීම (5km radius)
-        userCircle = new google.maps.Circle({
-          strokeColor: "#3b82f6",       // border color
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: "#3b82f6",         // fill color
-          fillOpacity: 0.2,
-          map: map,
-          center: userLocation,
-          radius: 5000                 // 5 km radius (meters)
-        });
-
-        getNearByBusinesses(userLocation.lat, userLocation.lng);
-
+        updateUserLocation(userLocation.lat, userLocation.lng);
       },
       (error) => {
-        console.log('Location not available, using default.', error);
+        console.warn("Geolocation blocked or failed:", error);
+        // Show draggable marker at default location
+        updateUserLocation(defaultLocation.lat, defaultLocation.lng);
+        alert("We couldn’t detect your location. Drag the marker to set your location.");
       },
-      { enableHighAccuracy: true }
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
+  } else {
+    // Browser does not support geolocation
+    updateUserLocation(defaultLocation.lat, defaultLocation.lng);
+    alert("Geolocation is not supported by this browser. Drag the marker to set your location.");
   }
 }
+
 
 let userLocation2;
 function getNearByBusinesses(latitude, longitude) {
@@ -59,14 +95,19 @@ function getNearByBusinesses(latitude, longitude) {
     latitude: latitude,
     longitude: longitude
   };
-
   $.ajax({
     url: `http://localhost:8080/business/nearByBusinesses?latitude=${latitude}&longitude=${longitude}`,
     method: 'GET',
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     success: (response) => {
       console.log("Businesses received successfully:", response.data);
-      showBusinessesOnMap(response.data);
+
+      if (response.data.length === 0) {
+        alert("No nearby businesses found.");
+      } else {
+        showBusinessesOnMap(response.data);
+      }
+
     },
     error: () => console.error("Failed to get businesses.")
   });
@@ -74,6 +115,7 @@ function getNearByBusinesses(latitude, longitude) {
 
 
 function showBusinessesOnMap(businesses) {
+  console.log("Showing businesses on map:");
   // clear existing markers
   markers.forEach(marker => marker.setMap(null));
   markers = [];
@@ -728,7 +770,7 @@ function reviewModal() {
 $(document).ready(function () {
 
   reviewModal();
-  setInterval(validateAndLoadDashboard, 10000 );
+  setInterval(validateAndLoadDashboard, 10000);
 
   function validateAndLoadDashboard() {
     let token = localStorage.getItem('token');

@@ -50,6 +50,27 @@
       </div>
     </section>
 
+    <div id="locationPopup" class="fixed inset-0 flex items-center justify-center bg-black/50 hidden z-50">
+      <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full text-center">
+        <h3 class="text-2xl font-bold text-gray-800 mb-4">How We Find Nearby Businesses</h3>
+        <p class="text-gray-600 mb-6">
+          👉 If you <span class="font-semibold text-green-600">turn ON your location</span>, we’ll show
+          businesses near your <span class="font-semibold">live location</span>.<br><br>
+          👉 If your location is <span class="font-semibold text-red-600">OFF</span>, you can
+          <span class="font-semibold">drag the marker</span> on the map to select your area.
+        </p>
+
+        <div class="flex justify-center gap-4">
+          <button id="closePopup" class="px-6 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 transition">
+            Cancel
+          </button>
+          <button id="confirmExplore" class="px-6 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+
 
     <!-- Map Container -->
     <section class="mb-12 relative">
