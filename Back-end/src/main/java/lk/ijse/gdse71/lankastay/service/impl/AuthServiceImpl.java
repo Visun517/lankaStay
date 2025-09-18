@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -47,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtUtil.generateToken(authDto.getEmail() , String.valueOf(user.getRole()));
         return new AuthResponseDto(token);
     }
-
+    @Transactional
     public String registerTourist(TouristRegisterDto registerDto){
         if (userRepository.findByEmail(registerDto.getEmail())
                 .isPresent()){
@@ -72,9 +73,8 @@ public class AuthServiceImpl implements AuthService {
 
         return "User registered successfully";
     }
-
+    @Transactional
     public String registerBusiness(BusinessRegisterDto businessRegisterDto){
-        System.out.println(businessRegisterDto);
         if (userRepository.findByEmail(businessRegisterDto.getEmail())
                 .isPresent()){
             throw new UserExistsException("User already exists with username: " + businessRegisterDto.getUserName());
@@ -86,9 +86,7 @@ public class AuthServiceImpl implements AuthService {
                 .password(passwordEncoder.encode(businessRegisterDto.getPassword()))
                 .role(businessRegisterDto.getRole())
                 .build();
-        System.out.println(user);
         User save = userRepository.save(user);
-        System.out.println(save);
 
         Business business = Business.builder()
                 .user(save)
@@ -110,6 +108,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public String registerGoogle(GoogleIdToken.Payload payload, String businessType) {
         if (userRepository.findByEmail(payload.getEmail())
                 .isPresent()){
@@ -138,9 +137,7 @@ public class AuthServiceImpl implements AuthService {
                     .password("GOOGLE")
                     .role(RoleTypes.valueOf(businessType))
                     .build();
-            System.out.println(user);
             User save = userRepository.save(user);
-            System.out.println(save);
 
             Business business = Business.builder()
                     .user(save)
@@ -148,7 +145,6 @@ public class AuthServiceImpl implements AuthService {
                     .updatedAt(LocalDate.now())
                     .build();
 
-            System.out.println(business);
             businessRepository.save(business);
         }
         return "User registered successfully";

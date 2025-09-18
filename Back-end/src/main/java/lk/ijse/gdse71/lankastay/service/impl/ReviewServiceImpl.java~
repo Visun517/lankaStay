@@ -95,7 +95,7 @@ public class ReviewServiceImpl implements ReviewService {
         Business business = businessRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Business not found with id: " + id));
 
-        double reviewsByBusiness = reviewRepository.getReviewsByBusiness(business.getId());
+        double reviewsByBusiness = reviewRepository.getReviewsByBusiness(business);
         return reviewsByBusiness;
     }
 

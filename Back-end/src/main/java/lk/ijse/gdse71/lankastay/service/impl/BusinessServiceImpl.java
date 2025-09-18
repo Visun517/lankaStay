@@ -30,9 +30,7 @@ public class BusinessServiceImpl implements BusinessService {
     private final BusinessRepository businessRepository;
     private final UserRepository userRepository;
     private final FileStorageService fileStorageService;
-    private final BusinessImageRepository businessImageRepository;
     private final ModelMapper modelMapper;
-    private final HotelPackageRepository packageRepository;
 
     public String updateProfilePicture(MultipartFile file, String email) throws IOException {
 

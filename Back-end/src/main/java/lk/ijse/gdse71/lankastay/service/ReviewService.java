@@ -8,4 +8,5 @@ public interface ReviewService {
     String addReview(ReviewDto reviewDto, Long id);
     List<ReviewDto> getAllReviews(Long businessId ,int page , int size , Long userId);
     String removeReview(Long reviewId , Long userId);
+    double getRatings(Long id);
 }

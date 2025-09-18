@@ -49,7 +49,7 @@ public class CloseDateController {
         return ResponseEntity.ok(
                 new ApiResponseDto(
                         200,
-                        "Packages fetched successfully",
+                        "Get all Close days successfully",
                         closeDateService.getAllDates(user.getId())
                 )
         );

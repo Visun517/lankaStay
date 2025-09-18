@@ -100,6 +100,7 @@ $(document).ready(function () {
   validateAndLoadDashboard();
   initCalendar();
   getAllBookings();
+  getBusinessRating();
 
   setInterval(validateAndLoadDashboard, 10000);
 
@@ -108,12 +109,9 @@ $(document).ready(function () {
   const bookingsNotificationContainer = $('#bookingsNotificationContainer');
   const closeBookingsNotificationBtn = $('#closeBookingsNotification');
 
+  // Booking notification (Recent Bookings opener)
   bookingsNotificationBtn.on('click', function () {
     bookingsNotificationContainer.toggleClass('hidden');
-    // Optionally fetch new bookings when opening the container
-    // if (!bookingsNotificationContainer.hasClass('hidden')) {
-    //   fetchBookings(); 
-    // }
   });
 
   closeBookingsNotificationBtn.on('click', function () {
@@ -126,15 +124,13 @@ $(document).ready(function () {
     }
   });
 
-
+  // Logout-button
   $('#logoutButton').click(function () {
     localStorage.removeItem('token');
     window.location.href = '../Login.html';
   });
 
-
-
-
+  // Gallery images delete function
   $('#galleryGridContainer').on('click', '.remove-image-btn', function (event) {
     event.stopPropagation();
 
@@ -166,7 +162,6 @@ $(document).ready(function () {
             getImages();
           },
           error: function (jqXHR) {
-            console.error("Failed to delete image:", jqXHR.responseText);
             Swal.fire('Error!', 'Could not remove the photo.', 'error');
           }
         });
@@ -174,6 +169,7 @@ $(document).ready(function () {
     });
   });
 
+  // Package delete function
   $('#packagesListContainer').on('click', '.remove-package-btn', function (event) {
     event.stopPropagation();
 
@@ -200,13 +196,10 @@ $(document).ready(function () {
           method: 'DELETE',
           headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
           success: function (response) {
-            getAllPackages();
             Swal.fire('Deleted!', 'The photo has been successfully removed.', 'success');
-
             getAllPackages();
           },
           error: function (jqXHR) {
-            console.error("Failed to delete image:", jqXHR.responseText);
             Swal.fire('Error!', 'Could not remove the photo.', 'error');
           }
         });
@@ -214,6 +207,7 @@ $(document).ready(function () {
     });
   });
 
+  // Special offer delete function
   $('#specialOffersContainer').on('click', '.remove-offer-btn', function (event) {
     event.stopPropagation();
 
@@ -256,72 +250,68 @@ $(document).ready(function () {
 
 
   $('#calendarDays').on('click', '.calendar-day', function () {
-
     const clickedDayElement = $(this);
-
     const dateKey = clickedDayElement.data('date');
-
     closedDateId = clickedDayElement.data('id');
-
     console.log("Date clicked:", dateKey);
     console.log("Associated Closed Date ID:", closedDateId);
-
   });
 
 
 
   //District input auto complete
   const districts = [
-  "Colombo", "Gampaha", "Kalutara",
-  "Kandy", "Matale", "Nuwara Eliya",
-  "Galle", "Matara", "Hambantota",
-  "Jaffna", "Kilinochchi", "Mannar",
-  "Vavuniya", "Mullaitivu", "Batticaloa",
-  "Ampara", "Trincomalee", "Kurunegala",
-  "Puttalam", "Anuradhapura", "Polonnaruwa",
-  "Badulla", "Monaragala", "Ratnapura",
-  "Kegalle"
-];
+    "Colombo", "Gampaha", "Kalutara",
+    "Kandy", "Matale", "Nuwara Eliya",
+    "Galle", "Matara", "Hambantota",
+    "Jaffna", "Kilinochchi", "Mannar",
+    "Vavuniya", "Mullaitivu", "Batticaloa",
+    "Ampara", "Trincomalee", "Kurunegala",
+    "Puttalam", "Anuradhapura", "Polonnaruwa",
+    "Badulla", "Monaragala", "Ratnapura",
+    "Kegalle"
+  ];
 
-const input = document.getElementById("district");
-const suggestionList = document.getElementById("suggestionList");
+  // get typing input and suggestion  district list
+  const input = document.getElementById("district");
+  const suggestionList = document.getElementById("suggestionList");
 
-input.addEventListener("input", function() {
-  const value = this.value.toLowerCase();
-  suggestionList.innerHTML = "";
+  input.addEventListener("input", function () {
+    const value = this.value.toLowerCase();
+    suggestionList.innerHTML = "";
 
-  if (!value) {
-    suggestionList.classList.add("hidden");
-    return;
-  }
-
-  const filtered = districts.filter(d => d.toLowerCase().startsWith(value));
-  filtered.forEach(d => {
-    const li = document.createElement("li");
-    li.textContent = d;
-    li.classList.add("p-2", "hover:bg-blue-100", "cursor-pointer");
-    li.addEventListener("click", () => {
-      input.value = d;
+    if (!value) {
       suggestionList.classList.add("hidden");
+      return;
+    }
+
+    const filtered = districts.filter(d => d.toLowerCase().startsWith(value));
+    filtered.forEach(d => {
+      const li = document.createElement("li");
+      li.textContent = d;
+      li.classList.add("p-2", "hover:bg-blue-100", "cursor-pointer");
+      li.addEventListener("click", () => {
+        input.value = d;
+        suggestionList.classList.add("hidden");
+      });
+      suggestionList.appendChild(li);
     });
-    suggestionList.appendChild(li);
+
+    suggestionList.classList.toggle("hidden", filtered.length === 0);
   });
 
-  suggestionList.classList.toggle("hidden", filtered.length === 0);
-});
-
-// Click outside to close suggestion list
-document.addEventListener("click", function(e) {
-  if (!e.target.closest("#district") && !e.target.closest("#suggestionList")) {
-    suggestionList.classList.add("hidden");
-  }
-});
+  // Click outside to close suggestion list
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest("#district") && !e.target.closest("#suggestionList")) {
+      suggestionList.classList.add("hidden");
+    }
+  });
 
 
 });
 
 
-
+// get all bookings
 function getAllBookings() {
   $.ajax({
     url: 'http://localhost:8080/business/getBookings/business',
@@ -341,7 +331,7 @@ function getAllBookings() {
 // Render pending bookings in the notification container
 function renderBookings(bookings) {
   const bookingList = $('#bookingList');
-  bookingList.empty(); // clear previous content
+  bookingList.empty();
 
   const pendingBookings = bookings.filter(b => b.status === 'PENDING');
 
@@ -379,17 +369,6 @@ function updateBookingBadge(bookings) {
     badge.addClass('hidden'); // hide badge if no pending
   }
 }
-
-$('#bookingNotificationBtn').on('click', function () {
-  $('#bookingsNotificationContainer').toggleClass('hidden'); // show/hide container
-  $('#newBookingCount').addClass('hidden'); // reset badge when opened
-});
-
-// Close button in container
-$('#closeBookingsNotification').on('click', function () {
-  $('#bookingsNotificationContainer').addClass('hidden');
-});
-
 
 // Handle Cancel booking
 $(document).on('click', '.cancel-booking-btn', function () {
@@ -432,6 +411,7 @@ $('#bookingNotificationBtn').on('click', function () {
 });
 
 
+// Function to validate and load the dashboard ( check if token is valid or not)
 function validateAndLoadDashboard() {
   let token = localStorage.getItem('token');
 
@@ -451,8 +431,8 @@ function validateAndLoadDashboard() {
     const tokenPayload = JSON.parse(atob(tokenParts[1]));
 
     const currentTimestamp = Math.floor(Date.now() / 1000);
-    console.log("Current timestamp:", currentTimestamp);
-    console.log("Token expiration timestamp:", tokenPayload.exp);
+    // console.log("Current timestamp:", currentTimestamp);
+    // console.log("Token expiration timestamp:", tokenPayload.exp);
 
     if (tokenPayload.exp && currentTimestamp >= tokenPayload.exp) {
       alert('Session expired. Please login again.');
@@ -479,7 +459,7 @@ function getAllPackages() {
     method: 'GET',
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     success: function (response) {
-      console.log("Packages received successfully:", response);
+      // console.log("Packages received successfully:", response);
 
       if (response.status === 200 && Array.isArray(response.data)) {
         const packages = response.data;
@@ -506,8 +486,6 @@ function getAllPackages() {
           { bg: 'bg-gradient-to-br from-rose-50 to-rose-100', border: 'border-rose-200 hover:border-rose-300', text: 'text-rose-600 font-semibold', iconBg: 'bg-rose-500' }
         ];
 
-
-
         activePackages.forEach((pkg, index) => {
 
           const color = packageColorPalette[index % packageColorPalette.length];
@@ -520,7 +498,6 @@ function getAllPackages() {
           const packageCardHtml = `
         <div class="package-card group relative ${color.bg} rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border ${color.border}">
             
-            <!-- 1. Image Container (මෙම කොටසේ වෙනසක් නැත) -->
             <div class="relative h-40">
                 <img src="${imageUrl}"
                      alt="${pkg.packageName || 'Package Image'}"
@@ -528,7 +505,6 @@ function getAllPackages() {
                 <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
             </div>
 
-            <!-- Card Content (මෙම කොටසේ වෙනසක් නැත) -->
             <div class="p-5">
                 <!-- Delete Button -->
                 <div class=" remove-package-btn absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -537,7 +513,6 @@ function getAllPackages() {
                     </button>
                 </div>
 
-                <!-- Package Name and Type -->
                 <div class="flex items-center gap-4 mb-3">
                     <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
@@ -550,7 +525,6 @@ function getAllPackages() {
                 
                 <p class="text-gray-600 text-sm mb-4 h-12 overflow-hidden">${pkg.description || 'No description available.'}</p>
 
-                <!-- Package Details with Icons -->
                 <div class="space-y-2 mb-4 text-sm">
                     <div class="flex items-center gap-3 text-gray-700">
                         <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
@@ -562,7 +536,6 @@ function getAllPackages() {
                     </div>
                 </div>
 
-                <!-- Price and Status -->
                 <div class="mt-5 pt-4 border-t border-gray-200">
                     <div class="flex items-center justify-between">
                         <div>
@@ -654,6 +627,7 @@ function setupProfileEventListeners() {
   submitProfileBtn.on('click', updateProfile);
 }
 
+// Gallery Modal listeners
 function setupGalleryModalListeners() {
   const addPhotoModal = $('#addPhotoModal');
   const imageInput = $('#imageInput');
@@ -741,7 +715,7 @@ function getImages() {
     method: 'GET',
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     success: (response) => {
-      console.log("Image data received:", response);
+      // console.log("Image data received:", response);
 
       if (response.status === 200 && Array.isArray(response.data)) {
         const images = response.data;
@@ -918,8 +892,8 @@ function updateProfile() {
     longitude: $('#longitude').val().trim(),
     address: $('#address').val().trim(),
     district: $('#district').val().trim(),
-    phoneNumber : $('#contactNumber').val().trim(),
-    type : $('#businessType').val().trim()
+    phoneNumber: $('#contactNumber').val().trim(),
+    type: $('#businessType').val().trim()
   };
 
   console.log("Updating profile with data:", updatedData);
@@ -1009,13 +983,13 @@ function handlePackageSave() {
   formData.append('image', packageImage);
   formData.append('price', price);
 
-  console.log("Package Name:", packageName);
-  console.log("Availability Start Date:", availabilityStartDate);
-  console.log("Availability End Date:", availabilityEndDate);
-  console.log("Is Meal Included:", isMealInclude);
-  console.log("Package Amenities:", packageAmenities);
-  console.log("Package Image:", packageImage);
-  console.log("Price:", price);
+  // console.log("Package Name:", packageName);
+  // console.log("Availability Start Date:", availabilityStartDate);
+  // console.log("Availability End Date:", availabilityEndDate);
+  // console.log("Is Meal Included:", isMealInclude);
+  // console.log("Package Amenities:", packageAmenities);
+  // console.log("Package Image:", packageImage);
+  // console.log("Price:", price);
 
 
   $.ajax({
@@ -1055,12 +1029,12 @@ function handleSpecialOfferSave() {
   let offerDescription = $('#offerDescription').val().trim();
   let offerImage = $('#offerImageUrl')[0].files[0];
 
-  console.log("Offer Title:", offerTitle);
-  console.log("Precentage:", precentage);
-  console.log("Valid From:", validFrom);
-  console.log("Valid Until:", validUntil);
-  console.log("Offer Description:", offerDescription);
-  console.log("Offer Image:", offerImage);
+  // console.log("Offer Title:", offerTitle);
+  // console.log("Precentage:", precentage);
+  // console.log("Valid From:", validFrom);
+  // console.log("Valid Until:", validUntil);
+  // console.log("Offer Description:", offerDescription);
+  // console.log("Offer Image:", offerImage);
 
   const formData = new FormData();
 
@@ -1269,14 +1243,13 @@ function updateMonthDisplay() {
 function generateCalendar() {
   const calendarDays = $('#calendarDays');
   calendarDays.empty().append('<div class="col-span-7 text-center p-4">Loading Availability...</div>');
-
   $.ajax({
-    url: `http://localhost:8080/calender/getAllDates?year=${calendar_currentYear}&month=${calendar_currentMonth + 1}`,
+    url: 'http://localhost:8080/calender/getAllDates',
     method: 'GET',
     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
     success: function (response) {
+      console.log("Closed dates received successfully:", response.data);
       if (!response.data || !Array.isArray(response.data)) {
-        console.error("Invalid data received for closed dates.");
         calendarDays.html('<p class="col-span-7 text-red-500 text-center">Error: Invalid data format.</p>');
         return;
       }
@@ -1305,13 +1278,9 @@ function generateCalendar() {
 
       for (let day = 1; day <= daysInMonth; day++) {
         const dateKey = `${calendar_currentYear}-${String(calendar_currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
         const isClosed = closedDatesMap.has(dateKey);
-
         const closedDateId = isClosed ? closedDatesMap.get(dateKey) : '';
-
         const dayClass = isClosed ? 'bg-red-200 text-red-800' : 'bg-green-200 text-green-800';
-
         const dayElement = $(`
             <div class="calendar-day p-3 text-center rounded-lg cursor-pointer transition hover:scale-105 ${dayClass}" 
                  data-date="${dateKey}"
@@ -1345,8 +1314,6 @@ function showDateConfirmationModal(dateKey, dayElement) {
   $('#selectedDateDisplay').text(date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
   $('#selectedDayDisplay').text(date.toLocaleDateString('en-US', { weekday: 'long' }));
 
-
-
   console.log("Show date confirmation modal for date:", dateKey);
   $('#dateConfirmationModal').removeClass('hidden');
 }
@@ -1358,11 +1325,9 @@ function closeDateConfirmationModal() {
 function confirmDateStatusChange() {
   if (!selectedDateKey) return;
   const selectedStatus = $('input[name="dateStatus"]:checked').val();
-  console.log(selectedStatus);
-
+  // console.log(selectedStatus);
 
   if (selectedStatus === 'closed') {
-
 
     const formData = new FormData();
     formData.append('date', selectedDateKey);
@@ -1388,9 +1353,7 @@ function confirmDateStatusChange() {
   }
 
   if (selectedStatus === 'open') {
-
     console.log("Show date confirmation modal for date:", closedDateId);
-
     const formData = new FormData();
     formData.append('date', selectedDateKey);
 
@@ -1422,15 +1385,31 @@ function confirmDateStatusChange() {
 
 function updateSummary() {
   const totalDays = new Date(calendar_currentYear, calendar_currentMonth + 1, 0).getDate();
-
   const closedCount = $('#calendarDays .bg-red-200').length;
-
   const openCount = totalDays - closedCount;
-
   $('#openDaysCount').text(openCount);
   $('#closedDaysCount').text(closedCount);
   $('#totalDaysCount').text(totalDays);
-
   console.log(`Summary Updated: Total=${totalDays}, Open=${openCount}, Closed=${closedCount}`);
+
 }
+
+function getBusinessRating() {
+
+  $.ajax({
+    url: 'http://localhost:8080/review/getRatings',
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+    success: function (response) {
+      console.log("get rating successfully!", response);
+      const avgRating = response.data;
+      const formatted = Number(avgRating).toFixed(1);
+      $('#ratings').text(formatted + " %");
+    },
+    error: function (jqXHR) {
+      Swal.fire("Error!", "Failed to get rating .", "error");
+    }
+  });
+}
+
 

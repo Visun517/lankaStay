@@ -67,6 +67,21 @@ public class ReviewController {
                         reviewService.removeReview(reviewId, user.getId())
                 )
         );
+    }
 
+    @GetMapping("/getRatings")
+    public ResponseEntity<ApiResponseDto> getAllReviews(Authentication authentication) {
+        if (authentication == null) {
+            return new ResponseEntity<>(new ApiResponseDto(401, "Unauthorized access", null), HttpStatus.UNAUTHORIZED);
+        }
+        User user = (User) authentication.getPrincipal();
+
+        return ResponseEntity.ok(
+                new ApiResponseDto(
+                        200,
+                        "Get Rating successfully",
+                        reviewService.getRatings(user.getId())
+                )
+        );
     }
 }
