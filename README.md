@@ -155,7 +155,7 @@ Follow these steps to get the project up and running on your local machine.
 
 A complete video demonstration of the project, including its features and functionality, is available on YouTube. The voice explanation is provided in English as per the submission guidelines.
 
-**[Watch the Project Demo on YouTube](https://your-youtube-link.here)**
+**[Watch the Project Demo on YouTube]([https://your-youtube-link.here](https://youtu.be/NrnYxdIty6Y))**
 
 *(**Important:** Make sure your video title follows the exact format required)*
 > **Spring Boot Project - IJSE - GDSE  - 71 - Visun prabodha - **Advanced API Development (ITS 1114)** module Semester Final Project**
